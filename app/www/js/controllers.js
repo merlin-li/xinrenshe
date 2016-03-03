@@ -113,8 +113,9 @@ angular.module('guozhongbao.controllers',[]).config([
                     $http({
                         method: 'POST',
                         url: common.API.regCode,
-                        params: {
-                            phone: pnum
+                        data: {
+                            phone: pnum,
+                            'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
                             // sign: md5.createHash('phone=' + pnum + common.CONSTANT.reg_code_key)
                         }
                     }).success(function (data) {

@@ -121,9 +121,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
 
         return {
             API: {
-                login: apiBaseUrl + '/login/loginAuth',
-                signup: apiBaseUrl + '/register/registerAuth',
-                regCode: apiBaseUrl + '/register/getVerifyCode'
+                login: apiBaseUrl + 'login/loginAuth',
+                signup: apiBaseUrl + 'register/registerAuth',
+                regCode: apiBaseUrl + 'register/getVerifyCode'
 
             },
             SOURCE: {

@@ -1,5 +1,8 @@
 /* Empty. Add your own CSS if you like */
 
-.button-positive{
+.button.button-positive{
+    background: #ff8c9b;
+}
+.button.button-positive.activated, .button.button-positive.activate{
     background: #ff8c9b;
 }
