@@ -1,24 +1,62 @@
-// Ionic Starter App
+'use strict';
+angular.module('guozhongbao', [
+    'ionic',
+    'guozhongbao.controllers',
+    'guozhongbao.services'
+    // 'guozhongbao.error'
+]).config([
+    '$stateProvider',
+    '$urlRouterProvider',
+    '$ionicConfigProvider',
+    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+        // $ionicConfigProvider.backButton.previousTitleText(false);
+        // $ionicConfigProvider.backButton.text('');
+        // $ionicConfigProvider.views.forwardCache(true);
+        // $ionicConfigProvider.views.transition('none');
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+        $stateProvider.state('app_home', {
+            url: '/home',
+            views: {
+                'content': {
+                    templateUrl: 'templates/home.html',
+                    controller: 'HomeCtrl'
+                }
+            }
+        }).state('app_login', {
+            url: '/user/login',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/login.html',
+                    controller: 'LoginCtrl'
+                }
+            }
+        }).state('app_register', {
+            url: '/user/signup',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/signup.html',
+                    controller: 'SignupCtrl'
+                }
+            }
+        })
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
-      cordova.plugins.Keyboard.disableScroll(true);
+        // .state('app_regist_agreement', {
+        //     url: '/agreement/register',
+        //     views: { 'content': { templateUrl: 'templates/agreement/register.html' } }
+        // }).state('app_loan_agreement', {
+        //     url: '/agreement/loan',
+        //     views: { 'content': { templateUrl: 'templates/agreement/loan.html' } }
+        // })
+        ;
+        // if none of the above states are matched, use this as the fallback
+        $urlRouterProvider.otherwise('/home');
     }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-  });
-})
+]);
+
+
+// angular.module('guozhongbao.error', []).factory('$exceptionHandler', function () {
+//     return function (exception, cause) {
+//         exception.message += ' (caused by "' + cause + '")';
+//         var userInfo = JSON.parse(window.localStorage.getItem('uinfo')), userId = userInfo ? userInfo.uid : 0;
+//     };
+// });

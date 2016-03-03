@@ -1,0 +1,20 @@
+<ion-view title="登录">
+    <ion-content has-header="true">
+        <form name="login_form">
+            <div class="list">
+                <label class="item item-input">
+                    <input ng-model="loginModel.phone" type="tel" placeholder="请输入手机号码" required>
+                </label>
+                <label class="item item-input">
+                    <input ng-model="loginModel.pwd" type="password" placeholder="请输入您的密码" required>
+                </label>
+            </div>
+            <div class="padding">
+                <button class="button button-positive button-block" ng-click="login()" ng-disabled="login_form.$invalid">登录</button>
+
+                <a href="#">忘记密码？</a><br>
+                <a href="#/user/register">新用户注册？</a>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,28 @@
+<ion-view title="注册" name="r-sign-up">
+    <ion-nav-buttons side="right">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <form>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">手机号码</span>
+                <input ng-model="signupModel.phone" type="tel" placeholder="请输入手机号">
+            </label>
+            <label class="item">
+                <button ng-click="sendcode()" class="button {{signupModel.getCode.class}}">{{signupModel.getCode.value}}</button>
+                <p style="display:inline-block;line-height:" class="{{signupModel.msg.class}}">{{signupModel.msg.value}}</p>
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">验证码</span>
+                <input ng-model="signupModel.code" type="text" placeholder="请输入验证码">
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">密码</span>
+                <input ng-model="signupModel.pwd" type="password" placeholder="请输入密码">
+            </label>
+            <div class="padding">
+                <button class="button button-block button-positive" ng-click="signup()">注册</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>
