@@ -9,6 +9,9 @@ angular.module('guozhongbao', [
     '$urlRouterProvider',
     '$ionicConfigProvider',
     function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+        // $httpProvider.defaults.useXDomain = true;
+        // delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        
         // $ionicConfigProvider.backButton.previousTitleText(false);
         // $ionicConfigProvider.backButton.text('');
         // $ionicConfigProvider.views.forwardCache(true);
@@ -38,7 +41,17 @@ angular.module('guozhongbao', [
                     controller: 'SignupCtrl'
                 }
             }
+        }).state('app_user', {
+            url: '/user',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/index.html',
+                    controller: 'UserCtrl'
+                }
+            }
         })
+
+
 
         // .state('app_regist_agreement', {
         //     url: '/agreement/register',

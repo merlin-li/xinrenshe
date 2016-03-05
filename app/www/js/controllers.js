@@ -1,10 +1,13 @@
 'use strict';
 angular.module('guozhongbao.controllers',[]).config([
     '$sceDelegateProvider',
-    function ($sceDelegateProvider) {
+    '$httpProvider',
+    function ($sceDelegateProvider, $httpProvider) {
         // $sceDelegateProvider.resourceUrlWhitelist([
         //     'self',
         // ]);
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
     }
 ])
 
@@ -43,6 +46,16 @@ angular.module('guozhongbao.controllers',[]).config([
                 console.log(data);
             });
         };
+    }
+])
+
+.controller('UserCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    function($scope, $http, common, $location) {
+
     }
 ])
 
