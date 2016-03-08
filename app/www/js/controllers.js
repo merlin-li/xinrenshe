@@ -1,5 +1,6 @@
 'use strict';
-angular.module('guozhongbao.controllers',[]).config([
+angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
+.config([
     '$sceDelegateProvider',
     '$httpProvider',
     function ($sceDelegateProvider, $httpProvider) {
@@ -29,21 +30,33 @@ angular.module('guozhongbao.controllers',[]).config([
     'Common',
     '$location',
     '$stateParams',
-    function ($scope, $http, common, $location, $stateParams) {
-        console.log(common.API.login);
-
-        $scope.loginModel = {phone: '', pwd: ''};
+    '$cookieStore',
+    'md5',
+    function ($scope, $http, common, $location, $stateParams, $cookieStore, md5) {
+        $scope.loginModel = {phone: '', password: ''};
 
         $scope.login = function(){
-            console.log($scope.loginModel.phone);
-            console.log($scope.loginModel.pwd);
+            var signStr = common.utility.createSign($scope.loginModel);
 
             $http({
                 method: 'post',
                 url: common.API.login,
-                data: $scope.loginModel
+                data: {
+                    phone: $scope.loginModel.phone,
+                    password: $scope.loginModel.password,
+                    accessSign: md5.createHash(signStr)
+                }
             }).success(function(data){
-                console.log(data);
+                if (data.status === 200) {
+                    //登录成功
+                    $cookieStore.put('userinfo', JSON.stringify({
+                        token: data.data.token,
+                        uid: data.data.userInfo.uid
+                    }));
+                    $location.path('/home');
+                } else {
+                    common.utility.alert(data.msg);
+                }
             });
         };
     }
@@ -55,7 +68,7 @@ angular.module('guozhongbao.controllers',[]).config([
     'Common',
     '$location',
     function($scope, $http, common, $location) {
-
+        console.log('user ctrl');
     }
 ])
 
@@ -63,9 +76,9 @@ angular.module('guozhongbao.controllers',[]).config([
     '$scope',
     '$http',
     '$location',
-    '$timeout',
+    '$interval',
     'Common',
-    function ($scope, $http, $location, $timeout, common) {
+    function ($scope, $http, $location, $interval, common) {
         $scope.signupModel = {
             phone: '',
             code: '',
@@ -79,15 +92,6 @@ angular.module('guozhongbao.controllers',[]).config([
                 'value': ''
             }
         };
-
-        //发送验证码
-        // $scope.sendcode = function(){
-
-        // };
-        //注册 
-        // $scope.signup = function(){
-
-        // };
 
         //注册
         $scope.signup = function () {
@@ -115,7 +119,7 @@ angular.module('guozhongbao.controllers',[]).config([
             });
         };
 
-        //send code event
+        //发送验证码
         $scope.sendcode = function () {
             var _m = $scope.signupModel;
             if ($scope.signupModel.getCode.class === 'goods-btn') {
@@ -127,9 +131,11 @@ angular.module('guozhongbao.controllers',[]).config([
                         method: 'POST',
                         url: common.API.regCode,
                         data: {
-                            phone: pnum,
-                            'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+                            phone: pnum
                             // sign: md5.createHash('phone=' + pnum + common.CONSTANT.reg_code_key)
+                        },
+                        headers: {
+                            'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
                         }
                     }).success(function (data) {
                         console.log(data);

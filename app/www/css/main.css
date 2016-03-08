@@ -6,3 +6,67 @@
 .button.button-positive.activated, .button.button-positive.activate{
     background: #ff8c9b;
 }
+[nav-bar-transition=ios] [nav-bar=entering] .bar, [nav-bar-transition=ios] [nav-bar=active] .bar{
+    background: #ff8c9b;
+}
+.bar.bar-stable .title{
+    color: #fff;
+    background: #ff8c9b;
+}
+.bar-stable .button.button-clear{
+    color: #fff;
+}
+.item{
+    border-color: #f1f1f1;
+}
+
+
+
+.home-container{
+    max-width: 640px;
+    margin: 0 auto;
+}
+.home-container img{
+    max-width: 100%;
+    width: 100%;
+}
+.home-card{
+    background: url(../img/home_1.jpg) no-repeat;
+    background-size: 100%;
+    min-height: 210px;
+    overflow: hidden;
+}
+.home-card div{
+    background: rgba(239, 108, 126, 0.9);
+    width: 80%;
+    height: 64px;
+    margin: 60px auto;
+    overflow: hidden;
+}
+.home-card a{
+    font-size: 15px;
+    line-height: 30px;
+    text-decoration: none;
+    color: #fff;
+    background: #0bd6c0;
+    text-align: center;
+    display: block;
+    width: 80%;
+    margin: 15px auto;
+}
+.home-send{
+    background: url(../img/home_2.jpg) no-repeat;
+    background-size: 100%;
+    min-height: 370px;
+    margin-top: 30px;
+}
+.button-code{
+    background: #fff;
+    border: solid 1px #dadada;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    padding: 0 15px;
+    line-height: 30px;
+    color: #fc8d96;
+}

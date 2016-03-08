@@ -5,12 +5,12 @@ angular.module('guozhongbao.services', []).factory('Common', [
     '$cacheFactory',
     '$ionicLoading',
     '$http',
-    '$rootScope',
     '$location',
-    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $rootScope, $location) {
+    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location) {
+
         var offline = false, location = window.location.search, apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        apiBaseUrl = offline ? 'http://xiaoyeshu.billowton.com/' : 'http://xiaoyeshu.billowton.com/';
+        apiBaseUrl = offline ? 'http://xiaoyeshu.billowton.com/v1.0/' : 'http://xiaoyeshu.billowton.com/v1.0/';
 
         //判断是不是stage环境
         // if (location.indexOf('?stage') >= 0) {
@@ -117,6 +117,19 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     deviceType: deviceType,
                     deviceCode: deviceCode
                 };
+            }, _createSign = function (paramObj) {
+                var appKey = '6a70eef64db7fc3f16ef19b877fb32db',
+                    appSecret = 'c34437ac61651d066a4380d01a5dead4',
+                    keys = Object.keys(paramObj).sort(), str = '';
+
+                str += appKey;
+                keys.map(function(t){
+                    str += (t + paramObj[t]);
+                });
+                str += appSecret;
+
+                // return md5.createHash(str);
+                return str;
             };
 
         return {
@@ -153,6 +166,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'removeCookie': _removeCookie,
                 'cookieStore': _cookieStore,
                 'getDeviceInfo': _getDeviceInfo,
+                'createSign': _createSign
             },
             tempData: {
 
