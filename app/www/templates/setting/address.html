@@ -1,0 +1,25 @@
+<ion-view title="收信地址">
+    <ion-content has-header="true">
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">收信人姓名</span>
+                <input ng-model="userModel.name" type="text" placeholder="请输入姓名">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">收信人邮编</span>
+                <input ng-model="userModel.zipcode" type="text" placeholder="请输入邮编">
+            </label>
+            <label class="item item-icon-right">
+                个人资料<i class="icon ion-ios-arrow-right"></i>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">街道地址</span>
+                <input ng-model="userModel.address" type="text" placeholder="请输入街道地址">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="save()">保存</button>
+        </div>
+    </ion-content>
+</ion-view>
+

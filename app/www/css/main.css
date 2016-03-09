@@ -1,5 +1,7 @@
 /* Empty. Add your own CSS if you like */
-
+body{
+    font-size: 62.5%;
+}
 .button.button-positive{
     background: #ff8c9b;
 }
@@ -19,6 +21,9 @@
 .item{
     border-color: #f1f1f1;
 }
+a.item{
+    /*color: #e2e2e2;*/
+}
 
 
 
@@ -36,29 +41,45 @@
     min-height: 210px;
     overflow: hidden;
 }
-.home-card div{
+/*.home-card div{
     background: rgba(239, 108, 126, 0.9);
     width: 80%;
     height: 64px;
     margin: 60px auto;
     overflow: hidden;
-}
+}*/
 .home-card a{
-    font-size: 15px;
-    line-height: 30px;
-    text-decoration: none;
-    color: #fff;
-    background: #0bd6c0;
-    text-align: center;
     display: block;
     width: 80%;
-    margin: 15px auto;
+    margin: 50px auto;
 }
 .home-send{
     background: url(../img/home_2.jpg) no-repeat;
     background-size: 100%;
     min-height: 370px;
     margin-top: 30px;
+    overflow: hidden;
+}
+.home-send div{
+    width: 80%;
+    margin: 43% auto 0;
+}
+.home-send a{
+    display: block;
+    background: #f04357;
+    width: 200px;
+    height: 40px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.3rem;
+    line-height: 40px;
+    border: solid 1px #fff;
+    text-align: center;
+    margin: 10px auto 0;
+}
+.home-send label{
+    color: #fff;
+    font-size: 1.3rem;
 }
 .button-code{
     background: #fff;
@@ -69,4 +90,52 @@
     padding: 0 15px;
     line-height: 30px;
     color: #fc8d96;
+}
+.full{
+    width: 100%;
+    max-width: 100%;
+}
+.avatar-container{
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+}
+.avatar-container img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.avatar-container span, .avatar-container label{
+    display: block;
+    color: #fff;
+}
+.avatar-container span{
+    font-size: 1rem;
+}
+.avatar-container label{
+    font-size: 0.8rem;
+}
+.user-avatar{
+    text-align: center;
+    padding: 20px 0 50px;
+}
+.user-avatar img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.warn-tip{
+    background: #fccfd4;
+    color: #fff;
+    font-size: 0.8rem;
+    margin-left: 20px;
+    padding: 0 10px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
 }

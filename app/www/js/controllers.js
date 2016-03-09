@@ -17,10 +17,23 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    '$ionicSlideBoxDelegate',
-    function ($scope, $http, common, $location, $ionicSlideBoxDelegate) {
+    'md5',
+    function ($scope, $http, common, $location, md5) {
 
-
+        !function(){
+            //初始化事件
+            $http({
+                method: 'post',
+                url: common.API.home,
+                data: {
+                    accessSign: md5.createHash(common.utility.createSign({}))
+                }
+            }).success(function(data){
+                if (data.status === 200){
+                    $scope.dataObj = data.data;
+                }
+            });
+        }();
     }
 ])
 
@@ -51,7 +64,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     //登录成功
                     $cookieStore.put('userinfo', JSON.stringify({
                         token: data.data.token,
-                        uid: data.data.userInfo.uid
+                        uobj: data.data.userInfo
                     }));
                     $location.path('/home');
                 } else {
@@ -59,6 +72,14 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 }
             });
         };
+
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                $location.path('/user');
+            }).fail(function(){
+                console.log('登录失败');
+            });
+        }();
     }
 ])
 
@@ -68,7 +89,13 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     'Common',
     '$location',
     function($scope, $http, common, $location) {
-        console.log('user ctrl');
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                $scope.userObj = u.uobj;
+            }).fail(function(){
+                $location.path('/user/login');
+            });
+        }();
     }
 ])
 
@@ -180,7 +207,30 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             }
         };
     }
-]);
+])
+
+
+.controller('SetUserInfoCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    function($scope, $http, common, $location) {
+
+        $scope.next = function(){};
+    }
+])
+
+.controller('SetAddressCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    function($scope, $http, common, $location) {
+
+    }
+])
+;
 
 
 

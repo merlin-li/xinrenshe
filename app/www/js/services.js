@@ -6,7 +6,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
     '$ionicLoading',
     '$http',
     '$location',
-    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location) {
+    '$q',
+    '$cookieStore',
+    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, $q, $cookieStore) {
 
         var offline = false, location = window.location.search, apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
@@ -43,13 +45,33 @@ angular.module('guozhongbao.services', []).factory('Common', [
             return fmt;
         };
 
+        //创建用于检查是否登录的公共函数
         var _checkLogin = function () {
-                var uinfo = _cookieStore.get('uinfo');
-                if (uinfo) {
-                    return uinfo;
+                var deferred = {}, userInfoObj; 
+
+                if ($cookieStore.get('userinfo')) {
+                    userInfoObj = JSON.parse($cookieStore.get('userinfo'));
+                    deferred.login = true;
+                    deferred.userInfo = userInfoObj;
                 } else {
-                    return false;
+                    deferred.login = false;
+                    deferred.userInfo = {};
                 }
+
+                deferred.success = function(cb) {
+                    if (this.login) {
+                        cb(this.userInfo);
+                    }
+                    return this;
+                };
+                deferred.fail = function(cb) {
+                    if (!this.login) {
+                        cb();
+                    }
+                    return this;
+                };
+
+                return deferred;
             }, _alert = function (t, c) {
                 var a = c || t;
                 var myAlert = $ionicPopup.alert({
@@ -134,10 +156,10 @@ angular.module('guozhongbao.services', []).factory('Common', [
 
         return {
             API: {
+                home: apiBaseUrl + 'homePage/sendInfo',
                 login: apiBaseUrl + 'login/loginAuth',
                 signup: apiBaseUrl + 'register/registerAuth',
                 regCode: apiBaseUrl + 'register/getVerifyCode'
-
             },
             SOURCE: {
                 'home': '/home',

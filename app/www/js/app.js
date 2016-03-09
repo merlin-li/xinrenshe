@@ -49,6 +49,22 @@ angular.module('guozhongbao', [
                     controller: 'UserCtrl'
                 }
             }
+        }).state('app_setting_userinfo', {
+            url: '/setting/userinfo',
+            views: {
+                'content': {
+                    templateUrl: 'templates/setting/userinfo.html',
+                    controller: 'SetUserInfoCtrl'
+                }
+            }
+        }).state('app_setting_address', {
+            url: '/setting/address',
+            views: {
+                'content': {
+                    templateUrl: 'templates/setting/address.html',
+                    controller: 'SetAddressCtrl'
+                }
+            }
         })
 
 

@@ -1,0 +1,25 @@
+<ion-view title="资料设置">
+    <ion-content has-header="true">
+        <div class="user-avatar">
+            <img src="img/tx_1.png">
+        </div>
+
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">昵称</span>
+                <input ng-model="userModel.nickname" type="text" placeholder="请输入昵称">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">性别</span>
+                <select>
+                    <option selected>男</option>
+                    <option>女</option>
+                </select>
+                <span class="warn-tip">选择后不可修改</span>
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="next()">下一步</button>
+        </div>
+    </ion-content>
+</ion-view>
