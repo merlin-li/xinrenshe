@@ -1,7 +1,7 @@
 <ion-view title="资料设置">
     <ion-content has-header="true">
         <div class="user-avatar">
-            <img src="img/tx_1.png">
+            <img ng-src="{{userModel.avatar}}" ng-click="takePicture()">
         </div>
 
         <div class="list">
@@ -11,7 +11,7 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">性别</span>
-                <select>
+                <select ng-model="userModel.gender">
                     <option selected>男</option>
                     <option>女</option>
                 </select>
@@ -21,5 +21,8 @@
         <div class="padding">
             <button class="button button-block button-positive" ng-click="next()">下一步</button>
         </div>
+
+        <!--拍照-->
+        <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
     </ion-content>
 </ion-view>

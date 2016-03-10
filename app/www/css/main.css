@@ -1,6 +1,6 @@
 /* Empty. Add your own CSS if you like */
 body{
-    font-size: 62.5%;
+    /*font-size: 62.5%;*/
 }
 .button.button-positive{
     background: #ff8c9b;
@@ -138,4 +138,11 @@ a.item{
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
+}
+.home-send .home-avatar{
+    width: 20px;
+    height: 20px;
+}
+.common-link a {
+    font-size: 12px;
 }

@@ -14,8 +14,10 @@ angular.module('guozhongbao', [
         
         // $ionicConfigProvider.backButton.previousTitleText(false);
         // $ionicConfigProvider.backButton.text('');
-        // $ionicConfigProvider.views.forwardCache(true);
+        // $ionicConfigProvider.views.forwardCache(false);
         // $ionicConfigProvider.views.transition('none');
+
+        $ionicConfigProvider.views.maxCache(0);
 
         $stateProvider.state('app_home', {
             url: '/home',
@@ -33,7 +35,7 @@ angular.module('guozhongbao', [
                     controller: 'LoginCtrl'
                 }
             }
-        }).state('app_register', {
+        }).state('app_signup', {
             url: '/user/signup',
             views: {
                 'content': {

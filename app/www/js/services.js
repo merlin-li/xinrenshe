@@ -159,7 +159,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 home: apiBaseUrl + 'homePage/sendInfo',
                 login: apiBaseUrl + 'login/loginAuth',
                 signup: apiBaseUrl + 'register/registerAuth',
-                regCode: apiBaseUrl + 'register/getVerifyCode'
+                regCode: apiBaseUrl + 'register/getVerifyCode',
+                setUserInfo: apiBaseUrl + 'register/setUserInfo',
+                setConsigneeInfo: apiBaseUrl + 'register/setConsigneeInfo'
             },
             SOURCE: {
                 'home': '/home',
