@@ -63,10 +63,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             }).success(function(data){
                 if (data.status === 200) {
                     //登录成功
-                    $cookieStore.put('userinfo', JSON.stringify({
-                        token: data.data.token,
-                        uobj: data.data.userInfo
-                    }));
+                    data.data.userInfo.token = data.data.token;
+                    $cookieStore.put('userinfo', data.data.userInfo);
                     $location.path('/home');
                 } else {
                     common.utility.alert(data.msg);
@@ -304,20 +302,24 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             if ($cookieStore.get('userinfo')) {
                 userObj = $cookieStore.get('userinfo');
             }
+
             paramsObj.uid = userObj.uid;
             paramsObj.token = userObj.token;
 
-            console.log(common.utility.createSign(paramsObj));
+            // console.log(common.utility.createSign(paramsObj));
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             paramsObj.avatar = $scope.userModel.avatar;
 
-            console.log(paramsObj);
             $http({
                 method: 'post',
                 url: common.API.setUserInfo,
                 data: paramsObj
             }).success(function(data){
-                console.log(data);
+                if (data.status === 200) {
+                    $location.path('/setting/address');
+                } else {
+                    common.utility.alert('提示', data.msg);
+                }
             });
         };
         //src="img/tx_1.png"
@@ -332,8 +334,74 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    function($scope, $http, common, $location) {
+    '$cookieStore',
+    function($scope, $http, common, $location, $cookieStore) {
+        $scope.userModel = {
+            name: '',
+            zipcode: '',
+            address: '',
+            area: ''
+        };
+        $scope.save = function(){
+            console.log(this.userModel);
+            if (this.userModel.name === '' 
+                || this.userModel.zipcode === ''
+                || this.userModel.address === ''
+                || this.userModel.area === '') {
+                common.utility.alert('提示', '信息不能为空！');
+            } else {
 
+            }
+        };
+
+        if ($cookieStore.get('areainfo')) {
+            $scope.userModel.area = $cookieStore.get('areainfo').name;
+        }
+    }
+])
+
+
+.controller('CitySettingCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    '$stateParams',
+    '$cookieStore',
+    function($scope, $http, common, $location, md5, $stateParams, $cookieStore) {
+        function _init (pid){
+            // console.log($cookieStore.get('areainfo'));
+            common.utility.loadingShow();
+            if ($stateParams.areaId) {
+                pid = $stateParams.areaId;
+            }
+            var paramsObj = {pid: pid};
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.getRegion,
+                data: paramsObj
+            }).success(function(data){
+                // console.log(data);
+                if (data.status === 200) {
+                    $scope.areaData = data.data.regionList;
+                } else {
+                    //表示选中当前的地区，进行跳转
+                    $location.path('/setting/address');
+                }
+                common.utility.loadingHide();
+            });
+        };
+
+
+        $scope.go = function(i){
+            //将当前的数据存放到cookie中
+            $cookieStore.put('areainfo', i);
+            $location.path('/city/setting/' + i.id);
+        };
+
+        _init(1);
     }
 ])
 ;

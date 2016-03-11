@@ -12,8 +12,8 @@ angular.module('guozhongbao', [
         // $httpProvider.defaults.useXDomain = true;
         // delete $httpProvider.defaults.headers.common['X-Requested-With'];
         
-        // $ionicConfigProvider.backButton.previousTitleText(false);
-        // $ionicConfigProvider.backButton.text('');
+        $ionicConfigProvider.backButton.previousTitleText(false);
+        $ionicConfigProvider.backButton.text('');
         // $ionicConfigProvider.views.forwardCache(false);
         // $ionicConfigProvider.views.transition('none');
 
@@ -65,6 +65,22 @@ angular.module('guozhongbao', [
                 'content': {
                     templateUrl: 'templates/setting/address.html',
                     controller: 'SetAddressCtrl'
+                }
+            }
+        }).state('app_city_setting', {
+            url: '/city/setting',
+            views: {
+                'content': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
+                }
+            }
+        }).state('app_city_setting_id', {
+            url: '/city/setting/:areaId',
+            views: {
+                'content': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
                 }
             }
         })

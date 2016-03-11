@@ -50,7 +50,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 var deferred = {}, userInfoObj; 
 
                 if ($cookieStore.get('userinfo')) {
-                    userInfoObj = JSON.parse($cookieStore.get('userinfo'));
+                    userInfoObj = $cookieStore.get('userinfo');
                     deferred.login = true;
                     deferred.userInfo = userInfoObj;
                 } else {
@@ -161,7 +161,11 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 signup: apiBaseUrl + 'register/registerAuth',
                 regCode: apiBaseUrl + 'register/getVerifyCode',
                 setUserInfo: apiBaseUrl + 'register/setUserInfo',
-                setConsigneeInfo: apiBaseUrl + 'register/setConsigneeInfo'
+                setConsigneeInfo: apiBaseUrl + 'register/setConsigneeInfo',
+                getRegion: apiBaseUrl + 'common/getRegion',
+
+                // getCity: apiBaseUrl + 'common/getCity',
+                // getArea: apiBaseUrl + 'common/getArea'
             },
             SOURCE: {
                 'home': '/home',
