@@ -146,3 +146,9 @@ a.item{
 .common-link a {
     font-size: 12px;
 }
+.send-userinfo p{
+    width: 80%;
+    margin: 0 auto;
+    line-height: 60px;
+    font-size: 16px;
+}

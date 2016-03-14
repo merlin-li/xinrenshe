@@ -146,12 +146,19 @@ angular.module('guozhongbao.services', []).factory('Common', [
 
                 str += appKey;
                 keys.map(function(t){
-                    str += (t + paramObj[t]);
+                    if (t !== 'accessSign')
+                        str += (t + paramObj[t]);
                 });
                 str += appSecret;
 
                 // return md5.createHash(str);
                 return str;
+            }, _getUserCookie = function () {
+                if ($cookieStore.get('userinfo')) {
+                    return $cookieStore.get('userinfo');
+                } else {
+                    return false;
+                }
             };
 
         return {
@@ -163,6 +170,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 setUserInfo: apiBaseUrl + 'register/setUserInfo',
                 setConsigneeInfo: apiBaseUrl + 'register/setConsigneeInfo',
                 getRegion: apiBaseUrl + 'common/getRegion',
+                getDestinyUser: apiBaseUrl + 'createOrders/getDestinyUser'
 
                 // getCity: apiBaseUrl + 'common/getCity',
                 // getArea: apiBaseUrl + 'common/getArea'
@@ -194,7 +202,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'removeCookie': _removeCookie,
                 'cookieStore': _cookieStore,
                 'getDeviceInfo': _getDeviceInfo,
-                'createSign': _createSign
+                'createSign': _createSign,
+                'getUserCookie': _getUserCookie
             },
             tempData: {
 

@@ -83,7 +83,24 @@ angular.module('guozhongbao', [
                     controller: 'CitySettingCtrl'
                 }
             }
+        }).state('app_sendtip', {
+            url: '/card/sendtip',
+            views: {
+                'content': {
+                    templateUrl: 'templates/card/sendtip.html',
+                    controller: 'SendtipCtrl'
+                }
+            }
+        }).state('app_send', {
+            url: '/card/send',
+            views: {
+                'content': {
+                    templateUrl: 'templates/card/send.html',
+                    controller: 'SendCtrl'
+                }
+            }
         })
+
 
 
 

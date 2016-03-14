@@ -88,7 +88,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     function($scope, $http, common, $location) {
         !function(){
             common.utility.checkLogin().success(function(u){
-                $scope.userObj = u.uobj;
+                console.log(u);
+                $scope.userObj = u;
             }).fail(function(){
                 $location.path('/user/login');
             });
@@ -335,31 +336,77 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     'Common',
     '$location',
     '$cookieStore',
-    function($scope, $http, common, $location, $cookieStore) {
+    'md5',
+    function($scope, $http, common, $location, $cookieStore, md5) {
         $scope.userModel = {
-            name: '',
-            zipcode: '',
-            address: '',
+            consignee_username: '',
+            zip_code: '',
+            consignee_address: '',
+            province: '',
+            city: '',
             area: ''
         };
+
         $scope.save = function(){
-            console.log(this.userModel);
-            if (this.userModel.name === '' 
-                || this.userModel.zipcode === ''
-                || this.userModel.address === ''
+            if (this.userModel.consignee_username === '' 
+                || this.userModel.zip_code === ''
+                || this.userModel.consignee_address === ''
                 || this.userModel.area === '') {
                 common.utility.alert('提示', '信息不能为空！');
             } else {
+                var self = $scope.userModel,
+                    paramsObj = {
+                        consignee_username: self.consignee_username,
+                        zip_code: self.zip_code,
+                        consignee_addr: self.consignee_address,
+                        province: self.province,
+                        city: self.city,
+                        area: self.area
+                    }, userObj;
+                if ($cookieStore.get('userinfo')) {
+                    userObj = $cookieStore.get('userinfo');
+                }
+                paramsObj.uid = userObj.uid;
+                paramsObj.token = userObj.token;
 
+                var signStr = common.utility.createSign(paramsObj);
+
+                // console.log(paramsObj);
+                // console.log(signStr);
+                // console.log(md5.createHash(signStr));
+                // console.log(md5.createHash('111'));
+                // console.log(md5.createHash('李蒙'));
+
+                var accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                paramsObj.accessSign = accessSign;
+                // console.log(paramsObj);
+                $http({
+                    method: 'post',
+                    url: common.API.setConsigneeInfo,
+                    data: paramsObj
+                }).success(function(data){
+                    if (data.status === 200) {
+                        $location.path('/home');
+                    } else {
+                        common.utility.alert('提示', data.msg);
+                    }
+                });
             }
         };
 
-        if ($cookieStore.get('areainfo')) {
-            $scope.userModel.area = $cookieStore.get('areainfo').name;
+        if ($cookieStore.get('areainfo1')) {
+            // $scope.userModel.area = $cookieStore.get('areainfo').name;
+
+            var areaObj1 = $cookieStore.get('areainfo1'),
+                areaObj2 = $cookieStore.get('areainfo2'),
+                areaObj3 = $cookieStore.get('areainfo3');
+
+            $scope.userModel.province = areaObj1.name;
+            $scope.userModel.city = areaObj2.name;
+            $scope.userModel.area = areaObj3.name;
         }
     }
 ])
-
 
 .controller('CitySettingCtrl', [
     '$scope',
@@ -396,12 +443,74 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
 
         $scope.go = function(i){
-            //将当前的数据存放到cookie中
-            $cookieStore.put('areainfo', i);
+            if (i.type === 1) {
+                //表示省份
+                $cookieStore.put('areainfo1', i);
+            } else if (i.type === 2) {
+                //表示市
+                $cookieStore.put('areainfo2', i);
+            } else if (i.type === 3) {
+                //表示区县
+                $cookieStore.put('areainfo3', i);
+            }
             $location.path('/city/setting/' + i.id);
         };
 
         _init(1);
+    }
+])
+
+.controller('SendtipCtrl', [
+    '$scope',
+    'Common',
+    '$location',
+    function($scope, common, $location) {
+        $scope.sendModel = {
+            agree: false
+        };
+
+        $scope.request = function(){
+            if (!this.sendModel.agree) {
+                common.utility.alert('提示', '请同意阅读提示！');
+            } else {
+                $location.path('/card/send');
+            }
+        };
+    }
+])
+
+.controller('SendCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        var userCookie = common.utility.getUserCookie(), paramsObj;
+        if (userCookie) {
+            paramsObj = {
+                uid: userCookie.uid,
+                token: userCookie.token
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            $http({
+                method: 'post',
+                url: common.API.getDestinyUser,
+                data: paramsObj
+            }).success(function(data) {
+                if (data.status === 200) {
+                    $scope.userObj = data.data.userInfo;
+                    $scope.userObj.avatar = data.data.host + $scope.userObj.avatar;
+                    var dateObj = new Date(data.data.userInfo.create_at * 1000);
+                    $scope.userObj.create_at = dateObj.getFullYear() + '年' + dateObj.getMonth() + '月' + dateObj.getDate() + '日';
+                } else {
+                    common.utility.alert('提示', data.msg);
+                }
+            });
+        } else {
+            $location.path('/user/login');
+        }
     }
 ])
 ;
