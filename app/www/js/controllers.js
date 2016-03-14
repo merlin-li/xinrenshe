@@ -513,6 +513,77 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         }
     }
 ])
+
+.controller('MySendingCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        var paramsObj = {
+            type: 1,
+            uid: '',
+            token: ''
+        }, userCookie = common.utility.getUserCookie();
+
+        if (userCookie) {
+            paramsObj.uid = userCookie.uid;
+            paramsObj.token = userCookie.token;
+        } else {
+            $location.path('/user/login');
+        }
+
+        $scope.readCardList = function(t) {
+            if (t === 1) {
+                $scope.btnClass1 = 'button-positivehover';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button';
+            } 
+            if (t === 4) {
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button-positivehover';
+                $scope.btnClass3 = 'button';
+            }
+            if (t === 5) {
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button-positivehover';
+            }
+            paramsObj.type = t;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            $http({
+                method: 'post',
+                url: common.API.orderList,
+                data: paramsObj
+            }).success(function(data){
+                console.log(data);
+                $scope.cardModel = data.data;
+            });
+        };
+
+        $scope.send = function(i) {
+            console.log(i);
+            var sendParamsObj = {
+                order_ids: [i.id],
+                token: userCookie.token,
+                uid: userCookie.uid
+            };
+            sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
+
+            $http({
+                method: 'post',
+                url: common.API.send, 
+                data: sendParamsObj
+            }).success(function(data){
+                common.utility.alert('提示', data.msg);
+            });
+        };
+
+        $scope.readCardList(1);
+    }
+])
 ;
 
 

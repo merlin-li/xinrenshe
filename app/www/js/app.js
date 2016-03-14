@@ -99,6 +99,14 @@ angular.module('guozhongbao', [
                     controller: 'SendCtrl'
                 }
             }
+        }).state('app_mysending', {
+            url: '/my/sending',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/sending.html',
+                    controller: 'MySendingCtrl'
+                }
+            }
         })
 
 

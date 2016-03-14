@@ -152,3 +152,57 @@ a.item{
     line-height: 60px;
     font-size: 16px;
 }
+.card-item{
+    border: solid 1px #cdcdcd;
+    background: #fff;
+    margin: 8px 0;
+}
+.card-item .header{
+    border-bottom: solid 1px #cdcdcd;
+    padding: 10px 0;
+}
+.card-item .header div, .card-item .footer div{
+    display: inline-block;
+    width: 70%;
+    padding-left: 20px;
+}
+.card-item .header label{
+    color: #afafaf;
+    display: block;
+}
+.card-item .header button{
+    background: #ff4f64;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    width: 60px;
+    line-height: 24px;
+}
+.card-item .footer{
+    padding: 20px 0;
+}
+.card-item .footer img{
+    width: 25%;
+    min-height: 100px;
+}
+.footer .address{
+    display: block;
+    line-height: 30px;
+}
+.button-positivehover{
+    border-bottom: solid 2px #f84b5f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
