@@ -553,18 +553,20 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             paramsObj.type = t;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.orderList,
                 data: paramsObj
             }).success(function(data){
-                console.log(data);
                 $scope.cardModel = data.data;
+                common.utility.loadingHide();
+            }).error(function(){
+                common.utility.loadingHide();
             });
         };
 
         $scope.send = function(i) {
-            console.log(i);
             var sendParamsObj = {
                 order_ids: [i.id],
                 token: userCookie.token,
@@ -581,6 +583,15 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             });
         };
 
+        $scope.show = function() {
+            $scope.modelStyle = {'display': 'block'};
+        };
+
+        $scope.hide = function() {
+            $scope.modelStyle = {'display': 'none'};
+        };
+
+        $scope.modelStyle = {'display': 'none'};
         $scope.readCardList(1);
     }
 ])

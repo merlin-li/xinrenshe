@@ -194,9 +194,18 @@ a.item{
 .button-positivehover{
     border-bottom: solid 2px #f84b5f;
 }
-
-
-
+#card_bg{
+    background: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 99;
+}
+#card_bg img{
+    max-width: 96%;
+    margin: 20% 2%;
+}
 
 
 
