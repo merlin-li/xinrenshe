@@ -107,6 +107,14 @@ angular.module('guozhongbao', [
                     controller: 'MySendingCtrl'
                 }
             }
+        }).state('app_myreceiving', {
+            url: '/my/receiving',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/receiving.html',
+                    controller: 'MyReceivingCtrl'
+                }
+            }
         })
 
 
