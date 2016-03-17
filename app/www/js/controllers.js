@@ -559,6 +559,14 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 url: common.API.orderList,
                 data: paramsObj
             }).success(function(data){
+                //处理card的示例图
+                data.data.orderList.map(function(order){
+                    if (order.picture) {
+                        order.picture = data.data.host + order.picture;
+                    } else {
+                        order.picture = 'img/xjbj_1.png';
+                    }
+                });
                 $scope.cardModel = data.data;
                 common.utility.loadingHide();
             }).error(function(){
@@ -593,6 +601,101 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
         $scope.modelStyle = {'display': 'none'};
         $scope.readCardList(1);
+
+
+        var takeCardPicture = document.getElementById('takecardpicture');
+        takeCardPicture.onchange = function (event){
+            var files = event.target.files, file;
+            if (files && files.length > 0) {
+                file = files[0];
+                try {
+                    var URL = window.URL || window.webkitURL;
+                    var blob = URL.createObjectURL(file);
+                    _compressPicture(blob);
+                } catch (e) {
+                    try {
+                        var fileReader = new FileReader();
+                        fileReader.onload = function (event) {
+                            _compressPicture(event.target.result);
+                        };
+                        fileReader.readAsDataURL(file);
+                    } catch (e) {
+                        common.utility.alert('error');
+                    }
+                }
+            }
+        };
+
+        /**
+         * 压缩照片
+         * @param blob 照片的url
+        */
+        var _compressPicture = function (blob) {
+            var quality = 0.5, image = new Image();
+            image.src = blob;
+            image.onload = function () {
+                var that = this;
+                // 生成比例
+                var width = that.width, height = that.height;
+                width = width / 4;
+                height = height / 4;
+                // 生成canvas画板
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(that, 0, 0, width, height);
+                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+                var imgurl = canvas.toDataURL('image/jpeg', quality);
+                // 修复IOS兼容问题
+                if (navigator.userAgent.match(/iphone/i)) {
+                    var mpImg = new MegaPixImage(image);
+                    mpImg.render(canvas, {
+                        maxWidth: width,
+                        maxHeight: height,
+                        quality: quality
+                    });
+                    imgurl = canvas.toDataURL('image/jpeg', quality);
+                }
+
+                $scope.cardModel.orderList.map(function(card){
+                    if (card.id === $scope.selectCardIndex) {
+                        card.picture = imgurl;
+                    }
+                });
+                // 上传寄片照片的操作
+                var picParamsObj = {
+                    order_id: $scope.selectCardIndex,
+                    uid: userCookie.uid,
+                    token: userCookie.token
+                };
+                picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
+                picParamsObj.picture = imgurl;
+                $http({
+                    method: 'post',
+                    url: common.API.uploadPic,
+                    data: picParamsObj
+                }).success(function(data){
+                    // console.log(data);
+                }).error(function(){});
+                $scope.$digest();
+            };
+        };
+
+        $scope.takePic = function(c) {
+            //保存当前选中的编号
+            $scope.selectCardIndex = c.id;
+            takeCardPicture.click();
+            // console.log(c.id);
+            // console.log(this.cardModel.orderList);
+
+            // this.cardModel.orderList = [];
+            // this.cardModel.orderList.map(function(card){
+            //     if (card.id === c.id) {
+            //         //更改当前的示例图片
+            //     }
+            // });
+        };
     }
 ])
 

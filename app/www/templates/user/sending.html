@@ -21,13 +21,13 @@
                         <span>收信人：{{card.consignee_username}}</span>
                         <span>邮编：{{card.zip_code}}</span>
                     </div>
-                    <!-- <img ng-src="{{cardModel.host + card.picture}}"> -->
-                    <img src="img/xjbj_1.png">
+                    <img ng-src="{{card.picture}}" ng-click="takePic(card)">
+                    <!-- <img src="img/xjbj_1.png" ng-click="takePic(card)"> -->
                 </div>
             </section>
 
             <!--拍照-->
-            <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
+            <input id="takecardpicture" type="file" accept="image/*" capture="camera" style="display: none">
 
             <div id="card_bg" ng-style="modelStyle">
                 <img src="img/tp_001.png" ng-click="hide()">

@@ -197,13 +197,14 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 getDestinyUser: apiBaseUrl + 'createOrders/getDestinyUser',
                 orderList: apiBaseUrl + 'postCard/orderList',
                 send: apiBaseUrl + 'postCard/send',
-                modifyUserName: apiBaseUrl + 'setUserInfo/username'
+                modifyUserName: apiBaseUrl + 'setUserInfo/username',
+                uploadPic: apiBaseUrl + 'postCard/uploadPic'
 
                 // getCity: apiBaseUrl + 'common/getCity',
                 // getArea: apiBaseUrl + 'common/getArea'
             },
             SOURCE: {
-                'home': '/home',
+                'home': '/home'
             },
             MESSAGE: {
                 network_error: 'Network error, please try again later.',
