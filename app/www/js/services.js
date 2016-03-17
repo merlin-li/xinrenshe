@@ -172,7 +172,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 getRegion: apiBaseUrl + 'common/getRegion',
                 getDestinyUser: apiBaseUrl + 'createOrders/getDestinyUser',
                 orderList: apiBaseUrl + 'postCard/orderList',
-                send: apiBaseUrl + 'postCard/send'
+                send: apiBaseUrl + 'postCard/send',
+                uploadPic: apiBaseUrl + 'postCard/uploadPic'
 
                 // getCity: apiBaseUrl + 'common/getCity',
                 // getArea: apiBaseUrl + 'common/getArea'
