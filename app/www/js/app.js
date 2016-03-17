@@ -107,6 +107,7 @@ angular.module('guozhongbao', [
                     controller: 'MySendingCtrl'
                 }
             }
+
         }).state('app_my_userinfo', {
           url: '/my/userinfo',
           views: {
@@ -115,6 +116,14 @@ angular.module('guozhongbao', [
               controller: 'MyUserInfoCtrl'
             }
           }
+        }).state('app_myreceiving', {
+            url: '/my/receiving',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/receiving.html',
+                    controller: 'MyReceivingCtrl'
+                }
+            }
         })
 
 

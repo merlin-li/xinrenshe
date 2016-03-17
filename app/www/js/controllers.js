@@ -686,15 +686,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             //保存当前选中的编号
             $scope.selectCardIndex = c.id;
             takeCardPicture.click();
-            // console.log(c.id);
-            // console.log(this.cardModel.orderList);
-
-            // this.cardModel.orderList = [];
-            // this.cardModel.orderList.map(function(card){
-            //     if (card.id === c.id) {
-            //         //更改当前的示例图片
-            //     }
-            // });
         };
     }
 ])
@@ -828,6 +819,72 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         };
       };
   }
+  ])
+.controller('MyReceivingCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        $scope.showTip = true;
+        var paramsObj = {
+            type: 3,
+            uid: '',
+            token: ''
+        }, userCookie = common.utility.getUserCookie();
+
+        if (userCookie) {
+            paramsObj.uid = userCookie.uid;
+            paramsObj.token = userCookie.token;
+        } else {
+            $location.path('/user/login');
+        }
+        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+        $scope.readCardList = function(t) {
+            if (t === 3) {
+                $scope.btnClass1 = 'button-positivehover';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button';
+            }
+            if (t === 2) {
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button-positivehover';
+                $scope.btnClass3 = 'button';
+            }
+            if (t === 6) {
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button-positivehover';
+            }
+            paramsObj.type = t;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.orderList,
+                data: paramsObj
+            }).success(function(data){
+                data.data.orderList.map(function(order){
+                    if (order.picture) {
+                        order.picture = data.data.host + order.picture;
+                    } else {
+                        order.picture = 'img/xjbj_1.png';
+                    }
+                });
+
+                $scope.cardModel = data.data;
+                common.utility.loadingHide();
+                $scope.showTip = (data.data.orderList.length > 0);
+            }).error(function(){
+                common.utility.loadingHide();
+            });
+        };
+
+        $scope.readCardList(3);
+    }
 ])
 ;
 

@@ -182,14 +182,38 @@ a.item{
 }
 .card-item .footer{
     padding: 20px 0;
+    overflow: hidden;
 }
-.card-item .footer img{
+.footer img.cardimg{
     width: 25%;
     min-height: 100px;
 }
 .footer .address{
     display: block;
     line-height: 30px;
+}
+.footer .left, .footer .center, .footer .right{
+    float: left;
+    width: 32%;
+    height: 120px;
+}
+.footer .left{
+    /*padding-left: 10px;*/
+    text-align: center;
+    padding-top: 20px;
+}
+.center span{
+    line-height: 70px;
+}
+.footer .avatar{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.footer .right img{
+    max-width: 100%;
 }
 .button-positivehover{
     border-bottom: solid 2px #f84b5f;
