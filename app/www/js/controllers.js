@@ -161,8 +161,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
             if ($scope.signupModel.getCode.class === 'goods-btn') {
                 //表示可以发送验证码
-                var pnum = _m.phone, 
-                    checkResult = common.utility.checkPhone(pnum), 
+                var pnum = _m.phone,
+                    checkResult = common.utility.checkPhone(pnum),
                     paramsObj = {
                         phone: pnum
                     };
@@ -348,7 +348,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         };
 
         $scope.save = function(){
-            if (this.userModel.consignee_username === '' 
+            if (this.userModel.consignee_username === ''
                 || this.userModel.zip_code === ''
                 || this.userModel.consignee_address === ''
                 || this.userModel.area === '') {
@@ -539,7 +539,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 $scope.btnClass1 = 'button-positivehover';
                 $scope.btnClass2 = 'button';
                 $scope.btnClass3 = 'button';
-            } 
+            }
             if (t === 4) {
                 $scope.btnClass1 = 'button';
                 $scope.btnClass2 = 'button-positivehover';
@@ -576,7 +576,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
             $http({
                 method: 'post',
-                url: common.API.send, 
+                url: common.API.send,
                 data: sendParamsObj
             }).success(function(data){
                 common.utility.alert('提示', data.msg);
@@ -594,6 +594,137 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         $scope.modelStyle = {'display': 'none'};
         $scope.readCardList(1);
     }
+])
+
+.controller('MyUserInfoCtrl', [
+  '$scope',
+  '$http',
+  'Common',
+  '$location',
+    '$cookieStore',
+  function($scope, $http, common, $location,$cookieStore) {
+      !function(){
+        common.utility.checkLogin().success(function(u){
+          console.log(u);
+          $scope.userObj = u;
+
+        }).fail(function(){
+          $location.path('/user/login');
+        });
+      }();
+
+      $scope.inputHide = true;
+      $scope.usernameHide = false;
+      $scope.changeUserName = function(){
+        $scope.usernameHide = true;
+        $scope.inputHide = false;
+      };
+
+      $scope.saveUserInfo = function(){
+        var params = {
+          'username':$scope.userObj.username
+        };
+
+        var result = common.utility.postData('setUserInfo/username',params,true,true);
+        result.success(function(data){
+          if (data.status === 200) {
+            $scope.inputHide = true;
+            $scope.usernameHide = false;
+            $cookieStore.put('userinfo',$scope.userObj);
+          } else {
+            common.utility.alert('提示', data.msg);
+          }
+        });
+      }
+
+      var _saveUserAvatar = function(avatar){
+
+        var params = {
+          'avatar':avatar
+        };
+
+        var result = common.utility.postData('setUserInfo/avatar',params,true,true);
+        result.success(function(data){
+          if (data.status === 200) {
+            $scope.userObj.avatar = data.data.avatar;
+            $cookieStore.put('userinfo',$scope.userObj);
+          } else {
+            common.utility.alert('提示', data.msg);
+          }
+        });
+
+      }
+
+
+    var takePicture = document.getElementById('takepicture');
+      //src="img/tx_1.png"
+      $scope.takePicture = function(){
+        takePicture.click();
+      };
+      takePicture.onchange = function (event){
+        var files = event.target.files, file;
+        if (files && files.length > 0) {
+          file = files[0];
+          try {
+            var URL = window.URL || window.webkitURL;
+            var blob = URL.createObjectURL(file);
+            _compressPicture(blob);
+
+          } catch (e) {
+            try {
+              var fileReader = new FileReader();
+              fileReader.onload = function (event) {
+                _compressPicture(event.target.result);
+              };
+              fileReader.readAsDataURL(file);
+            } catch (e) {
+              common.utility.alert('error');
+            }
+          }
+
+        }
+      };
+
+
+
+
+      /**
+       * 压缩照片
+       * @param blob 照片的url
+       */
+      var _compressPicture = function (blob) {
+        var quality = 0.5, image = new Image();
+        image.src = blob;
+        image.onload = function () {
+          var that = this;
+          // 生成比例
+          var width = that.width, height = that.height;
+          width = width / 4;
+          height = height / 4;
+          // 生成canvas画板
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(that, 0, 0, width, height);
+          // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+          var imgurl = canvas.toDataURL('image/jpeg', quality);
+          // 修复IOS兼容问题
+          if (navigator.userAgent.match(/iphone/i)) {
+            var mpImg = new MegaPixImage(image);
+            mpImg.render(canvas, {
+              maxWidth: width,
+              maxHeight: height,
+              quality: quality
+            });
+            imgurl = canvas.toDataURL('image/jpeg', quality);
+          }
+          $scope.userObj.avatar = imgurl;
+          _saveUserAvatar(imgurl);
+          $scope.$digest();
+        };
+      };
+  }
 ])
 ;
 

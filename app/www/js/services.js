@@ -8,7 +8,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
     '$location',
     '$q',
     '$cookieStore',
-    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, $q, $cookieStore) {
+    'md5',
+    function ($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, $q, $cookieStore, md5) {
 
         var offline = false, location = window.location.search, apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
@@ -47,7 +48,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
 
         //创建用于检查是否登录的公共函数
         var _checkLogin = function () {
-                var deferred = {}, userInfoObj; 
+                var deferred = {}, userInfoObj;
 
                 if ($cookieStore.get('userinfo')) {
                     userInfoObj = $cookieStore.get('userinfo');
@@ -159,6 +160,29 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 } else {
                     return false;
                 }
+            },_postData = function(subUrl,params,needLogin,needAccessSign){
+
+                if(needLogin!==false){
+                  var userCookie = _getUserCookie();
+                  if (userCookie) {
+                    params.uid = userCookie.uid;
+                    params.token = userCookie.token;
+
+                  }else{
+                    $location.path('/user/login');
+                  }
+                }
+                if(needAccessSign!==false){
+                  params.accessSign = md5.createHash(_createSign(params));
+                }
+                var result = {};
+                result = $http({
+                              method: 'post',
+                              url: apiBaseUrl+subUrl,
+                              data: params
+                            });
+                return result;
+
             };
 
         return {
@@ -172,7 +196,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 getRegion: apiBaseUrl + 'common/getRegion',
                 getDestinyUser: apiBaseUrl + 'createOrders/getDestinyUser',
                 orderList: apiBaseUrl + 'postCard/orderList',
-                send: apiBaseUrl + 'postCard/send'
+                send: apiBaseUrl + 'postCard/send',
+                modifyUserName: apiBaseUrl + 'setUserInfo/username'
 
                 // getCity: apiBaseUrl + 'common/getCity',
                 // getArea: apiBaseUrl + 'common/getArea'
@@ -205,7 +230,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'cookieStore': _cookieStore,
                 'getDeviceInfo': _getDeviceInfo,
                 'createSign': _createSign,
-                'getUserCookie': _getUserCookie
+                'getUserCookie': _getUserCookie,
+                'postData': _postData
             },
             tempData: {
 

@@ -11,7 +11,7 @@ angular.module('guozhongbao', [
     function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         // $httpProvider.defaults.useXDomain = true;
         // delete $httpProvider.defaults.headers.common['X-Requested-With'];
-        
+
         $ionicConfigProvider.backButton.previousTitleText(false);
         $ionicConfigProvider.backButton.text('');
         // $ionicConfigProvider.views.forwardCache(false);
@@ -107,6 +107,14 @@ angular.module('guozhongbao', [
                     controller: 'MySendingCtrl'
                 }
             }
+        }).state('app_my_userinfo', {
+          url: '/my/userinfo',
+          views: {
+            'content': {
+              templateUrl: 'templates/user/userinfo.html',
+              controller: 'MyUserInfoCtrl'
+            }
+          }
         })
 
 
