@@ -207,6 +207,39 @@ a.item{
     margin: 20% 2%;
 }
 
+.user-info-avatar{
+  width: 100%;
+  text-align: center;
+  position: relative;!important;
+  margin-top: 20px;
+  top: initial;!important;
+
+}
+
+.user-info-list{
+  margin-top: 60px;
+}
+
+/*.user-info-list .username-input{
+
+}*/
+
+.user-info-avatar .edit-avatar-btn{
+  margin-left: -30px;
+  min-height: 25px;!important;
+  color: #ff8c9b;
+  display: inline-block;
+  font-size: 32px;
+  margin-top: 40px;
+}
+.user-info-avatar .edit-avatar-btn .activated{
+  background: #ff8c9b;!important;
+}
+
+.user-info-list .list-right{
+  position: absolute;
+  right: 50px;
+}
 
 
 
