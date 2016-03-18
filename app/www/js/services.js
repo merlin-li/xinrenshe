@@ -199,7 +199,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 send: apiBaseUrl + 'postCard/send',
                 modifyUserName: apiBaseUrl + 'setUserInfo/username',
                 uploadPic: apiBaseUrl + 'postCard/uploadPic',
-                confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt'
+                confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt',
                 modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee'
             },

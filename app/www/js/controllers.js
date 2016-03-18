@@ -89,7 +89,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     function($scope, $http, common, $location) {
         !function(){
             common.utility.checkLogin().success(function(u){
-                u.avatar = u.host + u.avatar;
+                // console.log(u);
+                // u.avatar = u.host + u.avatar;
                 $scope.userObj = u;
             }).fail(function(){
                 $location.path('/user/login');
@@ -458,8 +459,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                       for(var i in redirectArr){
                         redirectUrl += '/'+redirectArr[i];
                       }
-                      console.log(redirectArr);
-                      console.log(redirectUrl);
                       $cookieStore.remove('citySetType');
                       $location.path(redirectUrl);
                     }
@@ -741,7 +740,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
   function($scope, $http, common, $location,$cookieStore) {
       !function(){
         common.utility.checkLogin().success(function(u){
-          console.log(u);
           $scope.userObj = u;
 
         }).fail(function(){
@@ -966,7 +964,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                         url: common.API.confirmReceipt,
                         data: confirmObj
                     }).success(function(data){
-                        if (data.status === 200)
+                        if (data.status === 200){
                             $scope.readCardList();
                         } else {
                             common.utility.alert('提示', data.msg);
@@ -988,7 +986,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     function($scope, $http, common, $location, $cookieStore) {
       !function(){
         common.utility.checkLogin().success(function(u){
-          console.log(u);
           $scope.userModel = u;
         }).fail(function(){
           $location.path('/user/login');
