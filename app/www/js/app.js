@@ -68,7 +68,7 @@ angular.module('guozhongbao', [
                 }
             }
         }).state('app_city_setting', {
-            url: '/city/setting',
+            url: '/city/setting/type/:type',
             views: {
                 'content': {
                     templateUrl: 'templates/city/setting.html',
@@ -124,6 +124,14 @@ angular.module('guozhongbao', [
                     controller: 'MyReceivingCtrl'
                 }
             }
+        }).state('app_my_address', {
+          url: '/my/address',
+          views: {
+            'content': {
+              templateUrl: 'templates/user/useraddress.html',
+              controller: 'MyAddressCtrl'
+            }
+          }
         })
 
 
