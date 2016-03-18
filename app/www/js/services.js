@@ -160,7 +160,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 } else {
                     return false;
                 }
-            },_postData = function(subUrl,params,needLogin,needAccessSign){
+            },_postData = function(url,params,needLogin,needAccessSign){
 
                 if(needLogin!==false){
                   var userCookie = _getUserCookie();
@@ -178,7 +178,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 var result = {};
                 result = $http({
                               method: 'post',
-                              url: apiBaseUrl+subUrl,
+                              url: url,
                               data: params
                             });
                 return result;
@@ -200,9 +200,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 modifyUserName: apiBaseUrl + 'setUserInfo/username',
                 uploadPic: apiBaseUrl + 'postCard/uploadPic',
                 confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt'
-
-                // getCity: apiBaseUrl + 'common/getCity',
-                // getArea: apiBaseUrl + 'common/getArea'
+                modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
+                modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee'
             },
             SOURCE: {
                 'home': '/home'

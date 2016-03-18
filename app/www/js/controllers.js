@@ -355,6 +355,12 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 || this.userModel.area === '') {
                 common.utility.alert('提示', '信息不能为空！');
             } else {
+              //邮编检查
+              var reg = /^\d{6}$/;
+              if(!reg.test($scope.userModel.zip_code)){
+                common.utility.alert('提示', '邮编格式不正确！');
+                return false;
+              }
                 var self = $scope.userModel,
                     paramsObj = {
                         consignee_username: self.consignee_username,
@@ -418,6 +424,11 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$stateParams',
     '$cookieStore',
     function($scope, $http, common, $location, md5, $stateParams, $cookieStore) {
+
+
+        if($stateParams.type){
+          $cookieStore.put('citySetType', $stateParams.type);
+        }
         function _init (pid){
             // console.log($cookieStore.get('areainfo'));
             common.utility.loadingShow();
@@ -436,7 +447,23 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     $scope.areaData = data.data.regionList;
                 } else {
                     //表示选中当前的地区，进行跳转
-                    $location.path('/setting/address');
+                    var redirect_type = $cookieStore.get('citySetType');
+
+                    if(!redirect_type){
+                      $location.path('/setting/address');
+                    }else{
+                      //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
+                      var redirectArr = redirect_type.split('_');
+                      var redirectUrl = '';
+                      for(var i in redirectArr){
+                        redirectUrl += '/'+redirectArr[i];
+                      }
+                      console.log(redirectArr);
+                      console.log(redirectUrl);
+                      $cookieStore.remove('citySetType');
+                      $location.path(redirectUrl);
+                    }
+
                 }
                 common.utility.loadingHide();
             });
@@ -733,8 +760,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         var params = {
           'username':$scope.userObj.username
         };
-
-        var result = common.utility.postData('setUserInfo/username',params,true,true);
+        var url = common.API.modifyUserName;
+        var result = common.utility.postData(url,params,true,true);
         result.success(function(data){
           if (data.status === 200) {
             $scope.inputHide = true;
@@ -751,8 +778,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         var params = {
           'avatar':avatar
         };
-
-        var result = common.utility.postData('setUserInfo/avatar',params,true,true);
+        var url = common.API.modifyAvatar;
+        var result = common.utility.postData(url,params,true,true);
         result.success(function(data){
           if (data.status === 200) {
             $scope.userObj.avatar = data.data.avatar;
@@ -952,6 +979,72 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         $scope.readCardList();
     }
 ])
+  .controller('MyAddressCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    '$cookieStore',
+    function($scope, $http, common, $location, $cookieStore) {
+      !function(){
+        common.utility.checkLogin().success(function(u){
+          console.log(u);
+          $scope.userModel = u;
+        }).fail(function(){
+          $location.path('/user/login');
+        });
+        if ($cookieStore.get('areainfo1')) {
+          var areaObj1 = $cookieStore.get('areainfo1'),
+            areaObj2 = $cookieStore.get('areainfo2'),
+            areaObj3 = $cookieStore.get('areainfo3');
+          $scope.userModel.province = areaObj1.name;
+          $scope.userModel.city = areaObj2.name;
+          $scope.userModel.area = areaObj3.name;
+          $cookieStore.remove('areainfo1');
+          $cookieStore.remove('areainfo2');
+          $cookieStore.remove('areainfo3');
+        }
+      }();
+
+      var params = {};
+      $scope.save = function(){
+        if (this.userModel.consignee_username === ''
+          || this.userModel.zip_code === ''
+          || this.userModel.consignee_addr === ''
+          || this.userModel.area === '') {
+          common.utility.alert('提示', '信息不能为空！');
+        } else {
+          //邮编检查
+          var reg = /^\d{6}$/;
+          if(!reg.test($scope.userModel.zip_code)){
+            common.utility.alert('提示', '邮编格式不正确！');
+            return false;
+          }
+          var self = $scope.userModel,
+            params = {
+              consignee_username: self.consignee_username,
+              zip_code: self.zip_code,
+              consignee_addr: self.consignee_addr,
+              province: self.province,
+              city: self.city,
+              area: self.area,
+            };
+          var url = common.API.modifyConsigneeInfo;
+          var result = common.utility.postData(url,params,true,true);
+          result.success(function(data){
+            if (data.status === 200) {
+              $cookieStore.put('userinfo',$scope.userModel);
+              $location.path('/user');
+            } else {
+              common.utility.alert('提示', data.msg);
+            }
+          });
+        }
+      };
+
+
+    }
+  ])
 ;
 
 
