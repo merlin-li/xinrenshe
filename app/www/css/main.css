@@ -152,6 +152,11 @@ a.item{
     line-height: 60px;
     font-size: 16px;
 }
+.receive-header span{
+    display: inline-block;
+    width: 27%;
+    margin-left: 20px;
+}
 .card-item{
     border: solid 1px #cdcdcd;
     background: #fff;
@@ -177,7 +182,6 @@ a.item{
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    width: 60px;
     line-height: 24px;
 }
 .card-item .footer{
@@ -243,10 +247,6 @@ a.item{
 .user-info-list{
   margin-top: 60px;
 }
-
-/*.user-info-list .username-input{
-
-}*/
 
 .user-info-avatar .edit-avatar-btn{
   margin-left: -30px;

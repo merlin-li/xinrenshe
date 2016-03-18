@@ -198,7 +198,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 orderList: apiBaseUrl + 'postCard/orderList',
                 send: apiBaseUrl + 'postCard/send',
                 modifyUserName: apiBaseUrl + 'setUserInfo/username',
-                uploadPic: apiBaseUrl + 'postCard/uploadPic'
+                uploadPic: apiBaseUrl + 'postCard/uploadPic',
+                confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt'
 
                 // getCity: apiBaseUrl + 'common/getCity',
                 // getArea: apiBaseUrl + 'common/getArea'

@@ -11,9 +11,10 @@
                 <div class="header">
                     <div>
                         <span>{{card.order_number}}</span>
-                        <label ng-click="show()">请将该编码写于明信片上！<a href="#">示例</a></label>
+                        <label ng-hide="{{!statusObj.hide}}" ng-click="show()" ng-hide="done">请将该编码写于明信片上！<a href="#">示例</a></label>
                     </div>
-                    <button ng-click="send(card)">寄出</button>
+                    <button ng-click="send(card)" ng-hide="{{!statusObj.hide}}">寄出</button>
+                    <span ng-hide="{{statusObj.hide}}">{{statusObj.txt}}{{card.travel_days}}天</span>
                 </div>
                 <div class="footer">
                     <div>

@@ -8,9 +8,11 @@
             </div>
 
             <section class="card-item" ng-repeat="card in cardModel.orderList">
-                <div class="header">
+                <div class="header receive-header">
                     <span>{{card.order_number}}</span>
-                    <span>等待寄出</span>
+                    <span ng-hide="!statusObj.hide">等待寄出</span>
+                    <span ng-hide="statusObj.hide">{{statusObj.txt}} {{card.travel_days}}天</span>
+                    <button ng-hide="statusObj.hideBtn" ng-click="done(card)">确认收信</button>
                 </div>
                 <div class="footer">
                     <section class="left">
