@@ -24,6 +24,9 @@ body{
 a.item{
     /*color: #e2e2e2;*/
 }
+ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-color-active-positive .tab-item.tab-item-active{
+    color: #ff8c9b;
+}
 
 
 
@@ -36,10 +39,10 @@ a.item{
     width: 100%;
 }
 .home-card{
-    background: url(../img/home_1.jpg) no-repeat;
+/*    background: url(../img/home_1.jpg) no-repeat;
     background-size: 100%;
     min-height: 210px;
-    overflow: hidden;
+    overflow: hidden;*/
 }
 /*.home-card div{
     background: rgba(239, 108, 126, 0.9);
@@ -48,13 +51,8 @@ a.item{
     margin: 60px auto;
     overflow: hidden;
 }*/
-.home-card a{
-    display: block;
-    width: 80%;
-    margin: 50px auto;
-}
 .home-send{
-    background: url(../img/home_2.jpg) no-repeat;
+    background: url(../img/home_2.png) no-repeat;
     background-size: 100%;
     min-height: 370px;
     margin-top: 30px;
@@ -144,7 +142,10 @@ a.item{
     height: 20px;
 }
 .common-link a {
-    font-size: 12px;
+    font-size: 16px;
+    display: block;
+    text-align: right;
+    margin-top: 20px;
 }
 .send-userinfo p{
     width: 80%;
