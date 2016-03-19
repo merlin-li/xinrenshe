@@ -1,4 +1,12 @@
 <ion-view title="收信">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons>
+            <a href="#/user" class="button back-button buttons button-clear header-item">
+                <i class="icon ion-ios-arrow-back"></i> 
+                <span class="back-text" style="transform: translate3d(0px, 0px, 0px);"></span>
+            </a>
+        </ion-nav-buttons>
+    </ion-nav-bar>
     <ion-content has-header="true">
         <div style="background:#f2f2f2">
             <div class="button-bar">
@@ -8,9 +16,11 @@
             </div>
 
             <section class="card-item" ng-repeat="card in cardModel.orderList">
-                <div class="header">
+                <div class="header receive-header">
                     <span>{{card.order_number}}</span>
-                    <span>等待寄出</span>
+                    <span ng-hide="!statusObj.hide">等待寄出</span>
+                    <span ng-hide="statusObj.hide">{{statusObj.txt}} {{card.travel_days}}天</span>
+                    <button ng-hide="statusObj.hideBtn" ng-click="done(card)">确认收信</button>
                 </div>
                 <div class="footer">
                     <section class="left">
@@ -18,7 +28,7 @@
                     </section>
                     <section class="center">
                         <span>{{card.sender_username}}</span>
-                        <span>{{card.sender_sex}}</span>
+                        <span>{{card.sender_sex ==1? '男':'女'}}</span>
                         <span class="address">{{card.sender_city}}{{card.sender_province}}</span>
                     </section>
                     <section class="right">

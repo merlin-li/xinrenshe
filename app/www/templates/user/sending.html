@@ -1,4 +1,12 @@
 <ion-view title="我的寄信">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons>
+            <a href="#/user" class="button back-button buttons button-clear header-item">
+                <i class="icon ion-ios-arrow-back"></i> 
+                <span class="back-text" style="transform: translate3d(0px, 0px, 0px);"></span>
+            </a>
+        </ion-nav-buttons>
+    </ion-nav-bar>
     <ion-content has-header="true">
         <div style="background:#f2f2f2">
             <div class="button-bar">
@@ -11,27 +19,28 @@
                 <div class="header">
                     <div>
                         <span>{{card.order_number}}</span>
-                        <label ng-click="show()">请将该编码写于明信片上！<a href="#">示例</a></label>
+                        <label ng-hide="{{!statusObj.hide}}" ng-click="show()" ng-hide="done">请将该编码写于明信片上！<a href="#">示例</a></label>
                     </div>
-                    <button ng-click="send(card)">寄出</button>
+                    <button ng-click="send(card)" ng-hide="{{!statusObj.hide}}">寄出</button>
+                    <span ng-hide="{{statusObj.hide}}">{{statusObj.txt}}{{card.travel_days}}天</span>
                 </div>
                 <div class="footer">
                     <div>
-                        <span class="address">{{card.consignee_addr}}</span>
-                        <span>收信人：{{card.consignee_username}}</span>
-                        <span>邮编：{{card.zip_code}}</span>
+                        <span class="address">{{card.province + card.city + card.area + card.consignee_addr}}</span>
+                        <span class="username">收信人：{{card.consignee_username}}</span>
+                        <span class="code">邮编：{{card.zip_code}}</span>
                     </div>
                     <img class="cardimg" ng-src="{{card.picture}}" ng-click="takePic(card)">
-                    <!-- <img src="img/xjbj_1.png" ng-click="takePic(card)"> -->
                 </div>
             </section>
 
             <!--拍照-->
             <input id="takecardpicture" type="file" accept="image/*" capture="camera" style="display: none">
 
-            <div id="card_bg" ng-style="modelStyle">
-                <img src="img/tp_001.png" ng-click="hide()">
-            </div>
+            <img src="img/xltb_1.png" class="full" ng-hide="showTip">
         </div>
     </ion-content>
+    <div id="card_bg" ng-style="modelStyle">
+        <img src="img/tp_001.png" ng-click="hide()">
+    </div>
 </ion-view>

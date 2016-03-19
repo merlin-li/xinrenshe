@@ -161,7 +161,6 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     return false;
                 }
             },_postData = function(url,params,needLogin,needAccessSign){
-
                 if(needLogin!==false){
                   var userCookie = _getUserCookie();
                   if (userCookie) {
@@ -198,12 +197,11 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 orderList: apiBaseUrl + 'postCard/orderList',
                 send: apiBaseUrl + 'postCard/send',
                 modifyUserName: apiBaseUrl + 'setUserInfo/username',
-                modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 uploadPic: apiBaseUrl + 'postCard/uploadPic',
-                modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee'
-
-                // getCity: apiBaseUrl + 'common/getCity',
-                // getArea: apiBaseUrl + 'common/getArea'
+                confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt',
+                modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
+                modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee',
+                getUserInfo: apiBaseUrl + 'common/getUserInfo'
             },
             SOURCE: {
                 'home': '/home'

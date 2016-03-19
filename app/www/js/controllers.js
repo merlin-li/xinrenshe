@@ -64,6 +64,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 if (data.status === 200) {
                     //登录成功
                     data.data.userInfo.token = data.data.token;
+                    data.data.host = data.data.host;
                     $cookieStore.put('userinfo', data.data.userInfo);
                     $location.path('/home');
                 } else {
@@ -85,11 +86,31 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    function($scope, $http, common, $location) {
+    '$cookieStore',
+    function($scope, $http, common, $location, $cookieStore) {
         !function(){
             common.utility.checkLogin().success(function(u){
-                console.log(u);
-                $scope.userObj = u;
+                if (u.avatar) {
+                    $scope.userObj = u;
+                } else {
+                    var paramsObj = {
+                        uid: u.uid,
+                        token: u.token
+                    };
+                    $http({
+                        method: 'post',
+                        url: common.API.getUserInfo,
+                        data: paramsObj
+                    }).success(function(data){
+                        if (data.status === 200) {
+                            $scope.userObj = data.data.userInfo;
+                            $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
+                            $scope.userObj.token = data.data.token;
+                            $cookieStore.remove('userinfo');
+                            $cookieStore.put('userinfo', $scope.userObj);
+                        }
+                    });
+                }
             }).fail(function(){
                 $location.path('/user/login');
             });
@@ -142,7 +163,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     data: paramsObj
                 }).success(function (data) {
                     if (data.status === 200) {
-                        alert('\u6ce8\u518c\u6210\u529f\uff01');
+                        common.utility.alert('提示', '注册成功！');
                         $cookieStore.put('userinfo', data.data);
                         $location.path('/setting/userinfo');
                     } else {
@@ -248,7 +269,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 }
             }
         };
-
 
         /**
          * 压缩照片
@@ -377,12 +397,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
                 var signStr = common.utility.createSign(paramsObj);
 
-                // console.log(paramsObj);
-                // console.log(signStr);
-                // console.log(md5.createHash(signStr));
-                // console.log(md5.createHash('111'));
-                // console.log(md5.createHash('李蒙'));
-
                 var accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 paramsObj.accessSign = accessSign;
                 // console.log(paramsObj);
@@ -423,13 +437,10 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$stateParams',
     '$cookieStore',
     function($scope, $http, common, $location, md5, $stateParams, $cookieStore) {
-
-
         if($stateParams.type){
           $cookieStore.put('citySetType', $stateParams.type);
         }
         function _init (pid){
-            // console.log($cookieStore.get('areainfo'));
             common.utility.loadingShow();
             if ($stateParams.areaId) {
                 pid = $stateParams.areaId;
@@ -448,21 +459,18 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     //表示选中当前的地区，进行跳转
                     var redirect_type = $cookieStore.get('citySetType');
 
-                    if(!redirect_type){
-                      $location.path('/setting/address');
-                    }else{
-                      //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
-                      var redirectArr = redirect_type.split('_');
-                      var redirectUrl = '';
-                      for(var i in redirectArr){
-                        redirectUrl += '/'+redirectArr[i];
-                      }
-                      console.log(redirectArr);
-                      console.log(redirectUrl);
-                      $cookieStore.remove('citySetType');
-                      $location.path(redirectUrl);
+                    if(!redirect_type) {
+                        $location.path('/setting/address');
+                    } else {
+                        //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
+                        var redirectArr = redirect_type.split('_');
+                        var redirectUrl = '';
+                        for(var i in redirectArr){
+                            redirectUrl += '/'+redirectArr[i];
+                        }
+                        $cookieStore.remove('citySetType');
+                        $location.path(redirectUrl);
                     }
-
                 }
                 common.utility.loadingHide();
             });
@@ -548,11 +556,17 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
+        $scope.showTip = true;
         var paramsObj = {
             type: 1,
             uid: '',
             token: ''
         }, userCookie = common.utility.getUserCookie();
+
+        $scope.statusObj = {
+            txt: '已旅行',
+            hide: true
+        };
 
         if (userCookie) {
             paramsObj.uid = userCookie.uid;
@@ -562,22 +576,28 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         }
 
         $scope.readCardList = function(t) {
-            if (t === 1) {
+            $scope.selectIndex = t || 1;
+            if (this.selectIndex === 1) {
                 $scope.btnClass1 = 'button-positivehover';
                 $scope.btnClass2 = 'button';
                 $scope.btnClass3 = 'button';
+                this.statusObj.hide = true;
             }
-            if (t === 4) {
+            if (this.selectIndex === 4) {
                 $scope.btnClass1 = 'button';
                 $scope.btnClass2 = 'button-positivehover';
                 $scope.btnClass3 = 'button';
+                this.statusObj.hide = false;
+                this.statusObj.txt = '已旅行';
             }
-            if (t === 5) {
+            if (this.selectIndex === 5) {
                 $scope.btnClass1 = 'button';
                 $scope.btnClass2 = 'button';
                 $scope.btnClass3 = 'button-positivehover';
+                this.statusObj.hide = false;
+                this.statusObj.txt = '共旅行';
             }
-            paramsObj.type = t;
+            paramsObj.type = $scope.selectIndex;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
             common.utility.loadingShow();
@@ -595,6 +615,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     }
                 });
                 $scope.cardModel = data.data;
+                $scope.showTip = (data.data.orderList.length > 0);
                 common.utility.loadingHide();
             }).error(function(){
                 common.utility.loadingHide();
@@ -615,6 +636,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 data: sendParamsObj
             }).success(function(data){
                 common.utility.alert('提示', data.msg);
+                $scope.readCardList();
             });
         };
 
@@ -627,7 +649,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         };
 
         $scope.modelStyle = {'display': 'none'};
-        $scope.readCardList(1);
+        $scope.selectIndex = 1;
+        $scope.readCardList();
 
 
         var takeCardPicture = document.getElementById('takecardpicture');
@@ -726,9 +749,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
   function($scope, $http, common, $location,$cookieStore) {
       !function(){
         common.utility.checkLogin().success(function(u){
-          console.log(u);
           $scope.userObj = u;
-
         }).fail(function(){
           $location.path('/user/login');
         });
@@ -849,14 +870,23 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
       };
   }
   ])
+
 .controller('MyReceivingCtrl', [
     '$scope',
     '$http',
     'Common',
     '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    '$ionicPopup',
+    function($scope, $http, common, $location, md5, $ionicPopup) {
         $scope.showTip = true;
+        $scope.selectIndex = 3;
+        $scope.statusObj = {
+            txt: '已旅行',
+            hide: false,
+            hideBtn: false
+        };
+
         var paramsObj = {
             type: 3,
             uid: '',
@@ -872,22 +902,31 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
         $scope.readCardList = function(t) {
-            if (t === 3) {
+            $scope.selectIndex = t || 3;
+            if (this.selectIndex === 3) {
                 $scope.btnClass1 = 'button-positivehover';
                 $scope.btnClass2 = 'button';
                 $scope.btnClass3 = 'button';
+                $scope.statusObj.hide = true;
+                $scope.statusObj.hideBtn = true;
             }
-            if (t === 2) {
+            if (this.selectIndex === 2) {
                 $scope.btnClass1 = 'button';
                 $scope.btnClass2 = 'button-positivehover';
                 $scope.btnClass3 = 'button';
+                $scope.statusObj.hide = false;
+                $scope.statusObj.txt = '已旅行';
+                $scope.statusObj.hideBtn = false;
             }
-            if (t === 6) {
+            if (this.selectIndex === 6) {
                 $scope.btnClass1 = 'button';
                 $scope.btnClass2 = 'button';
                 $scope.btnClass3 = 'button-positivehover';
+                $scope.statusObj.hide = false;
+                $scope.statusObj.txt = '共旅行';
+                $scope.statusObj.hideBtn = true;
             }
-            paramsObj.type = t;
+            paramsObj.type = this.selectIndex;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
             common.utility.loadingShow();
@@ -896,26 +935,60 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 url: common.API.orderList,
                 data: paramsObj
             }).success(function(data){
-                data.data.orderList.map(function(order){
-                    if (order.picture) {
-                        order.picture = data.data.host + order.picture;
-                    } else {
-                        order.picture = 'img/xjbj_1.png';
-                    }
-                });
+                if (data.status === 200) {
+                    data.data.orderList.map(function(order){
+                        if (order.picture) {
+                            order.picture = data.data.host + order.picture;
+                        } else {
+                            order.picture = 'img/xjbj_1.png';
+                        }
+                    });
 
-                $scope.cardModel = data.data;
-                common.utility.loadingHide();
-                $scope.showTip = (data.data.orderList.length > 0);
+                    $scope.cardModel = data.data;
+                    $scope.showTip = (data.data.orderList.length > 0);
+                    common.utility.loadingHide();
+                }
             }).error(function(){
                 common.utility.loadingHide();
             });
         };
 
-        $scope.readCardList(3);
+        $scope.done = function(c) {
+            var confirmObj = {
+                order_id: c.id,
+                uid: userCookie.uid,
+                token: userCookie.token
+            },
+            confirmPopup = $ionicPopup.confirm({
+                title: '温馨提示',
+                template: '您已经收到该编码的明信片?',
+                cancelText: '取消',
+                okText: '确定'
+            });
+            confirmPopup.then(function(res) {
+                if(res) {
+                    //确定收到当前的明信片
+                    confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+                    $http({
+                        method: 'post',
+                        url: common.API.confirmReceipt,
+                        data: confirmObj
+                    }).success(function(data){
+                        if (data.status === 200){
+                            $scope.readCardList();
+                        } else {
+                            common.utility.alert('提示', data.msg);
+                        }
+                    });
+                }
+            });
+        };
+
+        $scope.readCardList();
     }
 ])
-  .controller('MyAddressCtrl', [
+
+.controller('MyAddressCtrl', [
     '$scope',
     '$http',
     'Common',
@@ -924,7 +997,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     function($scope, $http, common, $location, $cookieStore) {
       !function(){
         common.utility.checkLogin().success(function(u){
-          console.log(u);
           $scope.userModel = u;
         }).fail(function(){
           $location.path('/user/login');
