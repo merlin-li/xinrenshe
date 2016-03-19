@@ -940,7 +940,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                         if (order.picture) {
                             order.picture = data.data.host + order.picture;
                         } else {
-                            order.picture = 'img/xjbj_1.png';
+                            order.picture = 'img/xjbj_2.png';
                         }
                     });
 
