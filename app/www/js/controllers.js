@@ -773,6 +773,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             $scope.inputHide = true;
             $scope.usernameHide = false;
             $cookieStore.put('userinfo',$scope.userObj);
+            $location.path('/user');
           } else {
             common.utility.alert('提示', data.msg);
           }
@@ -789,6 +790,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         result.success(function(data){
           if (data.status === 200) {
             $scope.userObj.avatar = data.data.avatar;
+            $scope.userObj.host = data.data.host;
             $cookieStore.put('userinfo',$scope.userObj);
           } else {
             common.utility.alert('提示', data.msg);
