@@ -29,7 +29,7 @@
                     <section class="center">
                         <span>{{card.sender_username}}</span>
                         <span>{{card.sender_sex ==1? '男':'女'}}</span>
-                        <span class="address">{{card.sender_city}}{{card.sender_province}}</span>
+                        <span class="address">{{card.sender_province + card.sender_city}}</span>
                     </section>
                     <section class="right">
                         <img ng-src="{{card.picture}}">
