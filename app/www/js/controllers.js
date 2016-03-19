@@ -144,7 +144,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     data: paramsObj
                 }).success(function (data) {
                     if (data.status === 200) {
-                        alert('\u6ce8\u518c\u6210\u529f\uff01');
+                        common.utility.alert('提示', '注册成功！');
                         $cookieStore.put('userinfo', data.data);
                         $location.path('/setting/userinfo');
                     } else {
@@ -250,7 +250,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                 }
             }
         };
-
 
         /**
          * 压缩照片
@@ -425,13 +424,10 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$stateParams',
     '$cookieStore',
     function($scope, $http, common, $location, md5, $stateParams, $cookieStore) {
-
-
         if($stateParams.type){
           $cookieStore.put('citySetType', $stateParams.type);
         }
         function _init (pid){
-            // console.log($cookieStore.get('areainfo'));
             common.utility.loadingShow();
             if ($stateParams.areaId) {
                 pid = $stateParams.areaId;
@@ -450,19 +446,18 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     //表示选中当前的地区，进行跳转
                     var redirect_type = $cookieStore.get('citySetType');
 
-                    if(!redirect_type){
-                      $location.path('/setting/address');
-                    }else{
-                      //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
-                      var redirectArr = redirect_type.split('_');
-                      var redirectUrl = '';
-                      for(var i in redirectArr){
-                        redirectUrl += '/'+redirectArr[i];
-                      }
-                      $cookieStore.remove('citySetType');
-                      $location.path(redirectUrl);
+                    if(!redirect_type) {
+                        $location.path('/setting/address');
+                    } else {
+                        //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
+                        var redirectArr = redirect_type.split('_');
+                        var redirectUrl = '';
+                        for(var i in redirectArr){
+                            redirectUrl += '/'+redirectArr[i];
+                        }
+                        $cookieStore.remove('citySetType');
+                        $location.path(redirectUrl);
                     }
-
                 }
                 common.utility.loadingHide();
             });
