@@ -91,7 +91,24 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             common.utility.checkLogin().success(function(u){
                 // console.log(u);
                 // u.avatar = u.host + u.avatar;
-                $scope.userObj = u;
+                if (u.avatar) {
+                    $scope.userObj = u;
+                } else {
+                    var paramsObj = {
+                        uid: u.uid,
+                        token: u.token
+                    };
+                    $http({
+                        method: 'post',
+                        url: common.API.getUserInfo,
+                        data: paramsObj
+                    }).success(function(data){
+                        if (data.status === 200) {
+                            $scope.userObj = data.data.userInfo;
+                            $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
+                        }
+                    });
+                }
             }).fail(function(){
                 $location.path('/user/login');
             });
@@ -972,7 +989,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
         $scope.readCardList();
     }
 ])
-  .controller('MyAddressCtrl', [
+
+.controller('MyAddressCtrl', [
     '$scope',
     '$http',
     'Common',
