@@ -86,11 +86,10 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    function($scope, $http, common, $location) {
+    '$cookieStore',
+    function($scope, $http, common, $location, $cookieStore) {
         !function(){
             common.utility.checkLogin().success(function(u){
-                // console.log(u);
-                // u.avatar = u.host + u.avatar;
                 if (u.avatar) {
                     $scope.userObj = u;
                 } else {
@@ -106,6 +105,9 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                         if (data.status === 200) {
                             $scope.userObj = data.data.userInfo;
                             $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
+                            $scope.userObj.token = data.data.token;
+                            $cookieStore.remove('userinfo');
+                            $cookieStore.put('userinfo', $scope.userObj);
                         }
                     });
                 }
@@ -395,12 +397,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
                 var signStr = common.utility.createSign(paramsObj);
 
-                // console.log(paramsObj);
-                // console.log(signStr);
-                // console.log(md5.createHash(signStr));
-                // console.log(md5.createHash('111'));
-                // console.log(md5.createHash('李蒙'));
-
                 var accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 paramsObj.accessSign = accessSign;
                 // console.log(paramsObj);
@@ -560,12 +556,12 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
+        $scope.showTip = true;
         var paramsObj = {
             type: 1,
             uid: '',
             token: ''
         }, userCookie = common.utility.getUserCookie();
-
 
         $scope.statusObj = {
             txt: '已旅行',
@@ -619,6 +615,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
                     }
                 });
                 $scope.cardModel = data.data;
+                $scope.showTip = (data.data.orderList.length > 0);
                 common.utility.loadingHide();
             }).error(function(){
                 common.utility.loadingHide();
@@ -753,7 +750,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
       !function(){
         common.utility.checkLogin().success(function(u){
           $scope.userObj = u;
-
         }).fail(function(){
           $location.path('/user/login');
         });

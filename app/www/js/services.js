@@ -161,7 +161,6 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     return false;
                 }
             },_postData = function(url,params,needLogin,needAccessSign){
-
                 if(needLogin!==false){
                   var userCookie = _getUserCookie();
                   if (userCookie) {
