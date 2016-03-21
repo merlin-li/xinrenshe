@@ -27,7 +27,17 @@ angular.module('guozhongbao', [
                     controller: 'HomeCtrl'
                 }
             }
-        }).state('app_login', {
+        })
+        .state('test', {
+            url: '/test',
+            views: {
+                'content': {
+                    templateUrl: 'templates/test.html',
+                    controller: 'TestCtrl'
+                }
+            }
+        })
+        .state('app_login', {
             url: '/user/login',
             views: {
                 'content': {
@@ -125,13 +135,20 @@ angular.module('guozhongbao', [
                 }
             }
         }).state('app_my_address', {
-          url: '/my/address',
-          views: {
-            'content': {
-              templateUrl: 'templates/user/useraddress.html',
-              controller: 'MyAddressCtrl'
+            url: '/my/address',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/useraddress.html',
+                    controller: 'MyAddressCtrl'
+                }
             }
-          }
+        }).state('app_joint', {
+            url: '/joint',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/index.html',
+                }
+            }
         })
 
 

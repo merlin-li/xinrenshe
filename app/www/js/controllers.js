@@ -1,5 +1,5 @@
 'use strict';
-angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
+angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCropper'])
 .config([
     '$sceDelegateProvider',
     '$httpProvider',
@@ -87,30 +87,29 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
     'Common',
     '$location',
     '$cookieStore',
-    function($scope, $http, common, $location, $cookieStore) {
+    'md5',
+    function($scope, $http, common, $location, $cookieStore, md5) {
         !function(){
             common.utility.checkLogin().success(function(u){
-                if (u.avatar) {
-                    $scope.userObj = u;
-                } else {
-                    var paramsObj = {
-                        uid: u.uid,
-                        token: u.token
-                    };
-                    $http({
-                        method: 'post',
-                        url: common.API.getUserInfo,
-                        data: paramsObj
-                    }).success(function(data){
-                        if (data.status === 200) {
-                            $scope.userObj = data.data.userInfo;
-                            $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
-                            $scope.userObj.token = data.data.token;
-                            $cookieStore.remove('userinfo');
-                            $cookieStore.put('userinfo', $scope.userObj);
-                        }
-                    });
-                }
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token
+                };
+                paramsObj.accessSign = md5.createHash(common.createSign(paramsObj));
+
+                $http({
+                    method: 'post',
+                    url: common.API.getUserInfo,
+                    data: paramsObj
+                }).success(function(data){
+                    if (data.status === 200) {
+                        $scope.userObj = data.data.userInfo;
+                        $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
+                        $scope.userObj.token = data.data.token;
+                        $cookieStore.remove('userinfo');
+                        $cookieStore.put('userinfo', $scope.userObj);
+                    }
+                });
             }).fail(function(){
                 $location.path('/user/login');
             });
@@ -414,17 +413,28 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
             }
         };
 
-        if ($cookieStore.get('areainfo1')) {
-            // $scope.userModel.area = $cookieStore.get('areainfo').name;
+        $scope.goAddress = function(){
+            console.log('go address');
+            //#/city/setting/type/setting_address
+            console.log(this.userModel);
+            $cookieStore.put('useraddressinfo', this.userModel);
+            $location.path('/city/setting/type/setting_address');
+        };
 
-            var areaObj1 = $cookieStore.get('areainfo1'),
-                areaObj2 = $cookieStore.get('areainfo2'),
-                areaObj3 = $cookieStore.get('areainfo3');
+        !function() {
+            if ($cookieStore.get('useraddressinfo')) {
+                $scope.userModel = $cookieStore.get('useraddressinfo');
+            }
+            if ($cookieStore.get('areainfo1') && $cookieStore.get('areainfo2') && $cookieStore.get('areainfo3')) {
+                var areaObj1 = $cookieStore.get('areainfo1'),
+                    areaObj2 = $cookieStore.get('areainfo2'),
+                    areaObj3 = $cookieStore.get('areainfo3');
 
-            $scope.userModel.province = areaObj1.name;
-            $scope.userModel.city = areaObj2.name;
-            $scope.userModel.area = areaObj3.name;
-        }
+                $scope.userModel.province = areaObj1.name;
+                $scope.userModel.city = areaObj2.name;
+                $scope.userModel.area = areaObj3.name;
+            }
+        }();
     }
 ])
 
@@ -1053,6 +1063,15 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
 
     }
   ])
+
+.controller('TestCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    function($scope, $http, common) {
+        
+    }
+])
 ;
 
 
