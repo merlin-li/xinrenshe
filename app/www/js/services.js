@@ -168,6 +168,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     params.token = userCookie.token;
 
                   }else{
+                    _alert('提示', '请重新登录');
                     $location.path('/user/login');
                   }
                 }
@@ -184,6 +185,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                   result.success(function(data){
                     if (data.status === 402) {
                       $cookieStore.remove('userinfo');
+                      _alert('提示',data.msg);
                       $location.path('/user/login');
                     }else{
                       successCallback(data);
