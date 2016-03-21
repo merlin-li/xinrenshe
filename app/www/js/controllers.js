@@ -767,9 +767,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
           'username':$scope.userObj.username
         };
         var url = common.API.modifyUserName;
-        var result = common.utility.postData(url,params,true,true);
-        result.success(function(data){
-          if (data.status === 200) {
+        var success = function(data){
+          if(data.status === 200){
             $scope.inputHide = true;
             $scope.usernameHide = false;
             $cookieStore.put('userinfo',$scope.userObj);
@@ -777,7 +776,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
           } else {
             common.utility.alert('提示', data.msg);
           }
-        });
+        }
+        common.utility.postData(url,params,true,true,success);
       }
 
       var _saveUserAvatar = function(avatar){
@@ -786,8 +786,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
           'avatar':avatar
         };
         var url = common.API.modifyAvatar;
-        var result = common.utility.postData(url,params,true,true);
-        result.success(function(data){
+        var success = function(data){
           if (data.status === 200) {
             $scope.userObj.avatar = data.data.avatar;
             $scope.userObj.host = data.data.host;
@@ -795,8 +794,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
           } else {
             common.utility.alert('提示', data.msg);
           }
-        });
-
+        }
+        common.utility.postData(url,params,true,true,success);
       }
 
 
@@ -1035,18 +1034,18 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5'])
               consignee_addr: self.consignee_addr,
               province: self.province,
               city: self.city,
-              area: self.area,
+              area: self.area
             };
           var url = common.API.modifyConsigneeInfo;
-          var result = common.utility.postData(url,params,true,true);
-          result.success(function(data){
+          var success = function(data){
             if (data.status === 200) {
               $cookieStore.put('userinfo',$scope.userModel);
               $location.path('/user');
             } else {
               common.utility.alert('提示', data.msg);
             }
-          });
+          }
+          common.utility.postData(url,params,true,true,success);
         }
       };
 
