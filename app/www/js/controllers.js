@@ -95,7 +95,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     uid: u.uid,
                     token: u.token
                 };
-                paramsObj.accessSign = md5.createHash(common.createSign(paramsObj));
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
                 $http({
                     method: 'post',
@@ -414,16 +414,13 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         };
 
         $scope.goAddress = function(){
-            console.log('go address');
-            //#/city/setting/type/setting_address
-            console.log(this.userModel);
-            $cookieStore.put('useraddressinfo', this.userModel);
+            common.tempData.userAddressInfo = this.userModel;
             $location.path('/city/setting/type/setting_address');
         };
 
         !function() {
-            if ($cookieStore.get('useraddressinfo')) {
-                $scope.userModel = $cookieStore.get('useraddressinfo');
+            if (common.tempData.userAddressInfo) {
+                $scope.userModel = common.tempData.userAddressInfo;
             }
             if ($cookieStore.get('areainfo1') && $cookieStore.get('areainfo2') && $cookieStore.get('areainfo3')) {
                 var areaObj1 = $cookieStore.get('areainfo1'),
@@ -1064,12 +1061,40 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     }
   ])
 
-.controller('TestCtrl', [
+.controller('ImgCropCtrl', [
     '$scope',
     '$http',
     'Common',
     function($scope, $http, common) {
+        $scope.fileChanged = function(e) {
+            var files = e.target.files;
         
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(files[0]);     
+            
+            fileReader.onload = function(e) {
+                $scope.imgSrc = this.result;
+                $scope.$apply();
+            };    
+        }
+
+        $scope.clear = function() {
+            $scope.imageCropStep = 1;
+            delete $scope.imgSrc;
+            delete $scope.result;
+            delete $scope.resultBlob;
+        };
+
+        $scope.upload = function() {
+            document.getElementById('fileInput').click();
+        };
+
+        $scope.crops = function() {
+            this.initCrop = true;
+            // this.$apply();
+            console.log(this.result);
+        };
+
     }
 ])
 ;

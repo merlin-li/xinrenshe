@@ -235,7 +235,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'postData': _postData
             },
             tempData: {
-
+                userAddressInfo: ''
             }
         };
     }

@@ -766,16 +766,16 @@
         replace: true,
         restrict: 'AE',
         scope: {
-		  crop: '=',
+		      crop: '=',
           width: '@',
           height: '@',
           shape: '@',
-		  src: '=',
+		      src: '=',
           resultBlob: '=',
-		  result: '=',
+		      result: '=',
           step: '=',
           padding: '@',
-		  maxSize: '@'
+		      maxSize: '@'
         },
         link: function (scope, element, attributes) {
 		  

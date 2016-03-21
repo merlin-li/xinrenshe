@@ -28,12 +28,12 @@ angular.module('guozhongbao', [
                 }
             }
         })
-        .state('test', {
-            url: '/test',
+        .state('img_crop', {
+            url: '/image/crop',
             views: {
                 'content': {
-                    templateUrl: 'templates/test.html',
-                    controller: 'TestCtrl'
+                    templateUrl: 'templates/image/crop.html',
+                    controller: 'ImgCropCtrl'
                 }
             }
         })
