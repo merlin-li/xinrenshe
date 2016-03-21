@@ -160,7 +160,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 } else {
                     return false;
                 }
-            },_postData = function(url,params,needLogin,needAccessSign){
+            },_postData = function(url,params,needLogin,needAccessSign,successCallback){
                 if(needLogin!==false){
                   var userCookie = _getUserCookie();
                   if (userCookie) {
@@ -168,6 +168,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     params.token = userCookie.token;
 
                   }else{
+                    _alert('提示', '请重新登录');
                     $location.path('/user/login');
                   }
                 }
@@ -180,8 +181,21 @@ angular.module('guozhongbao.services', []).factory('Common', [
                               url: url,
                               data: params
                             });
-                return result;
-
+                if(successCallback){
+                  result.success(function(data){
+                    if (data.status === 402) {
+                      $cookieStore.remove('userinfo');
+                      _alert('提示',data.msg);
+                      $location.path('/user/login');
+                    }else{
+                      successCallback(data);
+                    }
+                  }).error(function(){
+                    _alert('提示', '网络连接错误,请稍后再试');
+                  })
+                }else{
+                  return result;
+                }
             };
 
         return {
