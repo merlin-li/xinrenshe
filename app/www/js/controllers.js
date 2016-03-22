@@ -1088,7 +1088,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
             document.getElementById('fileInput').click();
         };
 
-        $scope.crops = function() {
+        $scope.xxx = function() {
             this.initCrop = true;
             // this.$apply();
             console.log(this.result);
