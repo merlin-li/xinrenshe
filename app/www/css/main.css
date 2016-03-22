@@ -4,6 +4,10 @@ body{
 }
 .button.button-positive{
     background: #ff8c9b;
+    border-color: #ff8c9b;
+}
+.button.button-positive.activated{
+    border-color: #ff8c9b;
 }
 .button.button-positive.activated, .button.button-positive.activate{
     background: #ff8c9b;
@@ -281,8 +285,23 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
   position: absolute;
   right: 50px;
 }
-
-
+.corp-header{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 150px;
+    background: url(../img/bj_1.png);
+}
+.corp-header img{
+    width: 100px;
+    height: 100px;
+    /*margin: 20px 0 0 20px;*/
+}
+.asso-avatar{
+    width: 50px;
+    height: 50px;
+}
 
 
 

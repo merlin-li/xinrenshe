@@ -1102,19 +1102,48 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     '$scope',
     'Common',
     '$stateParams',
-    function($http, $scope, common, $stateParams) {
-        var id = $stateParams.id;
-        console.log(id);
-        // $http({
-        //     method: 'post',
-        //     url: common.API.corporationDetail,
-        //     data: {
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
 
-        //     }
-        // })
+        !function(){
+            var id = $stateParams.id;
+            common.utility.checkLogin().success(function(u){
+                var paramsObj = {
+                    corporation_id: id,
+                    uid: u.uid,
+                    token: u.token
+                }, assoParamsObj = {
+                    corporation_id: id
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                assoParamsObj.accessSign = md5.createHash(common.utility.createSign(assoParamsObj));
 
+                $http({
+                    method: 'post',
+                    url: common.API.corporationDetail,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        console.log(d);
+                        $scope.corpModel = d.data;
+                        $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                    });
+                });
 
-        // common.utility.
+                $http({
+                    method: 'post',
+                    url: common.API.associatorList,
+                    data: assoParamsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        console.log(d);
+                        $scope.assoModel = d.data;
+                    });
+                });
+            }).fail(function(){
+
+            });
+        }();
     }
 ])
 ;

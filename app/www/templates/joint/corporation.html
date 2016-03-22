@@ -1,13 +1,45 @@
 <ion-view view-title="联名" hide-back-button="true">
     <ion-content>
-        
+        <section class="corp-header">
+            <img ng-src="{{corpModel.avatar}}">
+            <div>
+                <div>{{corpModel.name}}</div>
+                <span>地点：{{corpModel.addr_city}}</span>
+                <span>社员：{{assoModel.associatorList.length}}</span>
+                <button class="button button-small icon-left ion-plus button-positive">加入</button>
+            </div>
+        </section>
+        <div>
+            <span>［公告］</span>
+            {{corpModel.notice}}
+        </div>
+
+        <div class="button-bar">
+            <a class="button {{btnClass1}}" ng-click="">联名活动</a>
+            <a class="button {{btnClass2}}" ng-click="">社员</a>
+        </div>
+
+        <div class="list">
+            <div class="item item-divider">社长</div>
+            <div class="item" ng-repeat="p in assoModel.presidentList">
+                <img ng-src="{{assoModel.host + p.avatar}}" class="asso-avatar">
+                <span>{{p.username}} {{p.sex}}</span>
+                <label>{{p.province + p.city}}</label>
+            </div>
+
+            <div class="item item-divider">社员</div>
+            <div class="item" ng-repeat="p in assoModel.associatorList">
+                <img ng-src="{{assoModel.host + p.avatar}}" class="asso-avatar">
+                <span>{{p.username}} {{p.sex}}</span>
+                <label>{{p.province + p.city}}</label>
+            </div>
+        </div>
+
     </ion-content>
     
-    <ion-footer-bar>
-        <ion-tabs class="tabs-icon-top tabs-color-active-positive">
-            <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-            <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
-            <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-        </ion-tabs>
-    </ion-footer-bar>
+    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+        <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
+        <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
+        <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
+    </ion-tabs>
 </ion-view>
