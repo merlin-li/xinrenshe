@@ -1096,6 +1096,27 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
 
     }
 ])
+
+.controller('CorporationCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    function($http, $scope, common, $stateParams) {
+        var id = $stateParams.id;
+        console.log(id);
+        // $http({
+        //     method: 'post',
+        //     url: common.API.corporationDetail,
+        //     data: {
+
+        //     }
+        // })
+
+
+        // common.utility.
+    }
+])
 ;
 
 
