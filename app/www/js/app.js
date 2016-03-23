@@ -158,7 +158,15 @@ angular.module('guozhongbao', [
                     controller: 'CorporationCtrl'
                 }
             }
-        })
+        }).state('joint_manage_associator', {
+            url: '/joint/manage/associator/:id',
+            views: {
+              'content': {
+                templateUrl: 'templates/joint/manage/associator.html',
+                controller: 'JointManageAssociatorCtrl'
+              }
+            }
+          })
 
 
 

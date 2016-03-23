@@ -218,7 +218,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 getUserInfo: apiBaseUrl + 'common/getUserInfo',
                 activityList:apiBaseUrl + 'jointly/activityList',
               corporationList:apiBaseUrl + 'jointly/getCorporationList',
-                corporationDetail: apiBaseUrl + 'jointly/corporationDetail'
+                corporationDetail: apiBaseUrl + 'jointly/corporationDetail',
+              associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
+              associatorVet: apiBaseUrl + 'jointlyManage/associatorVet'
             },
             SOURCE: {
                 'home': '/home'

@@ -1262,6 +1262,89 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         // common.utility.
     }
 ])
+.controller('JointManageAssociatorCtrl', [
+  '$http',
+  '$scope',
+  'Common',
+  '$stateParams',
+  function($http, $scope, common, $stateParams) {
+    !function(){
+      $scope.hasMore = true;
+      $scope.noData = false;
+      $scope.associatorApplyList = [];
+      $scope.host = "";
+      $scope.page = 1;
+      $scope.corpid = $stateParams.id;//社团id
+    }();
+
+    $scope.$on('stateChangeSuccess', function() {
+      $scope.loadMoreData();
+    });
+
+    $scope.loadMoreData = function(){
+      var newParams = {
+        page:$scope.page,
+        corporation_id:$scope.corpid
+      };
+      _loadList(newParams);
+    }
+
+    $scope.deal = function(associatorUid,optType){
+        var params = {
+          corporation_id:$scope.corpid,
+          associator_uid:associatorUid,
+          type:optType
+        }
+        var url = common.API.associatorVet;
+        var success = function(data){
+          if (data.status === 200) {
+            for(var i in $scope.associatorApplyList){
+              if($scope.associatorApplyList[i]['uid']==params.associator_uid){
+                $scope.associatorApplyList.splice(i,1);
+                break;
+              }
+            }
+          } else {
+
+            common.utility.alert('提示', data.msg);
+          }
+        }
+      common.utility.postData(url,params,true,true,success);
+    }
+
+    function _loadList(params){
+
+      var url = common.API.associatorApplyList;
+      var success = function(data){
+        //common.utility.loadingHide();
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        if (data.status === 200) {
+          $scope.host = data.data.host;
+          $scope.page = $scope.page+1;
+          if(data.data.applyList.length<=0){
+            $scope.hasMore = false;
+            $scope.noData = true;
+            return ;
+          }
+            _mergeList(data.data.applyList,$scope.associatorApplyList);
+        } else {
+          $scope.hasMore = false;
+          $scope.noData = true;
+          common.utility.alert('提示', data.msg);
+        }
+
+      }
+      common.utility.postData(url,params,true,true,success);
+    }
+
+    function _mergeList(List1,List2){
+      angular.forEach(List1, function(value) {
+        this.push(value);
+      }, List2);
+    }
+
+  }
+])
 ;
 
 

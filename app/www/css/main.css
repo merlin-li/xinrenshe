@@ -325,9 +325,26 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
   max-width: 50px;
 }
 
+.joint-list .agree-refuse-btn{
+  float: right;
+  background: #ef8b99;
+  border: 1px solid #ef8b99;
+  margin-right: 10px;
+  min-width: 45px;
+  padding: 0px 10px;
+  color: #fff;
+}
+
 
 .joint-list .ion-ios-clock-outline,.ion-navigate,.ion-ios-location-outline{
   color:#d84c60;
+}
+
+.joint-list .ion-female{
+  color: #ef8b99;
+}
+.joint-list .ion-male{
+  color: #00c8ef;
 }
 
 
