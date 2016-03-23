@@ -232,11 +232,15 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee',
                 getUserInfo: apiBaseUrl + 'common/getUserInfo',
+
                 corporationDetail: apiBaseUrl + 'jointly/corporationDetail',
                 associatorList: apiBaseUrl + '/jointly/associatorList',
                 activityList: apiBaseUrl + '/jointly/activityList',
                 corporationList: apiBaseUrl + 'jointly/getCorporationList',
-                joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation'
+                joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
+                associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
+                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet'
+
             },
             SOURCE: {
                 'home': '/home'
