@@ -14,7 +14,7 @@ angular.module('guozhongbao', [
 
         $ionicConfigProvider.backButton.previousTitleText(false);
         $ionicConfigProvider.backButton.text('');
-        // $ionicConfigProvider.views.forwardCache(false);
+        $ionicConfigProvider.views.forwardCache(true);
         // $ionicConfigProvider.views.transition('none');
 
         $ionicConfigProvider.views.maxCache(0);
@@ -148,6 +148,14 @@ angular.module('guozhongbao', [
                 'content': {
                     templateUrl: 'templates/joint/index.html',
                     controller: 'JointHomeCtrl'
+                }
+            }
+        }).state('corporation', {
+            url: '/joint/corporation/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/corporation.html',
+                    controller: 'CorporationCtrl'
                 }
             }
         })

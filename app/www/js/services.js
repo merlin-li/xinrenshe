@@ -218,6 +218,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 getUserInfo: apiBaseUrl + 'common/getUserInfo',
                 activityList:apiBaseUrl + 'jointly/activityList',
               corporationList:apiBaseUrl + 'jointly/getCorporationList',
+                corporationDetail: apiBaseUrl + 'jointly/corporationDetail'
             },
             SOURCE: {
                 'home': '/home'
