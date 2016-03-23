@@ -1067,14 +1067,14 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     function($scope, $http, common) {
         $scope.fileChanged = function(e) {
             var files = e.target.files;
-        
+
             var fileReader = new FileReader();
-            fileReader.readAsDataURL(files[0]);     
-            
+            fileReader.readAsDataURL(files[0]);
+
             fileReader.onload = function(e) {
                 $scope.imgSrc = this.result;
                 $scope.$apply();
-            };    
+            };
         }
 
         $scope.clear = function() {
@@ -1095,6 +1095,151 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         };
 
     }
+])
+
+.controller('JointHomeCtrl', [
+  '$scope',
+  '$http',
+  'Common',
+  function($scope, $http, common) {
+    !function(){
+      $scope.loadType = 'activity';
+      $scope.hasMore = true;
+      $scope.noData = false;
+      $scope.noCurentData = false;
+      $scope.activityList = [];
+      $scope.corporationList = [];
+      $scope.historyActivityList = [];
+      $scope.host = "";
+      $scope.page = 1;
+      $scope.listType = 1;
+      $scope.templateUrl = 'templates/joint/activityList.html';
+    }();
+
+    $scope.$on('stateChangeSuccess', function() {
+      $scope.loadMoreData();
+
+    });
+    $scope.changeLoadType = function(loadType){
+
+      if($scope.loadType == loadType){
+        return false;
+      }
+      var listdom = document.getElementsByClassName('scroll');
+      angular.element(listdom).css('transform','translate3d(0px, 0px, 0px)');
+      if(loadType=='activity'){
+        $scope.listType = 1;
+        $scope.templateUrl = 'templates/joint/activityList.html';
+      }else if(loadType=='corporation'){
+        $scope.templateUrl = 'templates/joint/corporationList.html';
+      }
+      $scope.noCurentData = false;
+      $scope.hasMore = false;
+      $scope.noData = false;
+
+      $scope.activityList = [];
+      $scope.corporationList = [];
+      $scope.historyActivityList = [];
+
+      $scope.page = 1;
+      $scope.loadType = loadType;
+
+     //document.documentElement.scrollTop = document.body.scrollTop =0;
+      common.utility.loadingShow();
+      $scope.loadMoreData();
+      //common.utility.loadingHide();
+    }
+    $scope.loadMoreData = function(){
+      var newParams = {
+        page:$scope.page,
+      };
+      if($scope.loadType=='activity'){//活动
+        newParams.type = $scope.listType;
+        var userCookie = common.utility.getUserCookie();
+        if (userCookie) {
+          newParams.uid = userCookie.uid;
+          newParams.token = userCookie.token;
+        }
+      }else{ //社团
+
+      }
+      _loadList(newParams,$scope.loadType);
+    }
+
+    function _loadList(params,loadType){
+      if(loadType=='activity'){
+        var url = common.API.activityList;
+      }else{
+        var url = common.API.corporationList;
+      }
+
+      var success = function(data){
+        common.utility.loadingHide();
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        if (data.status === 200) {
+          $scope.host = data.data.host;
+          $scope.page = $scope.page+1;
+          if(loadType=='activity'){
+            if(data.data.activityList.length<=0){
+              if($scope.listType == 1){
+                $scope.noCurentData = true;
+                $scope.listType = 2;
+                $scope.page = 1;
+              }else{
+                $scope.hasMore = false;
+                $scope.noData = true;
+                return ;
+              }
+            }
+          }else{
+            if(data.data.corporationList.length<=0){
+              $scope.hasMore = false;
+              $scope.noData = true;
+              return ;
+            }
+          }
+          $scope.hasMore = true;
+
+          if(loadType=='activity'){
+            if($scope.listType == 1){
+              _mergeList(data.data.activityList,$scope.activityList);
+            }else if($scope.listType == 2){
+              _mergeList(data.data.activityList,$scope.historyActivityList);
+            }
+          }else{
+              _mergeList(data.data.corporationList,$scope.corporationList);
+
+          }
+
+          //$scope.activityList = angular.extend($scope.activityList,data.data.activityList);
+
+        } else {
+          common.utility.alert('提示', data.msg);
+        }
+
+      }
+      common.utility.postData(url,params,false,true,success);
+    }
+
+    function _mergeList(dataActivityList,activityList){
+      angular.forEach(dataActivityList, function(value, key) {
+        var dateObj = new Date(value.activity_time * 1000);
+        var week = dateObj.getDay();
+        var weekStr = '';
+        switch(week){
+          case 1:weekStr = '一';break;
+          case 2:weekStr = '二';break;
+          case 3:weekStr = '三';break;
+          case 4:weekStr = '四';break;
+          case 5:weekStr = '五';break;
+          case 6:weekStr = '六';break;
+          case 7:weekStr = '日';break;
+        }
+        value.activity_time = dateObj.getMonth() + '/' + dateObj.getDate() +'周'+weekStr;
+        this.push(value);
+      }, activityList);
+    }
+  }
 ])
 
 .controller('CorporationCtrl', [
