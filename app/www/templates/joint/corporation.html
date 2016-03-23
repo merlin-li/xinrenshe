@@ -8,7 +8,7 @@
                 <br>
                 <span>地点：{{corpModel.addr_city}}</span>
                 <span>社员：{{assoModel.associatorList.length}}</span>
-                <a class="button button-small icon-left ion-plus button-positive">加入</a>
+                <a class="button button-small {{pageModel.buttonStatus === 1 ? '' : 'button-positive'}}" ng-hide="pageModel.hideBtn" ng-click="btnClick()">{{pageModel.buttonText}}</a>
             </div>
         </section>
 
@@ -18,17 +18,33 @@
         </div>
 
         <div class="button-bar">
-            <a class="button {{pageModel.btnClass.class1}}" ng-click="">联名活动</a>
-            <a class="button {{pageModel.btnClass.class2}}" ng-click="">社员</a>
+            <a class="button {{pageModel.showActivity ? 'button-positivehover' : ''}}" ng-click="switchPanel()">联名活动</a>
+            <a class="button {{pageModel.showActivity ? '' : 'button-positivehover'}}" ng-click="switchPanel()">社员</a>
         </div>
 
-        <div class="list">
-            <div class="item" ng-repeat="activity in activityModel.activityList">
-                <img ng-src="{{activityModel.host + activity.propaganda_pic}}" class="activity-avatar">
+        <div class="list joint-list" style="top:0" ng-hide="!pageModel.showActivity">
+            <div class="item item-thumbnail-left" href="#" ng-repeat="activity in activityModel.activityList">
+                <img ng-src="{{activityModel.host + activity.propaganda_pic}}">
+                <div>
+                    <h2 ng-bind="activity.name"></h2>
+                    <p>主办方：{{activity.corporation_name}}</p>
+                    <p>
+                        <span>
+                            <span class="ion-ios-clock-outline" data-pack="ios" data-tags="time, date, hours, minutes, seconds, watch"></span>
+                            {{activity.activity_time}}
+                        </span>&nbsp;
+
+                        <span>
+                            <span class="ion-ios-location-outline" data-pack="ios" data-tags="navigation, map, gps, pin"></span>{{activity.addr_city}}
+                        </span> &nbsp;
+
+                        <span><b>{{activity.cadge_count}}</b>索片</span>
+                    </p>
+                </div>
             </div>
         </div>
 
-        <div class="list">
+        <div class="list" ng-hide="pageModel.showActivity">
             <div class="item item-divider">社长</div>
             <div class="item member-item" ng-repeat="p in assoModel.presidentList">
                 <img ng-src="{{assoModel.host + p.avatar}}" class="asso-avatar">
@@ -50,9 +66,9 @@
 
     </ion-content>
     
-    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+<!--     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
         <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
         <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
         <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-    </ion-tabs>
+    </ion-tabs> -->
 </ion-view>

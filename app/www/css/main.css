@@ -34,9 +34,14 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .button-bar > .button{
     border: 0;
     background: #fff;
+    font-size: 14px;
 }
 .button-bar .button-positivehover{
     border-bottom: solid 2px #f84b5f;
+    color: #f84b5f;
+}
+.item-divider{
+    font-size: 14px;
 }
 
 
@@ -292,7 +297,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
   position: absolute;
   right: 50px;
 }
-<<<<<<< HEAD
+
 .corp-header{
     /*display: flex;
     display: -webkit-flex;
@@ -301,6 +306,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     /*height: 130px;*/
     /*background: url(../img/bj_1.png);*/
     color: #fff;
+    font-size: 12px;
 }
 .corp-header img.pic{
     width: 65px;
@@ -341,14 +347,18 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     position: absolute;
     top: 22px;
     left: 80px;
+    font-size: 12px;
 }
 .member-item label{
     display: block;
+    font-size: 12px;
 }
 i.gender{
     width: 20px;
     height: 20px;
     display: inline-block;
+    position: relative;
+    top: 6px;
 }
 i.gender1{
     background: url(../img/baom_1.png);
@@ -409,7 +419,6 @@ i.gender0{
 .joint-list .ion-ios-clock-outline,.ion-navigate,.ion-ios-location-outline{
   color:#d84c60;
 }
-
 
 
 

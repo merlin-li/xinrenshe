@@ -1248,15 +1248,68 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     'Common',
     '$stateParams',
     'md5',
-    function($http, $scope, common, $stateParams, md5) {
+    '$ionicActionSheet',
+    function($http, $scope, common, $stateParams, md5, $ionicActionSheet) {
+        var id = $stateParams.id;
+
+        $scope.switchPanel = function(){
+            this.pageModel.showActivity = !this.pageModel.showActivity;
+        };
+
+        $scope.btnClick = function(){
+            console.log(this.pageModel.buttonStatus);
+            var paramsObj = {
+                corporation_id: id
+            };
+            if (this.pageModel.buttonStatus === 0) {
+                //社务管理
+                var hideSheet = $ionicActionSheet.show({
+                    buttons: [
+                        { text: '发布活动' },
+                        { text: '社员管理' },
+                        { text: '公告发布' },
+                        { text: '联名社资料' }
+                    ],
+                    titleText: '社务管理',
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        console.log(index);
+                    }
+                });
+            }
+            if (this.pageModel.buttonStatus === 1) {
+                //已申请
+            }
+            if (this.pageModel.buttonStatus === 2) {
+                //申请加入
+                common.utility.checkLogin().success(function(u){
+                    paramsObj.uid = u.uid;
+                    paramsObj.token = u.token;
+                    paramsObj.type = 1;
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    $http({
+                        method: 'post',
+                        url: common.API.joinExitCorporation,
+                        data: paramsObj
+                    }).success(function(data){
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg);
+                            $scope.pageModel.buttonStatus = 1;
+                        });
+                    });
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
+        };
 
         !function(){
-            var id = $stateParams.id;
             $scope.pageModel = {
-                btnClass: {
-                    class1: '',
-                    class2: 'button-positivehover'
-                }
+                showActivity: false,
+                buttonText: '加入',
+                buttonStatus: 0,
+                hideBtn: false
             };
             common.utility.checkLogin().success(function(u){
                 var paramsObj = {
@@ -1276,9 +1329,29 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     data: paramsObj
                 }).success(function(data){
                     common.utility.handlePostResult(data, function(d){
-                        console.log(d);
                         $scope.corpModel = d.data;
                         $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                        if (d.data.isPresident) {
+                            //如果是社长，显示社务管理
+                            $scope.pageModel.buttonText = '社务管理';
+                            $scope.pageModel.buttonStatus = 0;
+                        } else {
+                            if (d.data.joined) {
+                                //如果已加入，隐藏按钮
+                                $scope.pageModel.hideBtn = true;
+                            } else {
+                                //如果没有加入时，判断是否申请，
+                                if (d.data.applied) {
+                                    //已申请，显示 “已申请”
+                                    $scope.pageModel.buttonText = '已申请';
+                                    $scope.pageModel.buttonStatus = 1;
+                                } else {
+                                    //显示“加入”
+                                    $scope.pageModel.buttonText = '加入';
+                                    $scope.pageModel.buttonStatus = 2;
+                                }
+                            }
+                        }
                         common.utility.loadingHide();
                     });
                 });
@@ -1289,7 +1362,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     data: assoParamsObj
                 }).success(function(data){
                     common.utility.handlePostResult(data, function(d){
-                        console.log(d);
                         $scope.assoModel = d.data;
                         common.utility.loadingHide();
                     });
@@ -1301,7 +1373,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     data: paramsObj
                 }).success(function(data){
                     common.utility.handlePostResult(data, function(d){
-                        console.log(d);
                         $scope.activityModel = d.data;
                         common.utility.loadingHide();
                     });
