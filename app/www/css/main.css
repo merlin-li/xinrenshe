@@ -281,7 +281,54 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
   position: absolute;
   right: 50px;
 }
+.joint .scroll-bar{
+  z-index: 0;
+}
+.joint-tabs .tabs{
+  top: 40px;
+  background-color: #fff;!important;
+  color:#949494;
+  border-bottom:5px solid #F5F5F5;
+}
+.joint-tabs .tabs .active{
+  border-color: #d84c60;
+  border-width: 3px;
+  color:#d84c60;
+}
+.joint-tabs .tabs .activated{
+  border-color: #d84c60;
+  color:#d84c60;
+}
+.joint-tabs .tab-item{
+   max-width: none;
+}
+.joint-list{
+  position: relative;
+  top: 44px;
+}
 
+.joint-list h2{
+  white-space: normal;
+  font-size: 14px;
+}
+.joint-list p{
+  color: #bababa;
+  font-size: 10px;
+}
+.joint-list p b{
+  color:#d84c60;
+}
+.joint-list .hasCadge{
+  right: 0px;
+  position: absolute;
+  top: 0px;
+  max-width: 50px;
+}
+
+
+.joint-list .ion-ios-clock-outline,.ion-navigate,.ion-ios-location-outline{
+  color:#d84c60;
+}
 
 
 

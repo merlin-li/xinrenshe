@@ -215,7 +215,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 confirmReceipt: apiBaseUrl + 'postCard/confirmReceipt',
                 modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee',
-                getUserInfo: apiBaseUrl + 'common/getUserInfo'
+                getUserInfo: apiBaseUrl + 'common/getUserInfo',
+                activityList:apiBaseUrl + 'jointly/activityList',
+              corporationList:apiBaseUrl + 'jointly/getCorporationList',
             },
             SOURCE: {
                 'home': '/home'

@@ -147,6 +147,7 @@ angular.module('guozhongbao', [
             views: {
                 'content': {
                     templateUrl: 'templates/joint/index.html',
+                    controller: 'JointHomeCtrl'
                 }
             }
         })
