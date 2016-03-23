@@ -1,37 +1,50 @@
 <ion-view view-title="联名" hide-back-button="true">
-    <ion-content>
+    <ion-content style="background:#f5f5f5">
         <section class="corp-header">
-            <img ng-src="{{corpModel.avatar}}">
-            <div>
-                <div>{{corpModel.name}}</div>
+            <img src="img/bj_1.png" class="full">
+            <img class="pic" ng-src="{{corpModel.avatar}}">
+            <div class="right">
+                <span>{{corpModel.name}}</span>
+                <br>
                 <span>地点：{{corpModel.addr_city}}</span>
                 <span>社员：{{assoModel.associatorList.length}}</span>
-                <button class="button button-small icon-left ion-plus button-positive">加入</button>
+                <a class="button button-small icon-left ion-plus button-positive">加入</a>
             </div>
         </section>
-        <div>
-            <span>［公告］</span>
+
+        <div class="notice">
+            <span style="color:red">［公告］</span>
             {{corpModel.notice}}
         </div>
 
         <div class="button-bar">
-            <a class="button {{btnClass1}}" ng-click="">联名活动</a>
-            <a class="button {{btnClass2}}" ng-click="">社员</a>
+            <a class="button {{pageModel.btnClass.class1}}" ng-click="">联名活动</a>
+            <a class="button {{pageModel.btnClass.class2}}" ng-click="">社员</a>
+        </div>
+
+        <div class="list">
+            <div class="item" ng-repeat="activity in activityModel.activityList">
+                <img ng-src="{{activityModel.host + activity.propaganda_pic}}" class="activity-avatar">
+            </div>
         </div>
 
         <div class="list">
             <div class="item item-divider">社长</div>
-            <div class="item" ng-repeat="p in assoModel.presidentList">
+            <div class="item member-item" ng-repeat="p in assoModel.presidentList">
                 <img ng-src="{{assoModel.host + p.avatar}}" class="asso-avatar">
-                <span>{{p.username}} {{p.sex}}</span>
-                <label>{{p.province + p.city}}</label>
+                <div>
+                    <span>{{p.username}}<i class="gender gender{{p.sex}}"></i></span>
+                    <label>{{p.province + p.city}}</label>
+                </div>
             </div>
 
             <div class="item item-divider">社员</div>
-            <div class="item" ng-repeat="p in assoModel.associatorList">
+            <div class="item member-item" ng-repeat="p in assoModel.associatorList">
                 <img ng-src="{{assoModel.host + p.avatar}}" class="asso-avatar">
-                <span>{{p.username}} {{p.sex}}</span>
-                <label>{{p.province + p.city}}</label>
+                <div>
+                    <span>{{p.username}}<i class="gender gender{{p.sex}}"></i></span>
+                    <label>{{p.province + p.city}}</label>
+                </div>
             </div>
         </div>
 

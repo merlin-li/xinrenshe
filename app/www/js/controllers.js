@@ -1107,6 +1107,12 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
 
         !function(){
             var id = $stateParams.id;
+            $scope.pageModel = {
+                btnClass: {
+                    class1: '',
+                    class2: 'button-positivehover'
+                }
+            };
             common.utility.checkLogin().success(function(u){
                 var paramsObj = {
                     corporation_id: id,
@@ -1118,6 +1124,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 assoParamsObj.accessSign = md5.createHash(common.utility.createSign(assoParamsObj));
 
+                common.utility.loadingShow();
                 $http({
                     method: 'post',
                     url: common.API.corporationDetail,
@@ -1127,6 +1134,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                         console.log(d);
                         $scope.corpModel = d.data;
                         $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                        common.utility.loadingHide();
                     });
                 });
 
@@ -1138,6 +1146,19 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     common.utility.handlePostResult(data, function(d){
                         console.log(d);
                         $scope.assoModel = d.data;
+                        common.utility.loadingHide();
+                    });
+                });
+
+                $http({
+                    method: 'post',
+                    url: common.API.activityList,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        console.log(d);
+                        $scope.activityModel = d.data;
+                        common.utility.loadingHide();
                     });
                 });
             }).fail(function(){
