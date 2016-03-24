@@ -72,6 +72,11 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     return this;
                 };
 
+                deferred.always = function(cb) {
+                    cb(this.userInfo);
+                    return this;
+                };
+
                 return deferred;
             }, _alert = function (t, c) {
                 var a = c || t;
@@ -206,11 +211,12 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 }
                 if (d.status && d.status === 200) {
                     cb(d);
-                }
-                if (d.status === 402) {
+                } else if (d.status === 402) {
                     //reset login method
                     $cookieStore.remove('userinfo');
                     $location.path('/user/login');
+                } else {
+                    _alert('提示', d.msg);
                 }
             };
 

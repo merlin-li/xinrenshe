@@ -1501,7 +1501,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
 
         !function(){
             common.utility.loadingShow();
-            common.utility.checkLogin().success(function(u){
+            common.utility.checkLogin().always(function(u){
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
@@ -1521,7 +1521,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     });
                 });
             }).fail(function(){
-
+                // common.utility.resetToken();
             });
         }();
     }
