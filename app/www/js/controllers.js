@@ -1476,7 +1476,6 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     'md5',
     function($http, $scope, common, $stateParams, md5) {
         var id = $stateParams.id;
-        console.log(id);
 
         $scope.joinActivity = function(){
             common.utility.loadingShow();
@@ -1507,6 +1506,35 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                 });
             }).fail(function(){
 
+            });
+        }();
+    }
+])
+
+.controller('ActivityMemberCtrl',[
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5){
+        var id = $stateParams.id;
+
+        !function(){
+            common.utility.loadingShow();
+            var paramsObj = {
+                activity_id: id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.joinUserList,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.memberList = d.data;
+                });
             });
         }();
     }

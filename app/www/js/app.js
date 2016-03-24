@@ -178,6 +178,16 @@ angular.module('guozhongbao', [
             }
         })
 
+        .state('activity_member', {
+            url: '/joint/activity/:id/member',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/memberlist.html',
+                    controller: 'ActivityMemberCtrl'
+                }
+            }
+        })
+
 
 
 

@@ -240,7 +240,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 corporationList: apiBaseUrl + 'jointly/getCorporationList',
                 joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
                 associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
-                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet'
+                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet',
+                joinUserList: apiBaseUrl + 'jointly/joinUserList'
 
             },
             SOURCE: {

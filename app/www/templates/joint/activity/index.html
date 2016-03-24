@@ -27,7 +27,7 @@
                 已索片<span class="red">{{activityModel.cadge_count}}</span>人 /
                 抽取<span class="red">{{activityModel.send_count}}</span>人
             </div>
-            <a class="item item-icon-right">
+            <a class="item item-icon-right" href="#/joint/activity/{{activityModel.id}}/member">
                 <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.joinUserList">
                 <i class="icon ion-ios-arrow-right"></i>
             </a>
