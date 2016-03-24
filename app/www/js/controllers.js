@@ -1475,16 +1475,31 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     '$stateParams',
     'md5',
     function($http, $scope, common, $stateParams, md5) {
-        var id = $stateParams.id;
-
+        var id = $stateParams.id,
+            paramsObj = {
+                activity_id: id,
+            };
+        $scope.buttonObj = {
+            joined: false,
+            buttonText: ''
+        };
         $scope.joinActivity = function(){
-            common.utility.loadingShow();
+            if (!this.buttonObj.joined) {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.joinActivity,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        common.utility.alert('提示', d.msg);
+                    });
+                });
+            }
         };
 
         !function(){
-            var paramsObj = {
-                activity_id: id,
-            };
             common.utility.loadingShow();
             common.utility.checkLogin().success(function(u){
                 paramsObj.uid = u.uid;
@@ -1497,11 +1512,12 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-                        console.log(d);
                         d.data.activity_time = new Date(d.data.activity_time * 1000).format('yyyy-MM-dd hh:mm:ss');
                         d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
                         d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
                         $scope.activityModel = d.data;
+                        $scope.buttonObj.joined = d.data.joined;
+                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片'
                     });
                 });
             }).fail(function(){

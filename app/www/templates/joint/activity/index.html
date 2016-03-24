@@ -41,7 +41,7 @@
         </div>
         
         <div class="padding">
-            <button class="button button-block button-positive" ng-click="joinActivity()">报名索片</button>
+            <button class="button button-block {{buttonObj.joined ? '' : 'button-positive'}}" ng-click="joinActivity()">{{buttonObj.buttonText}}</button>
         </div>
     </ion-content>
 </ion-view>
