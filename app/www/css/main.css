@@ -436,6 +436,25 @@ i.gender0{
 .joint-list .ion-male{
   color: #00c8ef;
 }
+.activity-list .item{
+    font-size: 14px;
+    padding: 10px;
+    color: #c4c4c4;
+}
+.activity-list .item.title{
+    color: #9d9d9d;
+}
+.activity-avatar{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    margin-right: 6px;
+}
+span.red{
+    color: red;
+}
 
 
 

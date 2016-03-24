@@ -166,7 +166,18 @@ angular.module('guozhongbao', [
                 controller: 'JointManageAssociatorCtrl'
               }
             }
-          })
+        })
+
+        .state('activity', {
+            url: '/joint/activity/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/index.html',
+                    controller: 'JointActivityCtrl'
+                }
+            }
+        })
+
 
 
 

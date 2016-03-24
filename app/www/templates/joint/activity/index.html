@@ -1,0 +1,47 @@
+<ion-view view-title="活动详情">
+    <ion-content style="background:#f5f5f5">
+        <img class="full" ng-src="{{activityModel.host + activityModel.propaganda_pic}}">
+
+        <div class="list activity-list">
+            <div class="item title">{{activityModel.name}}</div>
+            <div class="item">
+                活动时间：{{activityModel.activity_time}}
+            </div>
+            <div class="item">
+                联名地点：{{activityModel.addr_province}} &nbsp;
+                {{activityModel.addr_city}} &nbsp;
+                {{activityModel.activity_addr}} 
+            </div>
+            <div class="item">
+                主办单位：{{activityModel.corporation_name}}
+            </div>
+        </div>
+
+        <div class="list activity-list">
+            <div class="item">
+                索片时间：{{activityModel.cadge_time_start}}
+                ~
+                {{activityModel.cadge_time_end}}
+            </div>
+            <div class="item">
+                已索片<span class="red">{{activityModel.cadge_count}}</span>人 /
+                抽取<span class="red">{{activityModel.send_count}}</span>人
+            </div>
+            <a class="item item-icon-right">
+                <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.joinUserList">
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="list activity-list">
+            <div class="item">活动说明</div>
+            <div class="item">
+                {{activityModel.introduction}}
+            </div>
+        </div>
+        
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="joinActivity()">报名索片</button>
+        </div>
+    </ion-content>
+</ion-view>

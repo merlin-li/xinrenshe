@@ -1466,6 +1466,51 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
 
   }
 ])
+
+
+.controller('JointActivityCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id;
+        console.log(id);
+
+        $scope.joinActivity = function(){
+            common.utility.loadingShow();
+        };
+
+        !function(){
+            var paramsObj = {
+                activity_id: id,
+            };
+            common.utility.loadingShow();
+            common.utility.checkLogin().success(function(u){
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.activityDetail,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        console.log(d);
+                        d.data.activity_time = new Date(d.data.activity_time * 1000).format('yyyy-MM-dd hh:mm:ss');
+                        d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
+                        d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
+                        $scope.activityModel = d.data;
+                    });
+                });
+            }).fail(function(){
+
+            });
+        }();
+    }
+])
 ;
 
 
