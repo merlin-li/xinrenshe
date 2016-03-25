@@ -46,6 +46,9 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .item-divider{
     font-size: 14px;
 }
+.action-sheet .button{
+    font-size: 14px;
+}
 
 
 

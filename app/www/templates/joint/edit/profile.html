@@ -1,0 +1,24 @@
+<ion-view title="编辑资料">
+    <ion-content has-header="true">
+        <div class="avatar-container user-info-avatar" >
+            <img ng-src={{userObj.host+userObj.avatar}} ng-click="takePicture()">
+            <span class="ion-compose edit-avatar-btn" data-pack="default" data-tags="write, compose, type"></span>
+        </div>
+
+        <div class="content user-info-list ionic-pseudo">
+            <div class="list">
+                <div class="item item-input" ng-click="changeUserName()">
+                    <span  class="input-label">昵称</span>
+                    <span ng-bind="userObj.username" class="list-right" ng-hide="usernameHide"></span>
+                    <input type="search" maxlength="30" ng-hide="inputHide" ng-model="userObj.username" >
+                </div>
+            </div>
+        </div>
+
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="saveUserInfo()">确定</button>
+        </div>
+        <!--拍照-->
+        <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
+    </ion-content>
+</ion-view>

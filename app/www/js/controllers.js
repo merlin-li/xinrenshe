@@ -1257,24 +1257,32 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         };
 
         $scope.btnClick = function(){
-            console.log(this.pageModel.buttonStatus);
             var paramsObj = {
                 corporation_id: id
             };
-            if (this.pageModel.buttonStatus === 0) {
+            if (this.pageModel.buttonStatus === 1) {
                 //社务管理
                 var hideSheet = $ionicActionSheet.show({
                     buttons: [
                         { text: '发布活动' },
                         { text: '社员管理' },
-                        { text: '公告发布' },
-                        { text: '联名社资料' }
+                        { text: '发布公告' },
+                        { text: '修改联名社资料' }
                     ],
                     titleText: '社务管理',
                     cancelText: '取消',
                     cancel: function() {},
                     buttonClicked: function(index) {
-                        console.log(index);
+                        if (index === 0) {
+                            //发布活动
+                        } else if (index === 1) {
+                            //社员管理
+                        } else if (index === 2) {
+                            //发布公告
+                        } else if (index === 3) {
+                            //修改联名社资料
+                            $location.path('/corporation/profile/edit/' + id);
+                        }
                     }
                 });
             }
