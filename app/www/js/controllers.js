@@ -1923,6 +1923,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
           $scope.$broadcast('scroll.infiniteScrollComplete');
           if (data.status === 200) {
             $scope.page = $scope.page+1;
+            $scope.host = data.data.host;
             if(data.data.corporationList.length<=0){
               $scope.hasMore = false;
               $scope.noData = true;
