@@ -1151,7 +1151,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     }
     $scope.loadMoreData = function(){
       var newParams = {
-        page:$scope.page,
+        page:$scope.page
       };
       if($scope.loadType=='activity'){//活动
         newParams.type = $scope.listType;
@@ -1247,19 +1247,140 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     '$scope',
     'Common',
     '$stateParams',
-    function($http, $scope, common, $stateParams) {
+    'md5',
+    '$ionicActionSheet',
+    function($http, $scope, common, $stateParams, md5, $ionicActionSheet) {
         var id = $stateParams.id;
-        console.log(id);
-        // $http({
-        //     method: 'post',
-        //     url: common.API.corporationDetail,
-        //     data: {
 
-        //     }
-        // })
+        $scope.switchPanel = function(){
+            this.pageModel.showActivity = !this.pageModel.showActivity;
+        };
 
+        $scope.btnClick = function(){
+            console.log(this.pageModel.buttonStatus);
+            var paramsObj = {
+                corporation_id: id
+            };
+            if (this.pageModel.buttonStatus === 0) {
+                //社务管理
+                var hideSheet = $ionicActionSheet.show({
+                    buttons: [
+                        { text: '发布活动' },
+                        { text: '社员管理' },
+                        { text: '公告发布' },
+                        { text: '联名社资料' }
+                    ],
+                    titleText: '社务管理',
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        console.log(index);
+                    }
+                });
+            }
+            if (this.pageModel.buttonStatus === 1) {
+                //已申请
+            }
+            if (this.pageModel.buttonStatus === 2) {
+                //申请加入
+                common.utility.checkLogin().success(function(u){
+                    paramsObj.uid = u.uid;
+                    paramsObj.token = u.token;
+                    paramsObj.type = 1;
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    $http({
+                        method: 'post',
+                        url: common.API.joinExitCorporation,
+                        data: paramsObj
+                    }).success(function(data){
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg);
+                            $scope.pageModel.buttonStatus = 1;
+                        });
+                    });
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
+        };
 
-        // common.utility.
+        !function(){
+            $scope.pageModel = {
+                showActivity: false,
+                buttonText: '加入',
+                buttonStatus: 0,
+                hideBtn: false
+            };
+            common.utility.checkLogin().success(function(u){
+                var paramsObj = {
+                    corporation_id: id,
+                    uid: u.uid,
+                    token: u.token
+                }, assoParamsObj = {
+                    corporation_id: id
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                assoParamsObj.accessSign = md5.createHash(common.utility.createSign(assoParamsObj));
+
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.corporationDetail,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.corpModel = d.data;
+                        $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                        if (d.data.isPresident) {
+                            //如果是社长，显示社务管理
+                            $scope.pageModel.buttonText = '社务管理';
+                            $scope.pageModel.buttonStatus = 0;
+                        } else {
+                            if (d.data.joined) {
+                                //如果已加入，隐藏按钮
+                                $scope.pageModel.hideBtn = true;
+                            } else {
+                                //如果没有加入时，判断是否申请，
+                                if (d.data.applied) {
+                                    //已申请，显示 “已申请”
+                                    $scope.pageModel.buttonText = '已申请';
+                                    $scope.pageModel.buttonStatus = 1;
+                                } else {
+                                    //显示“加入”
+                                    $scope.pageModel.buttonText = '加入';
+                                    $scope.pageModel.buttonStatus = 2;
+                                }
+                            }
+                        }
+                        common.utility.loadingHide();
+                    });
+                });
+
+                $http({
+                    method: 'post',
+                    url: common.API.associatorList,
+                    data: assoParamsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.assoModel = d.data;
+                        common.utility.loadingHide();
+                    });
+                });
+
+                $http({
+                    method: 'post',
+                    url: common.API.activityList,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.activityModel = d.data;
+                        common.utility.loadingHide();
+                    });
+                });
+            }).fail(function(){
+
+            });
+        }();
     }
 ])
 .controller('JointManageAssociatorCtrl', [
@@ -1345,6 +1466,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
 
   }
 ])
+
 .controller('JointManagereleaseActivityCtrl', [
   '$http',
   '$scope',
@@ -1365,7 +1487,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
           activity_name:'',
           activity_addr:'',
           introduction:'',
-          send_count:10,
+          send_count:10
       }
     }();
 
@@ -1654,6 +1776,99 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     }
 
   }
+])
+.controller('JointActivityCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id,
+            paramsObj = {
+                activity_id: id
+            };
+        $scope.buttonObj = {
+            joined: false,
+            buttonText: ''
+        };
+        $scope.joinActivity = function(){
+            if (!this.buttonObj.joined) {
+                common.utility.checkLogin().success(function(u){
+                    paramsObj.uid = u.uid;
+                    paramsObj.token = u.token;
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.joinActivity,
+                        data: paramsObj
+                    }).success(function(data){
+                        common.utility.loadingHide();
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg);
+                        });
+                    });
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
+        };
+
+        !function(){
+            common.utility.checkLogin().always(function(u){
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.activityDetail,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.activity_time = new Date(d.data.activity_time * 1000).format('yyyy-MM-dd hh:mm:ss');
+                        d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
+                        d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
+                        $scope.activityModel = d.data;
+                        $scope.buttonObj.joined = d.data.joined;
+                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片'
+                    });
+                });
+            }).fail(function(){
+                // common.utility.resetToken();
+            });
+        }();
+    }
+])
+.controller('ActivityMemberCtrl',[
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5){
+        var id = $stateParams.id;
+
+        !function(){
+            common.utility.loadingShow();
+            var paramsObj = {
+                activity_id: id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.joinUserList,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.memberList = d.data;
+                });
+            });
+        }();
+    }
 ])
 ;
 

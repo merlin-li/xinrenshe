@@ -72,6 +72,11 @@ angular.module('guozhongbao.services', []).factory('Common', [
                     return this;
                 };
 
+                deferred.always = function(cb) {
+                    cb(this.userInfo);
+                    return this;
+                };
+
                 return deferred;
             }, _alert = function (t, c) {
                 var a = c || t;
@@ -160,7 +165,7 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 } else {
                     return false;
                 }
-            },_postData = function(url,params,needLogin,needAccessSign,successCallback){
+            }, _postData = function(url,params,needLogin,needAccessSign,successCallback){
                 if(needLogin!==false){
                   var userCookie = _getUserCookie();
                   if (userCookie) {
@@ -196,6 +201,23 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 }else{
                   return result;
                 }
+            }, _resetToken = function() {
+                $cookieStore.remove('userinfo');
+                $location.path('/user/login');
+            }, _handlePostResult = function(d, cb) {
+                if (!d.status) {
+                    console.error('no status.');
+                    return false;
+                }
+                if (d.status && d.status === 200) {
+                    cb(d);
+                } else if (d.status === 402) {
+                    //reset login method
+                    $cookieStore.remove('userinfo');
+                    $location.path('/user/login');
+                } else {
+                    _alert('提示', d.msg);
+                }
             };
 
         return {
@@ -216,14 +238,19 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee',
                 getUserInfo: apiBaseUrl + 'common/getUserInfo',
-                activityList:apiBaseUrl + 'jointly/activityList',
-              corporationList:apiBaseUrl + 'jointly/getCorporationList',
                 corporationDetail: apiBaseUrl + 'jointly/corporationDetail',
-              associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
-              associatorVet: apiBaseUrl + 'jointlyManage/associatorVet',
-              uploadActivityPic: apiBaseUrl + 'jointlyManage/uploadActivityPic',
-              releaseActivity: apiBaseUrl + 'jointlyManage/releaseActivity',
-              cadgeListManage: apiBaseUrl + 'jointlyManage/joinUserList',
+                associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
+                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet',
+                uploadActivityPic: apiBaseUrl + 'jointlyManage/uploadActivityPic',
+                releaseActivity: apiBaseUrl + 'jointlyManage/releaseActivity',
+                cadgeListManage: apiBaseUrl + 'jointlyManage/joinUserList',
+                associatorList: apiBaseUrl + '/jointly/associatorList',
+                activityList: apiBaseUrl + '/jointly/activityList',
+                activityDetail: apiBaseUrl + '/jointly/activityDetail',
+                corporationList: apiBaseUrl + 'jointly/getCorporationList',
+                joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
+                joinUserList: apiBaseUrl + 'jointly/joinUserList',
+                joinActivity: apiBaseUrl + 'jointly/joinActivity'
             },
             SOURCE: {
                 'home': '/home'
@@ -254,7 +281,9 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'getDeviceInfo': _getDeviceInfo,
                 'createSign': _createSign,
                 'getUserCookie': _getUserCookie,
-                'postData': _postData
+                'postData': _postData,
+                'resetToken': _resetToken,
+                'handlePostResult': _handlePostResult
             },
             tempData: {
                 userAddressInfo: ''

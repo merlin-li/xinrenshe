@@ -187,6 +187,27 @@ angular.module('guozhongbao', [
             }
           })
 
+        .state('activity', {
+            url: '/joint/activity/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/index.html',
+                    controller: 'JointActivityCtrl'
+                }
+            }
+        })
+
+        .state('activity_member', {
+            url: '/joint/activity/:id/member',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/memberlist.html',
+                    controller: 'ActivityMemberCtrl'
+                }
+            }
+        })
+
+
 
 
 
@@ -215,7 +236,7 @@ angular.module('guozhongbao', [
         showTodayButton: true,
         dateFormat: 'dd MMMM yyyy',
         closeOnSelect: false,
-        disableWeekdays: [],
+        disableWeekdays: []
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
     }

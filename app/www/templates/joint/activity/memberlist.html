@@ -1,0 +1,13 @@
+<ion-view view-title="报名列表">
+    <ion-content>
+        <div class="list member-list">
+            <div class="item member-item" ng-repeat="member in memberList.cadgeList">
+                <img ng-src="{{memberList.host + member.avatar}}" class="asso-avatar">
+                <div>
+                    <span>{{member.username}}<i class="gender gender{{member.sex}}"></i></span>
+                    <label>{{member.province + member.city}}</label>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
