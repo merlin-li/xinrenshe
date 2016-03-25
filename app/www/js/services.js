@@ -238,17 +238,21 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 modifyAvatar: apiBaseUrl + 'setUserInfo/avatar',
                 modifyConsigneeInfo: apiBaseUrl + 'setUserInfo/consignee',
                 getUserInfo: apiBaseUrl + 'common/getUserInfo',
-
                 corporationDetail: apiBaseUrl + 'jointly/corporationDetail',
+                associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
+                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet',
+                uploadActivityPic: apiBaseUrl + 'jointlyManage/uploadActivityPic',
+                releaseActivity: apiBaseUrl + 'jointlyManage/releaseActivity',
+                cadgeListManage: apiBaseUrl + 'jointlyManage/joinUserList',
                 associatorList: apiBaseUrl + '/jointly/associatorList',
                 activityList: apiBaseUrl + '/jointly/activityList',
                 activityDetail: apiBaseUrl + '/jointly/activityDetail',
                 corporationList: apiBaseUrl + 'jointly/getCorporationList',
                 joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
-                associatorApplyList: apiBaseUrl + 'jointlyManage/associatorApplyList',
-                associatorVet: apiBaseUrl + 'jointlyManage/associatorVet',
                 joinUserList: apiBaseUrl + 'jointly/joinUserList',
-                joinActivity: apiBaseUrl + 'jointly/joinActivity'
+                joinActivity: apiBaseUrl + 'jointly/joinActivity',
+                corporationListManage: apiBaseUrl + 'jointlyManage/corporationList',
+                saveCorporation: apiBaseUrl + 'jointlyManage/saveCorporation'
             },
             SOURCE: {
                 'home': '/home'
@@ -284,7 +288,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 'handlePostResult': _handlePostResult
             },
             tempData: {
-                userAddressInfo: ''
+                userAddressInfo: '',
+                corporationInfo: ''
             }
         };
     }

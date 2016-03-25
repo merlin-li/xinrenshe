@@ -375,7 +375,7 @@ i.gender0{
     background-size: 100%;
 }
 .activity-avatar{
-    
+
 }
 .joint .scroll-bar{
   z-index: 0;
@@ -442,6 +442,19 @@ i.gender0{
 .joint-list .ion-male{
   color: #00c8ef;
 }
+
+
+.release-activity .s-label{
+  margin-top: 15px;
+}
+.release-activity .list{
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+.release-activity .cadge-list .item{
+  padding: 13px 0 12px 16px;
+}
+
 .activity-list .item{
     font-size: 14px;
     /*padding: 10px 0;*/
@@ -468,6 +481,7 @@ i.gender0{
 span.red{
     color: red;
 }
+
 
 
 
