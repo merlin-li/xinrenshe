@@ -1,0 +1,41 @@
+<ion-view title="索片名单">
+  <ion-content has-header="true" style="background: #f2f2f2">
+    <div>
+      <ul class="list">
+        <li class="item">
+          活动名称: <span ng-bind="activityName"></span>
+        </li>
+        <li class="item">
+          索片人数: <span ng-bind="joinCount"></span>
+        </li>
+        <li class="item">
+          抽中人数: <span ng-bind="totalCount"></span>
+        </li>
+     </ul>
+    </div>
+    <div class="joint-list" style="top:0px">
+      <ion-list class="list">
+        <a class="item " href="#" ng-repeat="cadgeUser in cadgeList">
+          <h2> <span>{{$index+1}}.地址：</span>
+            <span ng-bind="cadgeUser.province"></span>
+            <span ng-bind="cadgeUser.city"></span>
+            <span ng-bind="cadgeUser.area"></span>
+            <span ng-bind="cadgeUser.consignee_addr"></span>
+          </h2>
+          <p>
+              <span>收信人：<span ng-bind="cadgeUser.consignee_username"></span></span>
+              &nbsp;&nbsp;&nbsp;
+              <span>邮编：<span ng-bind="cadgeUser.zip_code"></span></span>
+          </p>
+
+        </a>
+      </ion-list>
+      <div class="bottom" ng-show="noData">
+        没有更多
+      </div>
+      <ion-infinite-scroll
+        on-infinite="loadMoreData()" distance="5%" ng-if="hasMore">
+      </ion-infinite-scroll>
+    </div>
+  </ion-content>
+</ion-view>

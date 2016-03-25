@@ -1235,7 +1235,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
           case 6:weekStr = '六';break;
           case 7:weekStr = '日';break;
         }
-        value.activity_time = dateObj.getMonth() + '/' + dateObj.getDate() +'周'+weekStr;
+        value.activity_time = (dateObj.getMonth()+1) + '/' + dateObj.getDate() +'周'+weekStr;
         this.push(value);
       }, activityList);
     }
@@ -1327,6 +1327,316 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
             return ;
           }
             _mergeList(data.data.applyList,$scope.associatorApplyList);
+        } else {
+          $scope.hasMore = false;
+          $scope.noData = true;
+          common.utility.alert('提示', data.msg);
+        }
+
+      }
+      common.utility.postData(url,params,true,true,success);
+    }
+
+    function _mergeList(List1,List2){
+      angular.forEach(List1, function(value) {
+        this.push(value);
+      }, List2);
+    }
+
+  }
+])
+.controller('JointManagereleaseActivityCtrl', [
+  '$http',
+  '$scope',
+  'Common',
+  '$stateParams',
+    'ionicDatePicker',
+    '$location',
+  function($http, $scope, common, $stateParams,ionicDatePicker,$location) {
+    !function(){
+      $scope.corpid = $stateParams.id;//社团id
+      $scope.cadge_time_start = '';
+      $scope.cadge_time_end = '';
+      $scope.activity_time_ymd = '';
+      $scope.activity_time_his = '';
+      $scope.activity_time = '';
+      $scope.propaganda_pic = '';
+      $scope.modelInfo = {
+          activity_name:'',
+          activity_addr:'',
+          introduction:'',
+          send_count:10,
+      }
+    }();
+
+
+    $scope.timeSelect = function(type){
+      var ipObj1 = {
+        from: new Date(), //Optional
+        to: new Date(2020, 10, 30), //Optional
+        inputDate: new Date(),      //Optional
+        mondayFirst: true,          //Optional
+        disableWeekdays: [],       //Optional
+        closeOnSelect: false,       //Optional
+        templateType: 'popup'       //Optional
+      };
+      if(type==1){
+        ipObj1.callback = function(val){
+          var dateObj = new Date(val);
+          $scope.cadge_time_start = dateObj.getFullYear() +'-' + (dateObj.getMonth()+1) + '-' + dateObj.getDate();
+          $scope.cadge_time_start_timestamp = dateObj;
+        }
+
+      }else if(type==2){
+
+        ipObj1.callback = function(val){
+          var dateObj = new Date(val);
+          $scope.cadge_time_end = dateObj.getFullYear() +'-' + (dateObj.getMonth()+1) + '-' + dateObj.getDate();
+        }
+      }else if(type==3){
+        ipObj1.callback = function(val){
+          var dateObj = new Date(val);
+          $scope.activity_time_ymd = dateObj.getFullYear() +'-' + (dateObj.getMonth()+1)+ '-' + dateObj.getDate();
+          document.getElementById('timeClick').click();
+        }
+      }
+      ionicDatePicker.openDatePicker(ipObj1);
+    }
+
+
+    $scope.openDatePicker = function(){
+      ionicDatePicker.openDatePicker(ipObj1);
+    };
+
+    $scope.timePickerObject = {
+      inputEpochTime: ((new Date()).getHours() * 60 * 60),  //Optional
+      step: 30,  //Optional
+      format: 24,  //Optional
+      titleLabel: '选择时间',  //Optional
+      setLabel: '确定',  //Optional
+      closeLabel: '取消',  //Optional
+      setButtonType: 'button-positive',  //Optional
+      closeButtonType: 'button-stable',  //Optional
+      callback: function (val) {    //Mandatory
+        timePickerCallback(val);
+      }
+    };
+
+    function timePickerCallback(val) {
+      if (typeof (val) === 'undefined') {
+        $scope.activity_time = $scope.activity_time_ymd+' 09:00';
+      } else {
+        var selectedTime = new Date(val * 1000);
+        var h = '00';
+        var i = '00';
+        if (selectedTime.getUTCHours()<10){
+            h ="0" + selectedTime.getUTCHours();
+        }else{
+            h = selectedTime.getUTCHours();
+        }
+        if(selectedTime.getUTCMinutes()<10){
+            i = selectedTime.getUTCMinutes()+'0';
+        }else{
+            i = selectedTime.getUTCMinutes();
+        }
+        $scope.activity_time_his = h+':'+i;
+        //console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+        $scope.activity_time = $scope.activity_time_ymd+' '+$scope.activity_time_his;
+      }
+    }
+
+    $scope.releaseActivity = function(){
+      var url = common.API.releaseActivity;
+      if($scope.activity_time==''){
+          common.utility.alert('提示', '活动时间不得为空');
+          return false;
+      }
+      if($scope.cadge_time_start==''){
+        common.utility.alert('提示', '索片开始时间不得为空');
+        return false;
+      }
+      if($scope.cadge_time_end==''){
+        common.utility.alert('提示', '索片结束时间不得为空');
+        return false;
+      }
+      if($scope.modelInfo.activity_addr==''){
+        common.utility.alert('提示', '活动地点不得为空');
+        return false;
+      }
+      if($scope.modelInfo.activity_name==''){
+        common.utility.alert('提示', '活动时间不得为空');
+        return false;
+      }
+      var params = {
+        activity_time:$scope.activity_time,
+        cadge_time_start:$scope.cadge_time_start,
+        cadge_time_end:$scope.cadge_time_end,
+        corporation_id:$scope.corpid,
+        activity_addr:$scope.modelInfo.activity_addr,
+        send_count:$scope.modelInfo.send_count,
+        introduction:$scope.modelInfo.introduction,
+        propaganda_pic:$scope.propaganda_pic,
+        name:$scope.modelInfo.activity_name,
+      }
+      console.log(params);
+      var success = function(data){
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        if (data.status === 200) {
+          $location.path('/joint/corporation/'+$scope.corpid);
+        } else {
+          common.utility.alert('提示', data.msg);
+        }
+      }
+      common.utility.postData(url,params,true,true,success);
+    }
+
+
+    var _savePropagandaPic = function(pic){
+
+      var params = {
+        'propaganda_pic':pic,
+        'corporation_id':$scope.corpid
+      };
+      var url = common.API.uploadActivityPic;
+      var success = function(data){
+        if (data.status === 200) {
+          $scope.propaganda_pic = data.data.propaganda_pic;
+          $scope.showPic = true;
+          console.log($scope.propaganda_pic);
+        } else {
+          common.utility.alert('提示', data.msg);
+        }
+      }
+      common.utility.postData(url,params,true,true,success);
+    }
+
+
+    var takePicture = document.getElementById('takepicture');
+    //src="img/tx_1.png"
+    $scope.takePicture = function(){
+
+        takePicture.click();
+    };
+    takePicture.onchange = function (event){
+      var files = event.target.files, file;
+      if (files && files.length > 0) {
+        file = files[0];
+        try {
+          var URL = window.URL || window.webkitURL;
+          var blob = URL.createObjectURL(file);
+          _compressPicture(blob);
+
+        } catch (e) {
+          try {
+            var fileReader = new FileReader();
+            fileReader.onload = function (event) {
+              _compressPicture(event.target.result);
+            };
+            fileReader.readAsDataURL(file);
+          } catch (e) {
+            common.utility.alert('error');
+          }
+        }
+
+      }
+    };
+
+
+
+
+    /**
+     * 压缩照片
+     * @param blob 照片的url
+     */
+    var _compressPicture = function (blob) {
+      var quality = 0.5, image = new Image();
+      image.src = blob;
+      image.onload = function () {
+        var that = this;
+        // 生成比例
+        var width = that.width, height = that.height;
+        width = width / 4;
+        height = height / 4;
+        // 生成canvas画板
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(that, 0, 0, width, height);
+        // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+        var imgurl = canvas.toDataURL('image/jpeg', quality);
+        // 修复IOS兼容问题
+        if (navigator.userAgent.match(/iphone/i)) {
+          var mpImg = new MegaPixImage(image);
+          mpImg.render(canvas, {
+            maxWidth: width,
+            maxHeight: height,
+            quality: quality
+          });
+          imgurl = canvas.toDataURL('image/jpeg', quality);
+        }
+        $scope.propagandaPic = imgurl;
+        _savePropagandaPic(imgurl);
+        $scope.$digest();
+      };
+
+    };
+
+  }
+])
+.controller('JointManageCadgeListCtrl', [
+  '$http',
+  '$scope',
+  'Common',
+  '$stateParams',
+  function($http, $scope, common, $stateParams) {
+    !function(){
+      $scope.hasMore = true;
+      $scope.noData = false;
+      $scope.cadgeList = [];
+      $scope.activityName = '';
+      $scope.totalCount = '';
+      $scope.joinCount = '';
+      $scope.host = "";
+      $scope.page = 1;
+      $scope.activityId = $stateParams.activityId;//社团id
+      $scope.corporationId = $stateParams.corporationId;//社团id
+    }();
+
+    $scope.$on('stateChangeSuccess', function() {
+      $scope.loadMoreData();
+    });
+
+    $scope.loadMoreData = function(){
+      var newParams = {
+        page:$scope.page,
+        corporation_id:$scope.corporationId,
+        activity_id:$scope.activityId
+      };
+      _loadList(newParams);
+    }
+
+
+    function _loadList(params){
+
+      var url = common.API.cadgeListManage;
+      var success = function(data){
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        if (data.status === 200) {
+          //$scope.host = data.data.host;
+          if($scope.page==1){
+            $scope.totalCount = data.data.totalCount;
+            $scope.activityName = data.data.activityName;
+            $scope.joinCount = data.data.joinCount;
+          }
+
+          $scope.page = $scope.page+1;
+          if(data.data.joinUserList.length<=0){
+            $scope.hasMore = false;
+            $scope.noData = true;
+            return ;
+          }
+          _mergeList(data.data.joinUserList,$scope.cadgeList);
         } else {
           $scope.hasMore = false;
           $scope.noData = true;

@@ -347,6 +347,18 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
   color: #00c8ef;
 }
 
+.release-activity .s-label{
+  margin-top: 15px;
+}
+.release-activity .list{
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+.release-activity .cadge-list .item{
+  padding: 13px 0 12px 16px;
+}
+
+
 
 
 

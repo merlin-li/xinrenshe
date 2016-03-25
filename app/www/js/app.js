@@ -2,13 +2,16 @@
 angular.module('guozhongbao', [
     'ionic',
     'guozhongbao.controllers',
-    'guozhongbao.services'
+    'guozhongbao.services',
+    'ionic-datepicker',
+  'ionic-timepicker',
     // 'guozhongbao.error'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
     '$ionicConfigProvider',
-    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    'ionicDatePickerProvider',
+    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider,ionicDatePickerProvider) {
         // $httpProvider.defaults.useXDomain = true;
         // delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -166,6 +169,22 @@ angular.module('guozhongbao', [
                 controller: 'JointManageAssociatorCtrl'
               }
             }
+          }).state('joint_manage_release_activity', {
+            url: '/joint/manage/releaseActivity/:id',
+            views: {
+              'content': {
+                templateUrl: 'templates/joint/manage/releaseActivity.html',
+                controller: 'JointManagereleaseActivityCtrl'
+              }
+            }
+          }).state('joint_manage_cadgeList', {
+            url: '/joint/manage/cadgeList/:corporationId/:activityId',
+            views: {
+              'content': {
+                templateUrl: 'templates/joint/manage/cadgeList.html',
+                controller: 'JointManageCadgeListCtrl'
+              }
+            }
           })
 
 
@@ -181,6 +200,24 @@ angular.module('guozhongbao', [
         ;
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/home');
+
+      var datePickerObj = {
+        inputDate: new Date(),
+        setLabel: '设置',
+        todayLabel: '今天',
+        closeLabel: '取消',
+        mondayFirst: false,
+        weeksList: ["日", "一", "二", "三", "四", "五", "六"],
+        monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+        templateType: 'popup',
+        from: new Date(2012, 8, 1),
+        to: new Date(2018, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+        disableWeekdays: [],
+      };
+      ionicDatePickerProvider.configDatePicker(datePickerObj);
     }
 ]);
 
