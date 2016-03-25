@@ -1894,6 +1894,7 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
       !function(){
         $scope.hasMore = true;
         $scope.noData = false;
+        $scope.showTip = false;
         $scope.corporationList = [];
         $scope.host = "";
         $scope.page = 1;
@@ -1925,6 +1926,9 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
             if(data.data.corporationList.length<=0){
               $scope.hasMore = false;
               $scope.noData = true;
+              if($scope.page==2){
+                $scope.showTip = true;
+              }
               return ;
             }
             _mergeList(data.data.corporationList,$scope.corporationList);
