@@ -205,7 +205,15 @@ angular.module('guozhongbao', [
                     controller: 'ActivityMemberCtrl'
                 }
             }
-        })
+        }).state('my_corporation_list', {
+            url: '/joint/manage/myCorporation',
+            views: {
+              'content': {
+                templateUrl: 'templates/joint/manage/mycorporationList.html',
+                controller: 'myCorporationCtrl'
+              }
+            }
+          })
 
 
 

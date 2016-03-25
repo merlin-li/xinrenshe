@@ -1249,7 +1249,8 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     '$stateParams',
     'md5',
     '$ionicActionSheet',
-    function($http, $scope, common, $stateParams, md5, $ionicActionSheet) {
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $ionicActionSheet,$location) {
         var id = $stateParams.id;
 
         $scope.switchPanel = function(){
@@ -1274,7 +1275,22 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
                     cancelText: '取消',
                     cancel: function() {},
                     buttonClicked: function(index) {
-                        console.log(index);
+                        var url = '/home';
+                        switch(index){
+                          case 0:
+                              url = '/joint/manage/releaseActivity/'+id;
+                              break;
+                          case 1:
+                              url = '/joint/manage/associator/'+id;
+                              break;
+                          case 2:
+                              url = '/home';
+                              break;
+                          case 3:
+                              url = '/home';
+                              break;
+                        }
+                        $location.path(url);
                     }
                 });
             }
@@ -1870,6 +1886,65 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         }();
     }
 ])
+  .controller('myCorporationCtrl',[
+    '$http',
+    '$scope',
+    'Common',
+    function($http, $scope, common){
+      !function(){
+        $scope.hasMore = true;
+        $scope.noData = false;
+        $scope.corporationList = [];
+        $scope.host = "";
+        $scope.page = 1;
+        var newParams = {
+          page:$scope.page,
+        };
+        _loadList(newParams);
+      }();
+
+/*      $scope.$on('stateChangeSuccess', function() {
+        $scope.loadMoreData();
+      });
+
+      $scope.loadMoreData = function(){
+         var newParams = {
+         page:$scope.page,
+         };
+         _loadList(newParams);
+      }*/
+
+
+      function _loadList(params){
+
+        var url = common.API.corporationListManage;
+        var success = function(data){
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+          if (data.status === 200) {
+            $scope.page = $scope.page+1;
+            if(data.data.corporationList.length<=0){
+              $scope.hasMore = false;
+              $scope.noData = true;
+              return ;
+            }
+            _mergeList(data.data.corporationList,$scope.corporationList);
+          } else {
+            $scope.hasMore = false;
+            $scope.noData = true;
+            common.utility.alert('提示', data.msg);
+          }
+
+        }
+        common.utility.postData(url,params,true,true,success);
+      }
+
+      function _mergeList(List1,List2){
+        angular.forEach(List1, function(value) {
+          this.push(value);
+        }, List2);
+      }
+    }
+  ])
 ;
 
 

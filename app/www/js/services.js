@@ -250,7 +250,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 corporationList: apiBaseUrl + 'jointly/getCorporationList',
                 joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
                 joinUserList: apiBaseUrl + 'jointly/joinUserList',
-                joinActivity: apiBaseUrl + 'jointly/joinActivity'
+                joinActivity: apiBaseUrl + 'jointly/joinActivity',
+              corporationListManage: apiBaseUrl + 'jointlyManage/corporationList',
             },
             SOURCE: {
                 'home': '/home'
