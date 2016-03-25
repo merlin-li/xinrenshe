@@ -1,7 +1,7 @@
 <ion-view title="编辑资料">
     <ion-content has-header="true">
         <div class="avatar-container user-info-avatar" >
-            <img ng-src={{userObj.host+userObj.avatar}} ng-click="takePicture()">
+            <img ng-src={{corpModel.avatar}} ng-click="takePic()">
             <span class="ion-compose edit-avatar-btn" data-pack="default" data-tags="write, compose, type"></span>
         </div>
 
@@ -9,7 +9,7 @@
             <div class="list">
                 <div class="item item-input">
                     <span  class="input-label">社团名称</span>
-                    <input type="search" maxlength="30" ng-model="userObj.username" >
+                    <input type="text" maxlength="30" ng-model="corpModel.name" >
                 </div>
 <!--                 <div class="item item-icon-right">
                     <span  class="input-label">地点</span>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="padding">
-            <button class="button button-block button-positive" ng-click="saveUserInfo()">确定</button>
+            <button class="button button-block button-positive" ng-click="save()">保存修改</button>
         </div>
         <!--拍照-->
         <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">

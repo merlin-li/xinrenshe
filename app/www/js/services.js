@@ -252,7 +252,8 @@ angular.module('guozhongbao.services', []).factory('Common', [
                 joinUserList: apiBaseUrl + 'jointly/joinUserList',
                 joinActivity: apiBaseUrl + 'jointly/joinActivity',
                 corporationListManage: apiBaseUrl + 'jointlyManage/corporationList',
-                saveCorporation: apiBaseUrl + 'jointlyManage/saveCorporation'
+                saveCorporation: apiBaseUrl + 'jointlyManage/saveCorporation',
+                releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice'
             },
             SOURCE: {
                 'home': '/home'

@@ -1959,30 +1959,138 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
     'Common',
     '$stateParams',
     'md5',
-    function($http, $scope, common, $stateParams, md5) {
-
-        console.log(common.tempData.corporationInfo);
-
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $location) {
         var id = $stateParams.id,
             paramsObj = {
                 corporation_id: id
             };
         common.utility.checkLogin().success(function(u){
-            console.log(u);
             paramsObj.uid = u.uid;
             paramsObj.token = u.token;
-            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             if (common.tempData.corporationInfo) {
-                
+                $scope.corpModel = common.tempData.corporationInfo;
             }
         }).fail(function(){
             common.utility.resetToken();
         });
 
-        $scope.save = function() {
 
+        $scope.save = function() {
+            paramsObj.name = $scope.corpModel.name;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.saveCorporation,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                    $location.path('/joint/corporation/' + id);
+                });
+            });
         };
 
+
+        var takePicture = document.getElementById('takepicture');
+        takePicture.onchange = function (event){
+            var files = event.target.files, file;
+            if (files && files.length > 0) {
+                file = files[0];
+                try {
+                    var URL = window.URL || window.webkitURL;
+                    var blob = URL.createObjectURL(file);
+                    _compressPicture(blob);
+                } catch (e) {
+                    try {
+                        var fileReader = new FileReader();
+                        fileReader.onload = function (event) {
+                            _compressPicture(event.target.result);
+                        };
+                        fileReader.readAsDataURL(file);
+                    } catch (e) {
+                        common.utility.alert('error');
+                    }
+                }
+            }
+        };
+
+        /**
+         * 压缩照片
+         * @param blob 照片的url
+        */
+        var _compressPicture = function (blob) {
+            var quality = 0.5, image = new Image();
+            image.src = blob;
+            image.onload = function () {
+                var that = this;
+                // 生成比例
+                var width = that.width, height = that.height;
+                width = width / 4;
+                height = height / 4;
+                // 生成canvas画板
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(that, 0, 0, width, height);
+                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+                var imgurl = canvas.toDataURL('image/jpeg', quality);
+                // 修复IOS兼容问题
+                if (navigator.userAgent.match(/iphone/i)) {
+                    var mpImg = new MegaPixImage(image);
+                    mpImg.render(canvas, {
+                        maxWidth: width,
+                        maxHeight: height,
+                        quality: quality
+                    });
+                    imgurl = canvas.toDataURL('image/jpeg', quality);
+                }
+                paramsObj.avatar = imgurl;
+                $scope.corpModel.avatar = imgurl;
+            };
+        };
+
+        $scope.takePic = function(c) {
+            takePicture.click();
+        };
+    }
+])
+
+.controller('CorporationNoticeCtrl', [
+    '$http',
+    '$scope', 
+    'Common',
+    '$stateParams',
+    'md5',
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $location) {
+        var id = $stateParams.id;
+        $scope.noticeModel = {
+            notice: '',
+            uid: '',
+            token: '',
+            corporation_id: id
+        };
+        common.utility.checkLogin().success(function(u){
+            $scope.noticeModel.uid = u.uid;
+            $scope.noticeModel.token = u.token;
+        });
+        $scope.save = function(){
+            this.noticeModel.accessSign = md5.createHash(common.utility.createSign(this.noticeModel));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.releaseNotice,
+                data: $scope.noticeModel
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                    $location.path('/joint/corporation/' + id);
+                });
+            });
+        };
     }
 ])
 ;

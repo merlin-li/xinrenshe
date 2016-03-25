@@ -214,6 +214,15 @@ angular.module('guozhongbao', [
               }
             }
         })
+        .state('corporation_notice', {
+            url: '/joint/manage/notice/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/notice.html',
+                    controller: 'CorporationNoticeCtrl'
+                }
+            }
+        })
 
         .state('corporation_edit', {
             url: '/corporation/profile/edit/:id',
