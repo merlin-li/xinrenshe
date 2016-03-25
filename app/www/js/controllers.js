@@ -1485,26 +1485,33 @@ angular.module('guozhongbao.controllers',['ngCookies', 'angular-md5', 'ImageCrop
         };
         $scope.joinActivity = function(){
             if (!this.buttonObj.joined) {
-                common.utility.loadingShow();
-                $http({
-                    method: 'post',
-                    url: common.API.joinActivity,
-                    data: paramsObj
-                }).success(function(data){
-                    common.utility.loadingHide();
-                    common.utility.handlePostResult(data, function(d){
-                        common.utility.alert('提示', d.msg);
+                common.utility.checkLogin().success(function(u){
+                    paramsObj.uid = u.uid;
+                    paramsObj.token = u.token;
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.joinActivity,
+                        data: paramsObj
+                    }).success(function(data){
+                        common.utility.loadingHide();
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg);
+                        });
                     });
+                }).fail(function(){
+                    common.utility.resetToken();
                 });
             }
         };
 
         !function(){
-            common.utility.loadingShow();
             common.utility.checkLogin().always(function(u){
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
                 $http({
                     method: 'post',
                     url: common.API.activityDetail,
