@@ -269,5 +269,6 @@ angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
     return function(exception, cause) {
         exception.message += ' (caused by "' + cause + '")';
         console.log(exception.message);
+        alert(exception.message);
     };
 });

@@ -1294,44 +1294,44 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                 var paramsObj = {
                     corporation_id: id
                 };
-                // if (this.pageModel.buttonStatus === 0) {
-                //社务管理
-                var hideSheet = $ionicActionSheet.show({
-                    buttons: [{
-                        text: '发布活动'
-                    }, {
-                        text: '社员管理'
-                    }, {
-                        text: '发布公告'
-                    }, {
-                        text: '修改联名社资料'
-                    }],
-                    titleText: '社务管理',
-                    cancelText: '取消',
-                    cancel: function() {},
-                    buttonClicked: function(index) {
-                        var url = '/home';
-                        switch (index) {
-                            case 0:
-                                url = '/joint/manage/releaseActivity/' + id;
-                                break;
-                            case 1:
-                                url = '/joint/manage/associator/' + id;
-                                break;
-                            case 2:
-                                //发布公告
-                                url = '/joint/manage/notice/' + id
-                                break;
-                            case 3:
-                                //联名社资料编辑
-                                common.tempData.corporationInfo = $scope.corpModel;
-                                url = '/corporation/profile/edit/' + id;
-                                break;
+                if (this.pageModel.buttonStatus === 0) {
+                    // 社务管理
+                    var hideSheet = $ionicActionSheet.show({
+                        buttons: [{
+                            text: '发布活动'
+                        }, {
+                            text: '社员管理'
+                        }, {
+                            text: '发布公告'
+                        }, {
+                            text: '修改联名社资料'
+                        }],
+                        titleText: '社务管理',
+                        cancelText: '取消',
+                        cancel: function() {},
+                        buttonClicked: function(index) {
+                            var url = '/home';
+                            switch (index) {
+                                case 0:
+                                    url = '/joint/manage/releaseActivity/' + id;
+                                    break;
+                                case 1:
+                                    url = '/joint/manage/associator/' + id;
+                                    break;
+                                case 2:
+                                    //发布公告
+                                    url = '/joint/manage/notice/' + id
+                                    break;
+                                case 3:
+                                    //联名社资料编辑
+                                    common.tempData.corporationInfo = $scope.corpModel;
+                                    url = '/corporation/profile/edit/' + id;
+                                    break;
+                            }
+                            $location.path(url);
                         }
-                        $location.path(url);
-                    }
-                });
-                // }
+                    });
+                }
                 if (this.pageModel.buttonStatus === 1) {
                     //已申请
                 }
