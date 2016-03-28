@@ -768,6 +768,7 @@
                     maxSize: '@'
                 },
                 link: function(scope, element, attributes) {
+                    console.log(scope);
 
                     var padding = scope.padding ? Number(scope.padding) : 200;
 
@@ -830,6 +831,14 @@
                         width: (scope.width + padding) + 'px',
                         height: (scope.height + padding) + 'px'
                     };
+
+                    var _width = 0;
+                    if (window.innerWidth) {
+                        _width = window.innerWidth;
+                    } else if (document.body && document.body.clientWidth) {
+                        _width = document.body.clientWidth;
+                    }
+                    padding = _width - scope.width;
 
                     scope.croppingGuideStyles = {
                         width: scope.width + 'px',

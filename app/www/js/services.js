@@ -241,7 +241,40 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else {
                     _alert('提示', d.msg);
                 }
+            },
+            _compressPicture = function(blob, cb) {
+                var quality = 0.5,
+                    image = new Image();
+                image.src = blob;
+                image.onload = function() {
+                    var that = this;
+                    // 生成比例
+                    var width = that.width,
+                        height = that.height;
+                    width = width / 4;
+                    height = height / 4;
+                    // 生成canvas画板
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(that, 0, 0, width, height);
+                    // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+                    var imgurl = canvas.toDataURL('image/jpeg', quality);
+                    // 修复IOS兼容问题
+                    if (navigator.userAgent.match(/iphone/i)) {
+                        var mpImg = new MegaPixImage(image);
+                        mpImg.render(canvas, {
+                            maxWidth: width,
+                            maxHeight: height,
+                            quality: quality
+                        });
+                        imgurl = canvas.toDataURL('image/jpeg', quality);
+                    }
+                    cb(imgurl);
+                };
             };
+
 
         return {
             API: {
@@ -309,11 +342,13 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'getUserCookie': _getUserCookie,
                 'postData': _postData,
                 'resetToken': _resetToken,
-                'handlePostResult': _handlePostResult
+                'handlePostResult': _handlePostResult,
+                'compressPicture': _compressPicture
             },
             tempData: {
                 userAddressInfo: '',
-                corporationInfo: ''
+                corporationInfo: '',
+                imgData: ''
             }
         };
     }

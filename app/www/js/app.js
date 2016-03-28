@@ -36,6 +36,17 @@ angular.module('xinrenshe', [
                     }
                 }
             })
+
+            .state('imgtest', {
+                url: '/image/test',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/image/test.html',
+                        controller: 'Imgtest'
+                    }
+                }
+            })
+
             .state('app_login', {
                 url: '/user/login',
                 views: {
