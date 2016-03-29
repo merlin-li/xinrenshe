@@ -16,7 +16,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
-alert(window.localStorage.length);
         ! function() {
             //初始化事件
             $http({
@@ -41,9 +40,8 @@ alert(window.localStorage.length);
     'Common',
     '$location',
     '$stateParams',
-    '$cookieStore',
     'md5',
-    function($scope, $http, common, $location, $stateParams, $cookieStore, md5) {
+    function($scope, $http, common, $location, $stateParams, md5) {
         $scope.loginModel = {
             phone: '',
             password: ''
@@ -65,7 +63,7 @@ alert(window.localStorage.length);
                     //登录成功
                     data.data.userInfo.token = data.data.token;
                     data.data.host = data.data.host;
-                    $cookieStore.put('userinfo', data.data.userInfo);
+                    common.utility.cookieStore.put('userinfo', data.data.userInfo);
                     $location.path('/home');
                 } else {
                     common.utility.alert(data.msg);
@@ -86,9 +84,8 @@ alert(window.localStorage.length);
     '$http',
     'Common',
     '$location',
-    '$cookieStore',
     'md5',
-    function($scope, $http, common, $location, $cookieStore, md5) {
+    function($scope, $http, common, $location, md5) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 var paramsObj = {
@@ -106,12 +103,12 @@ alert(window.localStorage.length);
                         $scope.userObj = d.data.userInfo;
                         $scope.userObj.avatar = d.data.host + d.data.userInfo.avatar;
                         $scope.userObj.token = d.data.token;
-                        $cookieStore.remove('userinfo');
-                        $cookieStore.put('userinfo', $scope.userObj);
+                        common.utility.cookieStore.remove('userinfo');
+                        common.utility.cookieStore.put('userinfo', $scope.userObj);
                     });
                 });
             }).fail(function() {
-                $location.path('/user/login');
+                // $location.path('/user/login');
             });
         }();
     }
@@ -124,8 +121,7 @@ alert(window.localStorage.length);
     '$interval',
     'Common',
     'md5',
-    '$cookieStore',
-    function($scope, $http, $location, $interval, common, md5, $cookieStore) {
+    function($scope, $http, $location, $interval, common, md5) {
         $scope.signupModel = {
             phone: '',
             code: '',
@@ -164,7 +160,7 @@ alert(window.localStorage.length);
                 }).success(function(data) {
                     if (data.status === 200) {
                         common.utility.alert('提示', '注册成功！').then(function(){
-                            $cookieStore.put('userinfo', data.data);
+                            common.utility.cookieStore.put('userinfo', data.data);
                             $location.path('/setting/userinfo');
                         });
                     } else {
@@ -246,9 +242,8 @@ alert(window.localStorage.length);
     'Common',
     '$location',
     'md5',
-    '$cookieStore',
     '$timeout',
-    function($scope, $http, common, $location, md5, $cookieStore, $timeout) {
+    function($scope, $http, common, $location, md5, $timeout) {
         var takePicture = document.getElementById('takepicture');
 
         takePicture.onchange = function(event) {
@@ -283,8 +278,8 @@ alert(window.localStorage.length);
                 },
                 userObj;
 
-            if ($cookieStore.get('userinfo')) {
-                userObj = $cookieStore.get('userinfo');
+            if (common.utility.cookieStore.get('userinfo')) {
+                userObj = common.utility.cookieStore.get('userinfo');
             }
 
             paramsObj.uid = userObj.uid;
@@ -318,9 +313,8 @@ alert(window.localStorage.length);
     '$http',
     'Common',
     '$location',
-    '$cookieStore',
     'md5',
-    function($scope, $http, common, $location, $cookieStore, md5) {
+    function($scope, $http, common, $location, md5) {
         $scope.userModel = {
             consignee_username: '',
             zip_code: '',
@@ -329,6 +323,7 @@ alert(window.localStorage.length);
             city: '',
             area: ''
         };
+
 
         $scope.save = function() {
             if (this.userModel.consignee_username === '' || this.userModel.zip_code === '' || this.userModel.consignee_address === '' || this.userModel.area === '') {
@@ -350,8 +345,8 @@ alert(window.localStorage.length);
                         area: self.area
                     },
                     userObj;
-                if ($cookieStore.get('userinfo')) {
-                    userObj = $cookieStore.get('userinfo');
+                if (common.utility.cookieStore.get('userinfo')) {
+                    userObj = common.utility.cookieStore.get('userinfo');
                 }
                 paramsObj.uid = userObj.uid;
                 paramsObj.token = userObj.token;
@@ -381,13 +376,17 @@ alert(window.localStorage.length);
         };
 
         ! function() {
+            common.utility.cookieStore.remove('areainfo1'),
+            common.utility.cookieStore.remove('areainfo2'),
+            common.utility.cookieStore.remove('areainfo3');
+
             if (common.tempData.userAddressInfo) {
                 $scope.userModel = common.tempData.userAddressInfo;
             }
-            if ($cookieStore.get('areainfo1') && $cookieStore.get('areainfo2') && $cookieStore.get('areainfo3')) {
-                var areaObj1 = $cookieStore.get('areainfo1'),
-                    areaObj2 = $cookieStore.get('areainfo2'),
-                    areaObj3 = $cookieStore.get('areainfo3');
+            if (common.utility.cookieStore.get('areainfo1') && common.utility.cookieStore.get('areainfo2') && common.utility.cookieStore.get('areainfo3')) {
+                var areaObj1 = common.utility.cookieStore.get('areainfo1'),
+                    areaObj2 = common.utility.cookieStore.get('areainfo2'),
+                    areaObj3 = common.utility.cookieStore.get('areainfo3');
 
                 $scope.userModel.province = areaObj1.name;
                 $scope.userModel.city = areaObj2.name;
@@ -404,10 +403,9 @@ alert(window.localStorage.length);
     '$location',
     'md5',
     '$stateParams',
-    '$cookieStore',
-    function($scope, $http, common, $location, md5, $stateParams, $cookieStore) {
+    function($scope, $http, common, $location, md5, $stateParams) {
         if ($stateParams.type) {
-            $cookieStore.put('citySetType', $stateParams.type);
+            common.utility.cookieStore.put('citySetType', $stateParams.type);
         }
 
         function _init(pid) {
@@ -429,7 +427,7 @@ alert(window.localStorage.length);
                     $scope.areaData = data.data.regionList;
                 } else {
                     //表示选中当前的地区，进行跳转
-                    var redirect_type = $cookieStore.get('citySetType');
+                    var redirect_type = common.utility.cookieStore.get('citySetType');
 
                     if (!redirect_type) {
                         $location.path('/setting/address');
@@ -440,7 +438,7 @@ alert(window.localStorage.length);
                         for (var i in redirectArr) {
                             redirectUrl += '/' + redirectArr[i];
                         }
-                        $cookieStore.remove('citySetType');
+                        common.utility.cookieStore.remove('citySetType');
                         $location.path(redirectUrl);
                     }
                 }
@@ -604,15 +602,17 @@ alert(window.localStorage.length);
                 data: paramsObj
             }).success(function(data) {
                 //处理card的示例图
-                data.data.orderList.map(function(order) {
-                    if (order.picture) {
-                        order.picture = data.data.host + order.picture;
-                    } else {
-                        order.picture = 'img/xjbj_1.png';
-                    }
-                });
-                $scope.cardModel = data.data;
-                $scope.showTip = (data.data.orderList.length > 0);
+                if (data.status === 200) {
+                    data.data.orderList.map(function(order) {
+                        if (order.picture) {
+                            order.picture = data.data.host + order.picture;
+                        } else {
+                            order.picture = 'img/xjbj_1.png';
+                        }
+                    });
+                    $scope.cardModel = data.data;
+                    $scope.showTip = (data.data.orderList.length > 0);
+                }
                 common.utility.loadingHide();
             }).error(function() {
                 common.utility.loadingHide();
@@ -674,8 +674,8 @@ alert(window.localStorage.length);
         };
 
         common.utility.checkLogin().success(function(u){
-            paramsObj.uid = userCookie.uid;
-            paramsObj.token = userCookie.token;
+            paramsObj.uid = u.uid;
+            paramsObj.token = u.token;
             $scope.readCardList();
         }).fail(function(){
             common.utility.resetToken();
@@ -688,9 +688,8 @@ alert(window.localStorage.length);
     '$http',
     'Common',
     '$location',
-    '$cookieStore',
     '$timeout',
-    function($scope, $http, common, $location, $cookieStore, $timeout) {
+    function($scope, $http, common, $location, $timeout) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userObj = u;
@@ -715,7 +714,7 @@ alert(window.localStorage.length);
                 if (data.status === 200) {
                     $scope.inputHide = true;
                     $scope.usernameHide = false;
-                    $cookieStore.put('userinfo', $scope.userObj);
+                    common.utility.cookieStore.put('userinfo', $scope.userObj);
                     $location.path('/user');
                 } else {
                     common.utility.alert('提示', data.msg);
@@ -733,7 +732,7 @@ alert(window.localStorage.length);
                 if (data.status === 200) {
                     $scope.userObj.avatar = data.data.avatar;
                     $scope.userObj.host = data.data.host;
-                    $cookieStore.put('userinfo', $scope.userObj);
+                    common.utility.cookieStore.put('userinfo', $scope.userObj);
                     cb();
                 } else {
                     common.utility.alert('提示', data.msg);
@@ -889,24 +888,23 @@ alert(window.localStorage.length);
     '$http',
     'Common',
     '$location',
-    '$cookieStore',
-    function($scope, $http, common, $location, $cookieStore) {
+    function($scope, $http, common, $location) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userModel = u;
             }).fail(function() {
                 $location.path('/user/login');
             });
-            if ($cookieStore.get('areainfo1')) {
-                var areaObj1 = $cookieStore.get('areainfo1'),
-                    areaObj2 = $cookieStore.get('areainfo2'),
-                    areaObj3 = $cookieStore.get('areainfo3');
+            if (common.utility.cookieStore.get('areainfo1')) {
+                var areaObj1 = common.utility.cookieStore.get('areainfo1'),
+                    areaObj2 = common.utility.cookieStore.get('areainfo2'),
+                    areaObj3 = common.utility.cookieStore.get('areainfo3');
                 $scope.userModel.province = areaObj1.name;
                 $scope.userModel.city = areaObj2.name;
                 $scope.userModel.area = areaObj3.name;
-                $cookieStore.remove('areainfo1');
-                $cookieStore.remove('areainfo2');
-                $cookieStore.remove('areainfo3');
+                common.utility.cookieStore.remove('areainfo1');
+                common.utility.cookieStore.remove('areainfo2');
+                common.utility.cookieStore.remove('areainfo3');
             }
         }();
 
@@ -933,7 +931,7 @@ alert(window.localStorage.length);
                 var url = common.API.modifyConsigneeInfo;
                 var success = function(data) {
                     if (data.status === 200) {
-                        $cookieStore.put('userinfo', $scope.userModel);
+                        common.utility.cookieStore.put('userinfo', $scope.userModel);
                         $location.path('/user');
                     } else {
                         common.utility.alert('提示', data.msg);

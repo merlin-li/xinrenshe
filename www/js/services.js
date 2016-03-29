@@ -54,8 +54,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 var deferred = {},
                     userInfoObj;
 
-                if ($cookieStore.get('userinfo')) {
-                    userInfoObj = $cookieStore.get('userinfo');
+                if (_cookieStore.get('userinfo')) {
+                    userInfoObj = _cookieStore.get('userinfo');
                     deferred.login = true;
                     deferred.userInfo = userInfoObj;
                 } else {
@@ -138,31 +138,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     }
                 };
             }(),
-            _getDeviceInfo = function() {
-                var deviceType = '',
-                    deviceCode = '',
-                    ua = navigator.userAgent;
-                if (/MicroMessenger/i.test(ua)) {
-                    deviceType = 'wechat';
-                    deviceCode = 4;
-                } else if (/IEMobile/i.test(ua)) {
-                    deviceType = 'windowsphone';
-                    deviceCode = 3;
-                } else if (/iPhone|iPad|iPod/i.test(ua)) {
-                    deviceType = 'ios';
-                    deviceCode = 1;
-                } else if (/Android/i.test(ua)) {
-                    deviceType = 'android';
-                    deviceCode = 2;
-                } else {
-                    deviceType = 'unknown';
-                    deviceCode = 0;
-                }
-                return {
-                    deviceType: deviceType,
-                    deviceCode: deviceCode
-                };
-            },
             _createSign = function(paramObj) {
                 var appKey = '6a70eef64db7fc3f16ef19b877fb32db',
                     appSecret = 'c34437ac61651d066a4380d01a5dead4',
@@ -224,7 +199,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 }
             },
             _resetToken = function() {
-                $cookieStore.remove('userinfo');
+                _cookieStore.remove('userinfo');
                 $location.path('/user/login');
             },
             _handlePostResult = function(d, cb) {
@@ -236,43 +211,11 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     cb(d);
                 } else if (d.status === 402) {
                     //reset login method
-                    $cookieStore.remove('userinfo');
+                    _cookieStore.remove('userinfo');
                     $location.path('/user/login');
                 } else {
                     _alert('提示', d.msg);
                 }
-            },
-            _compressPicture = function(blob, cb) {
-                var quality = 0.5,
-                    image = new Image();
-                image.src = blob;
-                image.onload = function() {
-                    var that = this;
-                    // 生成比例
-                    var width = that.width,
-                        height = that.height;
-                    width = width / 4;
-                    height = height / 4;
-                    // 生成canvas画板
-                    var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext('2d');
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(that, 0, 0, width, height);
-                    // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                    var imgurl = canvas.toDataURL('image/jpeg', quality);
-                    // 修复IOS兼容问题
-                    if (navigator.userAgent.match(/iphone/i)) {
-                        var mpImg = new MegaPixImage(image);
-                        mpImg.render(canvas, {
-                            maxWidth: width,
-                            maxHeight: height,
-                            quality: quality
-                        });
-                        imgurl = canvas.toDataURL('image/jpeg', quality);
-                    }
-                    cb(imgurl);
-                };
             };
 
 
@@ -337,13 +280,11 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'loadingHide': _loadingHide,
                 'removeCookie': _removeCookie,
                 'cookieStore': _cookieStore,
-                'getDeviceInfo': _getDeviceInfo,
                 'createSign': _createSign,
                 'getUserCookie': _getUserCookie,
                 'postData': _postData,
                 'resetToken': _resetToken,
-                'handlePostResult': _handlePostResult,
-                'compressPicture': _compressPicture
+                'handlePostResult': _handlePostResult
             },
             tempData: {
                 userAddressInfo: '',

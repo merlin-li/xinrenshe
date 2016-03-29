@@ -4,8 +4,8 @@ angular.module('xinrenshe', [
     'xinrenshe.controllers',
     'xinrenshe.services',
     'ionic-datepicker',
-    'ionic-timepicker',
-    'xinrenshe.error'
+    'ionic-timepicker'
+    // 'xinrenshe.error'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
@@ -263,13 +263,32 @@ angular.module('xinrenshe', [
         };
         ionicDatePickerProvider.configDatePicker(datePickerObj);
     }
-]);
+])
+// .run(function($ionicPlatform) {
+//     $ionicPlatform.ready(function() {
+//         if(window.cordova && window.cordova.plugins.Keyboard) {
+//             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+//             // for form inputs)
+//             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
+//             // Don't remove this line unless you know what you are doing. It stops the viewport
+//             // from snapping when text inputs are focused. Ionic handles this internally for
+//             // a much nicer keyboard experience.
+//             cordova.plugins.Keyboard.disableScroll(true);
+//         }
+//         if(window.StatusBar) {
+//             StatusBar.styleDefault();
+//         }
+//   });
+// })
+
+;
 
 
-angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
-    return function(exception, cause) {
-        exception.message += ' (caused by "' + cause + '")';
-        console.log(exception.message);
-        alert(exception.message);
-    };
-});
+// angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
+//     return function(exception, cause) {
+//         exception.message += ' (caused by "' + cause + '")';
+//         console.log(exception.message);
+//         alert(exception.message);
+//     };
+// });

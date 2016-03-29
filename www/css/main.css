@@ -13,7 +13,7 @@ body{
     background: #ff8c9b;
 }
 [nav-bar-transition=ios] [nav-bar=entering] .bar, [nav-bar-transition=ios] [nav-bar=active] .bar{
-    background: #ff8c9b;
+    /*background: #ff8c9b;*/
 }
 .bar.bar-stable .title{
     /*color: #fff;*/
