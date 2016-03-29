@@ -247,67 +247,20 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$location',
     'md5',
     '$cookieStore',
-    function($scope, $http, common, $location, md5, $cookieStore) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $cookieStore, $timeout) {
         var takePicture = document.getElementById('takepicture');
 
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                $scope.userModel.avatar = imgurl;
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.tempData.imgData = this.result;
+                $timeout(function() {
+                    $location.path('/image/crop/setting_userinfo');
+                }, 1000);
             };
         };
 
@@ -316,6 +269,10 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             gender: '',
             avatar: ''
         };
+        if (common.tempData.imgData) {
+            $scope.userModel.avatar = common.tempData.imgData;
+        }
+
         //下一步
         $scope.next = function() {
             var paramsObj = {
@@ -332,16 +289,16 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
             paramsObj.uid = userObj.uid;
             paramsObj.token = userObj.token;
-
-            // console.log(common.utility.createSign(paramsObj));
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             paramsObj.avatar = $scope.userModel.avatar;
 
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.setUserInfo,
                 data: paramsObj
             }).success(function(data) {
+                common.utility.loadingHide();
                 if (data.status === 200) {
                     $location.path('/setting/address');
                 } else {
@@ -349,7 +306,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                 }
             });
         };
-        //src="img/tx_1.png"
+
         $scope.takePicture = function() {
             takePicture.click();
         };
@@ -575,7 +532,8 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $timeout) {
         $scope.showTip = true;
         var paramsObj = {
                 type: 1,
@@ -584,17 +542,35 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             },
             userCookie = common.utility.getUserCookie();
 
+        var _loadPicture = function(imgurl, cb) {
+            // 上传寄片照片的操作
+            var picParamsObj = {
+                order_id: $scope.selectCardIndex,
+                uid: userCookie.uid,
+                token: userCookie.token
+            };
+            picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
+            picParamsObj.picture = imgurl;
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.uploadPic,
+                data: picParamsObj
+            }).success(function(data) {
+                common.utility.loadingHide();
+                cb();
+            }).error(function() {});
+        };
+        var takeCardPicture = document.getElementById('takecardpicture');
+
         $scope.statusObj = {
             txt: '已旅行',
             hide: true
         };
-
-        if (userCookie) {
-            paramsObj.uid = userCookie.uid;
-            paramsObj.token = userCookie.token;
-        } else {
-            $location.path('/user/login');
-        }
+        $scope.modelStyle = {
+            'display': 'none'
+        };
+        $scope.selectIndex = 1;
 
         $scope.readCardList = function(t) {
             $scope.selectIndex = t || 1;
@@ -673,92 +649,19 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             };
         };
 
-        $scope.modelStyle = {
-            'display': 'none'
-        };
-        $scope.selectIndex = 1;
-        $scope.readCardList();
-
-
-        var takeCardPicture = document.getElementById('takecardpicture');
         takeCardPicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-
-                $scope.cardModel.orderList.map(function(card) {
-                    if (card.id === $scope.selectCardIndex) {
-                        card.picture = imgurl;
-                    }
-                });
-                // 上传寄片照片的操作
-                var picParamsObj = {
-                    order_id: $scope.selectCardIndex,
-                    uid: userCookie.uid,
-                    token: userCookie.token
-                };
-                picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
-                picParamsObj.picture = imgurl;
-                $http({
-                    method: 'post',
-                    url: common.API.uploadPic,
-                    data: picParamsObj
-                }).success(function(data) {
-                    // console.log(data);
-                }).error(function() {});
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                common.tempData.imgDataCallback = _loadPicture;
+                $timeout(function() {
+                    $location.path('/image/crop/my_sending');
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
 
@@ -769,6 +672,14 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                 takeCardPicture.click();
             }
         };
+
+        common.utility.checkLogin().success(function(u){
+            paramsObj.uid = userCookie.uid;
+            paramsObj.token = userCookie.token;
+            $scope.readCardList();
+        }).fail(function(){
+            common.utility.resetToken();
+        });
     }
 ])
 
@@ -778,12 +689,13 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     '$cookieStore',
-    function($scope, $http, common, $location, $cookieStore) {
+    '$timeout',
+    function($scope, $http, common, $location, $cookieStore, $timeout) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userObj = u;
             }).fail(function() {
-                $location.path('/user/login');
+                common.utility.resetToken();
             });
         }();
 
@@ -812,8 +724,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-        var _saveUserAvatar = function(avatar) {
-
+        var _saveUserAvatar = function(avatar, cb) {
             var params = {
                 'avatar': avatar
             };
@@ -823,6 +734,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     $scope.userObj.avatar = data.data.avatar;
                     $scope.userObj.host = data.data.host;
                     $cookieStore.put('userinfo', $scope.userObj);
+                    cb();
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -830,76 +742,25 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-
         var takePicture = document.getElementById('takepicture');
-        //src="img/tx_1.png"
+
         $scope.takePicture = function() {
             takePicture.click();
         };
+
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
+                fileReader = new FileReader();
 
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-
-            }
-        };
-
-
-
-
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                $scope.userObj.avatar = imgurl;
-                _saveUserAvatar(imgurl);
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                common.tempData.imgDataCallback = _saveUserAvatar;
+                $timeout(function() {
+                    $location.path('/image/crop/my_userinfo');
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
     }
@@ -1086,85 +947,33 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     }
 ])
 
-.controller('Imgtest', [
-    '$scope',
-    '$location',
-    'Common',
-    '$timeout',
-    function($scope, $location, common, $timeout) {
-        $scope.test = function() {
-            document.getElementById('fileInput').click();
-        };
-
-
-        $timeout(function(){
-            console.log('xxxxxxxx');
-        }, 2000);
-
-
-
-        $scope.fileChangeds = function(e) {
-            var files = e.target.files;
-
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(files[0]);
-
-            fileReader.onload = function(e) {
-                // $scope.imgSrc = this.result;
-                console.log('onload event');
-                common.utility.compressPicture(this.result, function(x){
-                    console.log('compress event');
-                    common.tempData.imgData = x;
-                    $location.path('/image/crop');
-                    console.log($location.path);
-                    console.log('compress event done');
-                });
-            };
-        };
-    }
-])
 .controller('ImgCropCtrl', [
     '$scope',
     '$http',
     'Common',
-    function($scope, $http, common) {
-        // console.log(common.tempData.imgData);
-        $scope.imgSrc = common.tempData.imgData;
+    '$location',
+    '$stateParams',
+    function($scope, $http, common, $location, $stateParams) {
+        if (!common.tempData.imgData) {
+            $location.path('/image/test');
+        } else {
+            $scope.imgSrc = common.tempData.imgData;
 
-        $scope.fileChanged = function(e) {
-            var files = e.target.files;
-
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(files[0]);
-
-            fileReader.onload = function(e) {
-                $scope.imgSrc = this.result;
-                $scope.$apply();
+            $scope.save = function() {
+                common.tempData.imgData = this.result;
+                $scope.imageCropStep = 1;
+                delete $scope.imgSrc;
+                delete $scope.result;
+                delete $scope.resultBlob;
+                if (common.tempData.imgDataCallback) {
+                    common.tempData.imgDataCallback(this.result, function(){
+                       $location.path('/' + $stateParams.from.split('_').join('/')); 
+                    });
+                } else {
+                    $location.path('/' + $stateParams.from.split('_').join('/'));
+                }
             };
         }
-
-        $scope.clear = function() {
-            // $scope.imageCropStep = 1;
-            // delete $scope.imgSrc;
-            // delete $scope.result;
-            // delete $scope.resultBlob;
-
-            console.log($scope.resultBlob);
-        };
-
-        $scope.upload = function() {
-            document.getElementById('fileInput').click();
-        };
-
-        $scope.xxx = function() {
-            this.initCrop = true;
-            // this.$apply();
-            console.log(this.result);
-        };
-
-        // $scope.upload();
-        // document.getElementById('fileInput').click();
-
     }
 ])
 
@@ -1189,7 +998,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
         $scope.$on('stateChangeSuccess', function() {
             $scope.loadMoreData();
-
         });
         $scope.changeLoadType = function(loadType) {
 
@@ -1281,8 +1089,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                         _mergeList(data.data.corporationList, $scope.corporationList);
 
                     }
-
-                    //$scope.activityList = angular.extend($scope.activityList,data.data.activityList);
 
                 } else {
                     common.utility.alert('提示', data.msg);
@@ -1482,7 +1288,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     data: paramsObj
                 }).success(function(data) {
                     common.utility.handlePostResult(data, function(d) {
-                        console.log(d.data);
                         d.data.activityList.map(function(a){
                             a.activity_time = new Date(a.activity_time * 1000).format('MM/dd hh:mm');;
                         });
@@ -1947,7 +1752,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     });
                 });
             }).fail(function() {
-                // common.utility.resetToken();
+                common.utility.resetToken();
             });
         }();
     }
@@ -2043,7 +1848,8 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$stateParams',
     'md5',
     '$location',
-    function($http, $scope, common, $stateParams, md5, $location) {
+    '$timeout',
+    function($http, $scope, common, $stateParams, md5, $location, $timeout) {
         var id = $stateParams.id,
             paramsObj = {
                 corporation_id: id
@@ -2054,6 +1860,9 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             if (common.tempData.corporationInfo) {
                 $scope.corpModel = common.tempData.corporationInfo;
             }
+            if (common.tempData.imgData) {
+                $scope.corpModel.avatar = common.tempData.imgData;
+            }
         }).fail(function() {
             common.utility.resetToken();
         });
@@ -2061,6 +1870,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
         $scope.save = function() {
             paramsObj.name = $scope.corpModel.name;
+            paramsObj.avatar = $scope.corpModel.avatar;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             $http({
                 method: 'post',
@@ -2079,62 +1889,16 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
         var takePicture = document.getElementById('takepicture');
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                paramsObj.avatar = imgurl;
-                $scope.corpModel.avatar = imgurl;
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                $timeout(function() {
+                    $location.path('/image/crop/corporation_profile_edit_' + id);
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
 

@@ -768,8 +768,6 @@
                     maxSize: '@'
                 },
                 link: function(scope, element, attributes) {
-                    console.log(scope);
-
                     var padding = scope.padding ? Number(scope.padding) : 200;
 
                     scope.rand = Math.round(Math.random() * 99999);

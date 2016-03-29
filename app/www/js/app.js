@@ -28,21 +28,11 @@ angular.module('xinrenshe', [
                 }
             })
             .state('img_crop', {
-                url: '/image/crop',
+                url: '/image/crop/:from',
                 views: {
                     'content': {
                         templateUrl: 'templates/image/crop.html',
                         controller: 'ImgCropCtrl'
-                    }
-                }
-            })
-
-            .state('imgtest', {
-                url: '/image/test',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/image/test.html',
-                        controller: 'Imgtest'
                     }
                 }
             })
