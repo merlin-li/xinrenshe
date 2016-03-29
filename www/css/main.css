@@ -16,11 +16,11 @@ body{
     background: #ff8c9b;
 }
 .bar.bar-stable .title{
-    color: #fff;
-    background: #ff8c9b;
+    /*color: #fff;*/
+    /*background: #ff8c9b;*/
 }
 .bar-stable .button.button-clear{
-    color: #fff;
+    /*color: #fff;*/
 }
 .item{
     border-color: #f1f1f1;

@@ -16,7 +16,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
-
+alert(window.localStorage.length);
         ! function() {
             //初始化事件
             $http({
