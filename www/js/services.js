@@ -6,10 +6,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
     '$ionicLoading',
     '$http',
     '$location',
-    '$q',
-    '$cookieStore',
     'md5',
-    function($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, $q, $cookieStore, md5) {
+    function($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, md5) {
 
         var offline = false,
             location = window.location.search,
@@ -26,7 +24,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
         if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
             loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
         } else {
-            loadingTemplate = '<img src="img/loan/pic_loading.gif" style="width:30px;height:30px;">';
+            loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
         }
         Date.prototype.format = function(fmt) {
             var o = {
@@ -155,8 +153,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 return str;
             },
             _getUserCookie = function() {
-                if ($cookieStore.get('userinfo')) {
-                    return $cookieStore.get('userinfo');
+                if (_cookieStore.get('userinfo')) {
+                    return _cookieStore.get('userinfo');
                 } else {
                     return false;
                 }
@@ -185,7 +183,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 if (successCallback) {
                     result.success(function(data) {
                         if (data.status === 402) {
-                            $cookieStore.remove('userinfo');
+                            _cookieStore.remove('userinfo');
                             _alert('提示', data.msg);
                             $location.path('/user/login');
                         } else {

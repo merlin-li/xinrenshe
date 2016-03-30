@@ -1,5 +1,5 @@
 'use strict';
-angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropper'])
+angular.module('xinrenshe.controllers', ['angular-md5', 'ImageCropper'])
     .config([
         '$sceDelegateProvider',
         '$httpProvider',
@@ -49,7 +49,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
         $scope.login = function() {
             var signStr = common.utility.createSign($scope.loginModel);
-
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.login,
@@ -59,6 +59,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     accessSign: md5.createHash(signStr)
                 }
             }).success(function(data) {
+                common.utility.loadingHide();
                 if (data.status === 200) {
                     //登录成功
                     data.data.userInfo.token = data.data.token;
@@ -108,9 +109,13 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     });
                 });
             }).fail(function() {
-                // $location.path('/user/login');
+                $location.path('/user/login');
             });
         }();
+
+        $scope.logout = function(){
+            common.utility.resetToken();
+        };
     }
 ])
 
@@ -450,13 +455,13 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
         $scope.go = function(i) {
             if (i.type === 1) {
                 //表示省份
-                $cookieStore.put('areainfo1', i);
+                common.utility.cookieStore.put('areainfo1', i);
             } else if (i.type === 2) {
                 //表示市
-                $cookieStore.put('areainfo2', i);
+                common.utility.cookieStore.put('areainfo2', i);
             } else if (i.type === 3) {
                 //表示区县
-                $cookieStore.put('areainfo3', i);
+                common.utility.cookieStore.put('areainfo3', i);
             }
             $location.path('/city/setting/' + i.id);
         };
