@@ -94,13 +94,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             console.log($cordovaCamera);
 
             var options = {
-                quality: 50,
+                quality: 70,
                 destinationType: Camera.DestinationType.DATA_URL,
                 sourceType: Camera.PictureSourceType.CAMERA,
                 allowEdit: true,
                 encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 100,
-                targetHeight: 100,
+                targetWidth: 300,
+                targetHeight: 300,
                 popoverOptions: CameraPopoverOptions,
                 saveToPhotoAlbum: false,
                 correctOrientation:true
@@ -634,17 +634,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 data: paramsObj
             }).success(function(data) {
                 //处理card的示例图
-                if (data.status === 200) {
-                    data.data.orderList.map(function(order) {
+                common.utility.handlePostResult(data, function(d){
+                    d.data.orderList.map(function(order) {
                         if (order.picture) {
-                            order.picture = data.data.host + order.picture;
+                            order.picture = d.data.host + order.picture;
                         } else {
                             order.picture = 'img/xjbj_1.png';
                         }
                     });
-                    $scope.cardModel = data.data;
-                    $scope.showTip = (data.data.orderList.length > 0);
-                }
+                    $scope.cardModel = d.data;
+                    $scope.showTip = (d.data.orderList.length > 0);
+                });
                 common.utility.loadingHide();
             }).error(function() {
                 common.utility.loadingHide();
