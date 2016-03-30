@@ -17,6 +17,7 @@ angular.module('xinrenshe', [
         $ionicConfigProvider.views.forwardCache(true);
         // $ionicConfigProvider.views.transition('none');
         $ionicConfigProvider.views.maxCache(0);
+        $ionicConfigProvider.platform.android.tabs.position('bottom');
 
         $stateProvider.state('app_home', {
                 url: '/home',

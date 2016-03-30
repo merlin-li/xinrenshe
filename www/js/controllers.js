@@ -1,5 +1,5 @@
 'use strict';
-angular.module('xinrenshe.controllers', ['angular-md5', 'ImageCropper'])
+angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropper'])
     .config([
         '$sceDelegateProvider',
         '$httpProvider',
@@ -86,7 +86,34 @@ angular.module('xinrenshe.controllers', ['angular-md5', 'ImageCropper'])
     'Common',
     '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    '$cordovaCamera',
+    function($scope, $http, common, $location, md5, $cordovaCamera) {
+
+        $scope.camera = function(){
+            alert('xx');
+            console.log($cordovaCamera);
+
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 100,
+                targetHeight: 100,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                correctOrientation:true
+            };
+
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                var image = document.getElementById('myImage');
+                image.src = "data:image/jpeg;base64," + imageData;
+            }, function(err) {
+            // error
+            });
+        };
+
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 var paramsObj = {
