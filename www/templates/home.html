@@ -7,10 +7,11 @@
 
             <div class="home-send">
                 <div>
-                    <label>已有{{dataObj.sendCount}}人寄出</label>
+                    <label>已有{{dataObj.sendCount}}人寄出
                     <section>
                         <img class="home-avatar" ng-repeat="img in dataObj.userList" ng-src="{{dataObj.host + img.avatar}}">
                     </section>
+                    </label>
                     <a href="#/card/sendtip">寄一张</a>
                 </div>
             </div>
