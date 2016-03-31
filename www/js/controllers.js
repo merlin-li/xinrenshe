@@ -90,28 +90,32 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     function($scope, $http, common, $location, md5, $cordovaCamera) {
 
         $scope.camera = function(){
-            alert('xx');
-            console.log($cordovaCamera);
+            // alert('xx');
+            // console.log($cordovaCamera);
 
-            var options = {
-                quality: 70,
-                destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.CAMERA,
-                allowEdit: true,
-                encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 300,
-                targetHeight: 300,
-                popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false,
-                correctOrientation:true
-            };
+            // var options = {
+            //     quality: 90,
+            //     destinationType: Camera.DestinationType.DATA_URL,
+            //     sourceType: Camera.PictureSourceType.CAMERA,
+            //     allowEdit: true,
+            //     encodingType: Camera.EncodingType.JPEG,
+            //     targetWidth: 300,
+            //     targetHeight: 300,
+            //     popoverOptions: CameraPopoverOptions,
+            //     saveToPhotoAlbum: false,
+            //     correctOrientation:true
+            // };
 
-            $cordovaCamera.getPicture(options).then(function(imageData) {
-                var image = document.getElementById('myImage');
-                image.src = "data:image/jpeg;base64," + imageData;
-            }, function(err) {
-            // error
-            });
+            // $cordovaCamera.getPicture(options).then(function(imageData) {
+            //     var image = document.getElementById('myImage');
+            //     image.src = "data:image/jpeg;base64," + imageData;
+            // }, function(err) {
+            // // error
+            // });
+
+            common.utility.takepicture($cordovaCamera, function(s){
+                document.getElementById('myImage').src = s;
+            }, function(){});
         };
 
         ! function() {
@@ -274,22 +278,22 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     'md5',
-    '$timeout',
-    function($scope, $http, common, $location, md5, $timeout) {
-        var takePicture = document.getElementById('takepicture');
+    '$cordovaCamera',
+    function($scope, $http, common, $location, md5, $cordovaCamera) {
+        // var takePicture = document.getElementById('takepicture');
 
-        takePicture.onchange = function(event) {
-            var files = event.target.files,
-                fileReader = new FileReader();
+        // takePicture.onchange = function(event) {
+        //     var files = event.target.files,
+        //         fileReader = new FileReader();
 
-            fileReader.readAsDataURL(files[0]);
-            fileReader.onload = function(e) {
-                common.tempData.imgData = this.result;
-                $timeout(function() {
-                    $location.path('/image/crop/setting_userinfo');
-                }, 1000);
-            };
-        };
+        //     fileReader.readAsDataURL(files[0]);
+        //     fileReader.onload = function(e) {
+        //         common.tempData.imgData = this.result;
+        //         $timeout(function() {
+        //             $location.path('/image/crop/setting_userinfo');
+        //         }, 1000);
+        //     };
+        // };
 
         $scope.userModel = {
             nickname: '',
@@ -335,7 +339,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         };
 
         $scope.takePicture = function() {
-            takePicture.click();
+            common.utility.takePicture($cordovaCamera, function(s){
+                $scope.userModel.avatar = s;
+            }, function(){})
         };
     }
 ])

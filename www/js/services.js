@@ -214,6 +214,28 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else {
                     _alert('提示', d.msg);
                 }
+            },
+            _takePicture = function(cordovaCamera, successFn, errFn){
+                var options = {
+                    quality: 90,
+                    destinationType: Camera.DestinationType.DATA_URL,
+                    sourceType: Camera.PictureSourceType.CAMERA,
+                    allowEdit: true,
+                    encodingType: Camera.EncodingType.JPEG,
+                    targetWidth: 300,
+                    targetHeight: 300,
+                    popoverOptions: CameraPopoverOptions,
+                    saveToPhotoAlbum: false,
+                    correctOrientation:true
+                };
+
+                cordovaCamera.getPicture(options).then(function(imageData) {
+                    // var image = document.getElementById('myImage');
+                    // image.src = "data:image/jpeg;base64," + imageData;
+                    successFn('data:image/jpeg:base64,' + imageData);
+                }, function(err) {
+                    errFn(err);
+                });
             };
 
 
@@ -282,7 +304,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'getUserCookie': _getUserCookie,
                 'postData': _postData,
                 'resetToken': _resetToken,
-                'handlePostResult': _handlePostResult
+                'handlePostResult': _handlePostResult,
+                'takePicture': _takePicture
             },
             tempData: {
                 userAddressInfo: '',
