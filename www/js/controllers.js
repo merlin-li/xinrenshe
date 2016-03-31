@@ -280,21 +280,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'md5',
     '$cordovaCamera',
     function($scope, $http, common, $location, md5, $cordovaCamera) {
-        // var takePicture = document.getElementById('takepicture');
-
-        // takePicture.onchange = function(event) {
-        //     var files = event.target.files,
-        //         fileReader = new FileReader();
-
-        //     fileReader.readAsDataURL(files[0]);
-        //     fileReader.onload = function(e) {
-        //         common.tempData.imgData = this.result;
-        //         $timeout(function() {
-        //             $location.path('/image/crop/setting_userinfo');
-        //         }, 1000);
-        //     };
-        // };
-
         $scope.userModel = {
             nickname: '',
             gender: '',

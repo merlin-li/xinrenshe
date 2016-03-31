@@ -232,7 +232,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 cordovaCamera.getPicture(options).then(function(imageData) {
                     // var image = document.getElementById('myImage');
                     // image.src = "data:image/jpeg;base64," + imageData;
-                    successFn('data:image/jpeg:base64,' + imageData);
+                    successFn('data:image/jpeg;base64,' + imageData);
                 }, function(err) {
                     errFn(err);
                 });
