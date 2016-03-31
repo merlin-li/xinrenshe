@@ -234,7 +234,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     // image.src = "data:image/jpeg;base64," + imageData;
                     successFn('data:image/jpeg;base64,' + imageData);
                 }, function(err) {
-                    errFn(err);
+                    if (errFn) {
+                        errFn(err);
+                    }
                 });
             };
 

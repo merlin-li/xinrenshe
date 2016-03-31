@@ -86,38 +86,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     'md5',
-    '$cordovaCamera',
-    function($scope, $http, common, $location, md5, $cordovaCamera) {
-
-        $scope.camera = function(){
-            // alert('xx');
-            // console.log($cordovaCamera);
-
-            // var options = {
-            //     quality: 90,
-            //     destinationType: Camera.DestinationType.DATA_URL,
-            //     sourceType: Camera.PictureSourceType.CAMERA,
-            //     allowEdit: true,
-            //     encodingType: Camera.EncodingType.JPEG,
-            //     targetWidth: 300,
-            //     targetHeight: 300,
-            //     popoverOptions: CameraPopoverOptions,
-            //     saveToPhotoAlbum: false,
-            //     correctOrientation:true
-            // };
-
-            // $cordovaCamera.getPicture(options).then(function(imageData) {
-            //     var image = document.getElementById('myImage');
-            //     image.src = "data:image/jpeg;base64," + imageData;
-            // }, function(err) {
-            // // error
-            // });
-
-            common.utility.takePicture($cordovaCamera, function(s){
-                document.getElementById('myImage').src = s;
-            }, function(){});
-        };
-
+    function($scope, $http, common, $location, md5) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 var paramsObj = {
@@ -553,8 +522,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     'md5',
-    '$timeout',
-    function($scope, $http, common, $location, md5, $timeout) {
+    '$cordovaCamera',
+    function($scope, $http, common, $location, md5, $cordovaCamera) {
         $scope.showTip = true;
         var paramsObj = {
                 type: 1,
@@ -563,7 +532,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             },
             userCookie = common.utility.getUserCookie();
 
-        var _loadPicture = function(imgurl, cb) {
+        var _loadPicture = function(imgurl) {
             // 上传寄片照片的操作
             var picParamsObj = {
                 order_id: $scope.selectCardIndex,
@@ -579,10 +548,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 data: picParamsObj
             }).success(function(data) {
                 common.utility.loadingHide();
-                cb();
             }).error(function() {});
         };
-        var takeCardPicture = document.getElementById('takecardpicture');
 
         $scope.statusObj = {
             txt: '已旅行',
@@ -672,27 +639,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             };
         };
 
-        takeCardPicture.onchange = function(event) {
-            var files = event.target.files,
-                fileReader = new FileReader();
-
-            fileReader.readAsDataURL(files[0]);
-            fileReader.onload = function(e) {
-                common.utility.loadingShow();
-                common.tempData.imgData = this.result;
-                common.tempData.imgDataCallback = _loadPicture;
-                $timeout(function() {
-                    $location.path('/image/crop/my_sending');
-                    common.utility.loadingHide();
-                }, 1000);
-            };
-        };
-
         $scope.takePic = function(c) {
             //保存当前选中的编号
             if ($scope.selectIndex === 1){
                 $scope.selectCardIndex = c.id;
-                takeCardPicture.click();
+                common.utility.takePicture($cordovaCamera, _loadPicture);
             }
         };
 
@@ -711,8 +662,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     '$http',
     'Common',
     '$location',
-    '$timeout',
-    function($scope, $http, common, $location, $timeout) {
+    '$cordovaCamera',
+    function($scope, $http, common, $location, $cordovaCamera) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userObj = u;
@@ -746,44 +697,23 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-        var _saveUserAvatar = function(avatar, cb) {
-            var params = {
-                'avatar': avatar
-            };
-            var url = common.API.modifyAvatar;
-            var success = function(data) {
-                if (data.status === 200) {
-                    $scope.userObj.avatar = data.data.avatar;
-                    $scope.userObj.host = data.data.host;
-                    common.utility.cookieStore.put('userinfo', $scope.userObj);
-                    cb();
-                } else {
-                    common.utility.alert('提示', data.msg);
-                }
-            }
-            common.utility.postData(url, params, true, true, success);
-        }
-
-        var takePicture = document.getElementById('takepicture');
-
         $scope.takePicture = function() {
-            takePicture.click();
-        };
-
-        takePicture.onchange = function(event) {
-            var files = event.target.files,
-                fileReader = new FileReader();
-
-            fileReader.readAsDataURL(files[0]);
-            fileReader.onload = function(e) {
-                common.utility.loadingShow();
-                common.tempData.imgData = this.result;
-                common.tempData.imgDataCallback = _saveUserAvatar;
-                $timeout(function() {
-                    $location.path('/image/crop/my_userinfo');
-                    common.utility.loadingHide();
-                }, 1000);
-            };
+            common.utility.takePicture($cordovaCamera, function(avatar){
+                var params = {
+                    'avatar': avatar
+                };
+                var url = common.API.modifyAvatar;
+                var success = function(data) {
+                    if (data.status === 200) {
+                        $scope.userObj.avatar = data.data.avatar;
+                        $scope.userObj.host = data.data.host;
+                        common.utility.cookieStore.put('userinfo', $scope.userObj);
+                    } else {
+                        common.utility.alert('提示', data.msg);
+                    }
+                }
+                common.utility.postData(url, params, true, true, success);
+            });
         };
     }
 ])
@@ -1414,7 +1344,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     '$stateParams',
     'ionicDatePicker',
     '$location',
-    function($http, $scope, common, $stateParams, ionicDatePicker, $location) {
+    '$cordovaCamera',
+    function($http, $scope, common, $stateParams, ionicDatePicker, $location, $cordovaCamera) {
         ! function() {
             $scope.corpid = $stateParams.id; //社团id
             $scope.cadge_time_start = '';
@@ -1551,7 +1482,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         }
 
         var _savePropagandaPic = function(pic) {
-
             var params = {
                 'propaganda_pic': pic,
                 'corporation_id': $scope.corpid
@@ -1568,75 +1498,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-        var takePicture = document.getElementById('takepicture');
-        //src="img/tx_1.png"
         $scope.takePicture = function() {
-
-            takePicture.click();
-        };
-        takePicture.onchange = function(event) {
-            var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-
-            }
-        };
-
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                $scope.propagandaPic = imgurl;
-                _savePropagandaPic(imgurl);
-                $scope.$digest();
-            };
-
+            common.utility.takePicture($cordovaCamera, function(s){
+                $scope.propagandaPic = s;
+                _savePropagandaPic(s);
+            });
         };
     }
 ])
@@ -1869,8 +1735,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     '$stateParams',
     'md5',
     '$location',
-    '$timeout',
-    function($http, $scope, common, $stateParams, md5, $location, $timeout) {
+    '$cordovaCamera',
+    function($http, $scope, common, $stateParams, md5, $location, $cordovaCamera) {
         var id = $stateParams.id,
             paramsObj = {
                 corporation_id: id
@@ -1906,25 +1772,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             });
         };
 
-
-        var takePicture = document.getElementById('takepicture');
-        takePicture.onchange = function(event) {
-            var files = event.target.files,
-                fileReader = new FileReader();
-
-            fileReader.readAsDataURL(files[0]);
-            fileReader.onload = function(e) {
-                common.utility.loadingShow();
-                common.tempData.imgData = this.result;
-                $timeout(function() {
-                    $location.path('/image/crop/corporation_profile_edit_' + id);
-                    common.utility.loadingHide();
-                }, 1000);
-            };
-        };
-
-        $scope.takePic = function(c) {
-            takePicture.click();
+        $scope.takePic = function() {
+            common.utility.takePicture($cordovaCamera, function(s){
+                $scope.corpModel.avatar = s;
+            });
         };
     }
 ])
