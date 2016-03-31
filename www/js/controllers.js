@@ -113,7 +113,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             // // error
             // });
 
-            common.utility.takepicture($cordovaCamera, function(s){
+            common.utility.takePicture($cordovaCamera, function(s){
                 document.getElementById('myImage').src = s;
             }, function(){});
         };
