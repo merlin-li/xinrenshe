@@ -549,6 +549,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             }).success(function(data) {
                 common.utility.loadingHide();
             }).error(function() {});
+
+            //替换当前的上传图片缩略图
+            $scope.cardModel.orderList.map(function(t){
+                if (t.id == $scope.selectIndex) {
+                    t.picture = imgurl;
+                }
+            });
         };
 
         $scope.statusObj = {
@@ -1499,10 +1506,24 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         }
 
         $scope.takePicture = function() {
-            common.utility.takePicture($cordovaCamera, function(s){
+            var options = {
+                quality: 94,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 400,
+                targetHeight: 280,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                correctOrientation:true
+            };
+
+            cordovaCamera.getPicture(options).then(function(imageData) {
+                var s = 'data:image/jpeg;base64,' + imageData;
                 $scope.propagandaPic = s;
                 _savePropagandaPic(s);
-            });
+            }, function(err) {});
         };
     }
 ])

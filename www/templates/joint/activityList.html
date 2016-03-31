@@ -1,4 +1,4 @@
-<ion-list class="list">
+<ion-list class="list activity-list">
     <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in activityList">
         <img ng-src="{{host+activity.propaganda_pic}}">
         <img class="hasCadge" ng-if="activity.joined" src="./img/ysp_1.png"/>
@@ -8,7 +8,9 @@
             <p><span><span class="ion-ios-clock-outline" data-pack="ios" data-tags="time, date, hours, minutes, seconds, watch"></span>{{activity.activity_time}}</span>&nbsp;<span><span class="ion-ios-location-outline" data-pack="ios" data-tags="navigation, map, gps, pin"></span>{{activity.addr_city}}</span> &nbsp;<span><b>{{activity.cadge_count}}</b>索片</span></p>
         </div>
     </ion-item>
-    <div ng-show="noCurentData">以下为历史活动</div>
+
+    <div ng-show="noCurentData" class="item item-divider">以下为历史活动</div>
+
     <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in historyActivityList">
         <img ng-src="{{host+activity.propaganda_pic}}">
         <div>
@@ -18,7 +20,7 @@
         </div>
     </ion-item>
 </ion-list>
-<div class="bottom" ng-show="noData">
+<div class="bottom item item-divider" ng-show="noData">
     没有更多
 </div>
 

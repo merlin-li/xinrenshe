@@ -22,8 +22,8 @@
             <a class="button {{pageModel.showActivity ? '' : 'button-positivehover'}}" ng-click="switchPanel()">社员</a>
         </div>
 
-        <div class="list joint-list" style="top:0" ng-hide="!pageModel.showActivity">
-            <a class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in activityModel.activityList">
+        <div class="list joint-list activity-list" style="top:0" ng-hide="!pageModel.showActivity">
+            <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in activityModel.activityList">
                 <img ng-src="{{activityModel.host + activity.propaganda_pic}}">
                 <div>
                     <h2 ng-bind="activity.name"></h2>
@@ -41,7 +41,7 @@
                         <span><b>{{activity.cadge_count}}</b>索片</span>
                     </p>
                 </div>
-            </a>
+            </ion-item>
         </div>
 
         <div class="member-list list" ng-hide="pageModel.showActivity">

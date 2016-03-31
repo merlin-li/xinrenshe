@@ -243,10 +243,10 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     line-height: 24px;
-    width: 60px;
+    /*width: 60px;*/
     position: absolute;
     right: 15px;
-    top: 15px;
+    top: 6px;
 }
 .card-item .footer{
     padding: 10px 0;
@@ -436,7 +436,7 @@ i.gender0{
 }
 .joint-list p{
   color: #bababa;
-  font-size: 10px;
+  font-size: 12px;
 }
 .joint-list p b{
   color:#d84c60;
@@ -496,6 +496,13 @@ i.gender0{
 }
 .activity-list .item.title{
     color: #9d9d9d;
+}
+.activity-list .item-thumbnail-left .item-content>img:first-child{
+    max-width: 100px;
+    max-height: 70px;
+}
+.activity-list .item-thumbnail-left .item-content{
+    padding-left: 120px;
 }
 .activity-avatar{
     width: 20px;

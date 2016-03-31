@@ -148,8 +148,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
                         str += (t + paramObj[t]);
                 });
                 str += appSecret;
-
-                // return md5.createHash(str);
                 return str;
             },
             _getUserCookie = function() {
@@ -230,8 +228,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 };
 
                 cordovaCamera.getPicture(options).then(function(imageData) {
-                    // var image = document.getElementById('myImage');
-                    // image.src = "data:image/jpeg;base64," + imageData;
                     successFn('data:image/jpeg;base64,' + imageData);
                 }, function(err) {
                     if (errFn) {
