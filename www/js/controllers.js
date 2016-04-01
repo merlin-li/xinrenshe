@@ -252,7 +252,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         $scope.userModel = {
             nickname: '',
             gender: '',
-            avatar: ''
+            avatar: 'img/tx_1.png'
         };
         if (common.tempData.imgData) {
             $scope.userModel.avatar = common.tempData.imgData;
@@ -364,14 +364,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 
         $scope.goAddress = function() {
             common.tempData.userAddressInfo = this.userModel;
-            $location.path('/city/setting/type/setting_address');
+            $location.path('/city/setting/type/');
         };
 
         ! function() {
-            common.utility.cookieStore.remove('areainfo1'),
-            common.utility.cookieStore.remove('areainfo2'),
-            common.utility.cookieStore.remove('areainfo3');
-
             if (common.tempData.userAddressInfo) {
                 $scope.userModel = common.tempData.userAddressInfo;
             }
@@ -384,6 +380,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 $scope.userModel.city = areaObj2.name;
                 $scope.userModel.area = areaObj3.name;
             }
+            common.utility.cookieStore.remove('areainfo1'),
+            common.utility.cookieStore.remove('areainfo2'),
+            common.utility.cookieStore.remove('areainfo3');
         }();
     }
 ])
@@ -790,19 +789,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 url: common.API.orderList,
                 data: paramsObj
             }).success(function(data) {
-                if (data.status === 200) {
-                    data.data.orderList.map(function(order) {
+                common.utility.handlePostResult(data, function(d){
+                    d.data.orderList.map(function(order) {
                         if (order.picture) {
-                            order.picture = data.data.host + order.picture;
+                            order.picture = d.data.host + order.picture;
                         } else {
                             order.picture = 'img/xjbj_2.png';
                         }
                     });
 
-                    $scope.cardModel = data.data;
-                    $scope.showTip = (data.data.orderList.length > 0);
-                    common.utility.loadingHide();
-                }
+                    $scope.cardModel = d.data;
+                    $scope.showTip = (d.data.orderList.length > 0);
+                });
+                common.utility.loadingHide();
             }).error(function() {
                 common.utility.loadingHide();
             });
@@ -830,7 +829,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                         data: confirmObj
                     }).success(function(data) {
                         if (data.status === 200) {
-                            $scope.readCardList();
+                            $scope.readCardList($scope.selectIndex);
                         } else {
                             common.utility.alert('提示', data.msg);
                         }

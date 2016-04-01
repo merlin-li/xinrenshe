@@ -1,14 +1,15 @@
 <ion-list class="list">
-  <ion-item class="item item-thumbnail-left" href="#/joint/corporation/{{corporation.id}}" ng-repeat="corporation in corporationList">
-    <img ng-src="{{host+corporation.avatar}}">
-    <div>
-      <h2 ng-bind="corporation.name"></h2>
-      <p><span><span class="ion-navigate" data-pack="default" data-tags="gps, location pin"></span>{{corporation.addr_city}}</span> &nbsp;<span>社员<b>{{corporation.associator_count}}</b></span></p>
-    </div>
-  </ion-item>
+    <ion-item class="item item-thumbnail-left" href="#/joint/corporation/{{corporation.id}}" ng-repeat="corporation in corporationList">
+        <img ng-src="{{host+corporation.avatar}}">
+        <div>
+            <h2 ng-bind="corporation.name"></h2>
+            <p><span><span class="ion-navigate" data-pack="default" data-tags="gps, location pin"></span>{{corporation.addr_city}}</span> &nbsp;<span>社员<b>{{corporation.associator_count}}</b></span></p>
+        </div>
+    </ion-item>
 </ion-list>
-<div class="bottom" ng-show="noData">
-  没有更多
+
+<div class="bottom item item-divider" ng-show="noData">
+    没有更多
 </div>
 
 <ion-infinite-scroll

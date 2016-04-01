@@ -84,7 +84,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     overflow: hidden;
 }
 .home-send div{
-    width: 80%;
+    width: 230px;
     margin: 43% auto 0;
     position: relative;
 }
@@ -190,6 +190,10 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .send-userinfo label{
     width: 35%;
+    display: inline-block;
+}
+.send-userinfo span{
+    width: 64%;
     display: inline-block;
 }
 .receive-header span{
