@@ -557,8 +557,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             //替换当前的上传图片缩略图
             $scope.cardModel.orderList.map(function(t){
                 alert(t.id);
-                alert($scope.selectIndex);
-                if (t.id == $scope.selectIndex) {
+                alert($scope.selectCardIndex);
+                if (t.id == $scope.selectCardIndex) {
                     t.picture = imgurl;
                 }
             });
@@ -1788,6 +1788,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             paramsObj.name = $scope.corpModel.name;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             paramsObj.avatar = $scope.corpModel.avatar;
+            alert(paramsObj.avatar);
+            alert(paramsObj.uid);
+            alert(paramsObj.token);
+            alert(paramsObj.corporation_id);
             $http({
                 method: 'post',
                 url: common.API.saveCorporation,
