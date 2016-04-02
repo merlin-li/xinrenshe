@@ -191,9 +191,11 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .send-userinfo label{
     width: 35%;
     display: inline-block;
+    vertical-align: top;
+    line-height: 40px;
 }
 .send-userinfo span{
-    width: 64%;
+    width: 60%;
     display: inline-block;
 }
 .receive-header span{

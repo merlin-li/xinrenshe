@@ -251,7 +251,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     function($scope, $http, common, $location, md5, $cordovaCamera) {
         $scope.userModel = {
             nickname: '',
-            gender: '',
+            gender: '男',
             avatar: 'img/tx_1.png'
         };
         if (common.tempData.imgData) {
