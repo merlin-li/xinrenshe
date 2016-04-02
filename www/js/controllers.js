@@ -556,10 +556,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 
             //替换当前的上传图片缩略图
             $scope.cardModel.orderList.map(function(t){
+                alert(t.id);
+                alert($scope.selectIndex);
                 if (t.id == $scope.selectIndex) {
                     t.picture = imgurl;
                 }
             });
+            $scope.$apply();
         };
 
         $scope.statusObj = {
