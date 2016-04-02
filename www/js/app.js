@@ -14,7 +14,8 @@ angular.module('xinrenshe', [
     function($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) {
         $ionicConfigProvider.backButton.previousTitleText(false);
         $ionicConfigProvider.backButton.text('');
-        $ionicConfigProvider.views.forwardCache(true);
+        // $ionicConfigProvider.views.forwardCache(true);
+        $ionicConfigProvider.scrolling.jsScrolling(true);
         // $ionicConfigProvider.views.transition('none');
         $ionicConfigProvider.views.maxCache(0);
         $ionicConfigProvider.platform.android.tabs.position('bottom');
