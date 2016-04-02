@@ -1120,7 +1120,8 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$scope',
     '$http',
     'Common',
-    function($scope, $http, common) {
+    '$cookieStore',
+    function($scope, $http, common,$cookieStore) {
         ! function() {
             $scope.loadType = 'activity';
             $scope.hasMore = true;
@@ -1133,6 +1134,12 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             $scope.page = 1;
             $scope.listType = 1;
             $scope.templateUrl = 'templates/joint/activityList.html';
+            var hisColumn = $cookieStore.get('jonitColumn');
+
+            if(hisColumn&&hisColumn=='corporation'){
+                $scope.loadType = 'corporation';
+                $scope.templateUrl = 'templates/joint/corporationList.html';
+            }
         }();
 
         $scope.$on('stateChangeSuccess', function() {
@@ -1149,8 +1156,10 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             if (loadType == 'activity') {
                 $scope.listType = 1;
                 $scope.templateUrl = 'templates/joint/activityList.html';
+                $cookieStore.put('jonitColumn','activity');
             } else if (loadType == 'corporation') {
                 $scope.templateUrl = 'templates/joint/corporationList.html';
+              $cookieStore.put('jonitColumn','corporation');
             }
             $scope.noCurentData = false;
             $scope.hasMore = false;

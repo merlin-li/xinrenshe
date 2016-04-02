@@ -1,10 +1,10 @@
 <ion-view view-title="联名" hide-back-button="true">
     <div class="joint-tabs tabs-striped tabs-top    ">
         <div class="tabs">
-            <a class="tab-item" ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
+            <a class="tab-item" id='activity_column' ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
                 联名活动
             </a>
-            <a class="tab-item" ng-class="loadType=='corporation'? 'active':''" ng-click="changeLoadType('corporation')">
+            <a class="tab-item" id='corporation_column' ng-class="loadType=='corporation'? 'active':''" ng-click="changeLoadType('corporation')">
                 联名社
             </a>
         </div>

@@ -9,7 +9,7 @@
         </div>
     </ion-item>
     <div ng-show="noCurentData">以下为历史活动</div>
-    <ion-item class="item item-thumbnail-left" href="#" ng-repeat="activity in historyActivityList">
+    <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in historyActivityList">
         <img ng-src="{{host+activity.propaganda_pic}}">
         <div>
             <h2 ng-bind="activity.name"></h2>
