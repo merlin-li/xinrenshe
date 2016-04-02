@@ -1,9 +1,8 @@
 <ion-view title="个人资料">
   <ion-content has-header="true">
       <div class="avatar-container user-info-avatar" >
-        <img ng-src={{userObj.host+userObj.avatar}} ng-click="takePicture()">
+        <img style="width:80px;height:80px" ng-src={{userObj.host+userObj.avatar}} ng-click="takePicture()">
         <span class="ion-compose edit-avatar-btn" data-pack="default" data-tags="write, compose, type"></span>
-        <!--<button class="edit-avatar-btn button button-positive ">更换头像</button>-->
       </div>
 
       <div class="content user-info-list ionic-pseudo">

@@ -1,0 +1,29 @@
+<ion-view view-title="图片编辑">
+    <ion-content>
+        <div class="home-container">
+            <div ng-show="imageCropStep == 2">
+                <image-crop           
+                 data-height="200"
+                 data-width="200"
+                 data-shape="square"
+                 data-step="imageCropStep"
+                 src="imgSrc"
+                 data-result="result"
+                 data-result-blob="resultBlob"
+                 crop="initCrop"
+                 max-size="1024"
+                ></image-crop>        
+            </div>
+            <br>
+            <div class="padding" ng-show="imageCropStep == 2">
+                <button class="button button-block button-positive" ng-click="initCrop = true">剪裁</button>
+            </div>         
+       
+            <div ng-show="imageCropStep == 3" class="padding">
+                <img ng-src="{{result}}"></img>
+                <button class="button button-block button-positive" ng-click="save()">上传</button>
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

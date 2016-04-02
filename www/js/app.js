@@ -28,7 +28,7 @@ angular.module('xinrenshe', [
                 }
             })
             .state('img_crop', {
-                url: '/image/crop',
+                url: '/image/crop/:from',
                 views: {
                     'content': {
                         templateUrl: 'templates/image/crop.html',
@@ -36,6 +36,7 @@ angular.module('xinrenshe', [
                     }
                 }
             })
+
             .state('app_login', {
                 url: '/user/login',
                 views: {

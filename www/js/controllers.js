@@ -16,7 +16,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
-
+alert(window.localStorage.length);
         ! function() {
             //初始化事件
             $http({
@@ -28,7 +28,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             }).success(function(data) {
                 if (data.status === 200) {
                     $scope.dataObj = data.data;
-                    $scope.dataObj.host = 'http://xiaoyeshu.billowton.com/';
+                    $scope.dataObj.host = data.data.host;
                 }
             });
         }();
@@ -102,13 +102,13 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     url: common.API.getUserInfo,
                     data: paramsObj
                 }).success(function(data) {
-                    if (data.status === 200) {
-                        $scope.userObj = data.data.userInfo;
-                        $scope.userObj.avatar = data.data.host + data.data.userInfo.avatar;
-                        $scope.userObj.token = data.data.token;
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.userObj = d.data.userInfo;
+                        $scope.userObj.avatar = d.data.host + d.data.userInfo.avatar;
+                        $scope.userObj.token = d.data.token;
                         $cookieStore.remove('userinfo');
                         $cookieStore.put('userinfo', $scope.userObj);
-                    }
+                    });
                 });
             }).fail(function() {
                 $location.path('/user/login');
@@ -163,9 +163,10 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     data: paramsObj
                 }).success(function(data) {
                     if (data.status === 200) {
-                        common.utility.alert('提示', '注册成功！');
-                        $cookieStore.put('userinfo', data.data);
-                        $location.path('/setting/userinfo');
+                        common.utility.alert('提示', '注册成功！').then(function(){
+                            $cookieStore.put('userinfo', data.data);
+                            $location.path('/setting/userinfo');
+                        });
                     } else {
                         $scope.signupModel.msg = {
                             'class': 'assertive',
@@ -246,67 +247,20 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$location',
     'md5',
     '$cookieStore',
-    function($scope, $http, common, $location, md5, $cookieStore) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $cookieStore, $timeout) {
         var takePicture = document.getElementById('takepicture');
 
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                $scope.userModel.avatar = imgurl;
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.tempData.imgData = this.result;
+                $timeout(function() {
+                    $location.path('/image/crop/setting_userinfo');
+                }, 1000);
             };
         };
 
@@ -315,6 +269,10 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             gender: '',
             avatar: ''
         };
+        if (common.tempData.imgData) {
+            $scope.userModel.avatar = common.tempData.imgData;
+        }
+
         //下一步
         $scope.next = function() {
             var paramsObj = {
@@ -331,16 +289,16 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
             paramsObj.uid = userObj.uid;
             paramsObj.token = userObj.token;
-
-            // console.log(common.utility.createSign(paramsObj));
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             paramsObj.avatar = $scope.userModel.avatar;
 
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.setUserInfo,
                 data: paramsObj
             }).success(function(data) {
+                common.utility.loadingHide();
                 if (data.status === 200) {
                     $location.path('/setting/address');
                 } else {
@@ -348,7 +306,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                 }
             });
         };
-        //src="img/tx_1.png"
+
         $scope.takePicture = function() {
             takePicture.click();
         };
@@ -518,7 +476,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             agree: false
         };
 
-        $scope.request = function() {
+        $scope.request = function() {            
             if (!this.sendModel.agree) {
                 common.utility.alert('提示', '请同意阅读提示！');
             } else {
@@ -554,8 +512,12 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     $scope.userObj.avatar = data.data.host + $scope.userObj.avatar;
                     var dateObj = new Date(data.data.userInfo.create_at * 1000);
                     $scope.userObj.create_at = dateObj.getFullYear() + '年' + dateObj.getMonth() + '月' + dateObj.getDate() + '日';
-                } else {
-                    common.utility.alert('提示', data.msg);
+                } else if(data.status === 402) {
+                    common.utility.resetToken();
+                } else if (data.status === 501) {
+                    common.utility.alert('提示', data.msg).then(function(){
+                        $location.path('/home');
+                    });
                 }
             });
         } else {
@@ -570,7 +532,8 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $timeout) {
         $scope.showTip = true;
         var paramsObj = {
                 type: 1,
@@ -579,17 +542,35 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             },
             userCookie = common.utility.getUserCookie();
 
+        var _loadPicture = function(imgurl, cb) {
+            // 上传寄片照片的操作
+            var picParamsObj = {
+                order_id: $scope.selectCardIndex,
+                uid: userCookie.uid,
+                token: userCookie.token
+            };
+            picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
+            picParamsObj.picture = imgurl;
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.uploadPic,
+                data: picParamsObj
+            }).success(function(data) {
+                common.utility.loadingHide();
+                cb();
+            }).error(function() {});
+        };
+        var takeCardPicture = document.getElementById('takecardpicture');
+
         $scope.statusObj = {
             txt: '已旅行',
             hide: true
         };
-
-        if (userCookie) {
-            paramsObj.uid = userCookie.uid;
-            paramsObj.token = userCookie.token;
-        } else {
-            $location.path('/user/login');
-        }
+        $scope.modelStyle = {
+            'display': 'none'
+        };
+        $scope.selectIndex = 1;
 
         $scope.readCardList = function(t) {
             $scope.selectIndex = t || 1;
@@ -668,100 +649,37 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             };
         };
 
-        $scope.modelStyle = {
-            'display': 'none'
-        };
-        $scope.selectIndex = 1;
-        $scope.readCardList();
-
-
-        var takeCardPicture = document.getElementById('takecardpicture');
         takeCardPicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-
-                $scope.cardModel.orderList.map(function(card) {
-                    if (card.id === $scope.selectCardIndex) {
-                        card.picture = imgurl;
-                    }
-                });
-                // 上传寄片照片的操作
-                var picParamsObj = {
-                    order_id: $scope.selectCardIndex,
-                    uid: userCookie.uid,
-                    token: userCookie.token
-                };
-                picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
-                picParamsObj.picture = imgurl;
-                $http({
-                    method: 'post',
-                    url: common.API.uploadPic,
-                    data: picParamsObj
-                }).success(function(data) {
-                    // console.log(data);
-                }).error(function() {});
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                common.tempData.imgDataCallback = _loadPicture;
+                $timeout(function() {
+                    $location.path('/image/crop/my_sending');
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
 
         $scope.takePic = function(c) {
             //保存当前选中的编号
-            $scope.selectCardIndex = c.id;
-            takeCardPicture.click();
+            if ($scope.selectIndex === 1){
+                $scope.selectCardIndex = c.id;
+                takeCardPicture.click();
+            }
         };
+
+        common.utility.checkLogin().success(function(u){
+            paramsObj.uid = userCookie.uid;
+            paramsObj.token = userCookie.token;
+            $scope.readCardList();
+        }).fail(function(){
+            common.utility.resetToken();
+        });
     }
 ])
 
@@ -771,12 +689,13 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     'Common',
     '$location',
     '$cookieStore',
-    function($scope, $http, common, $location, $cookieStore) {
+    '$timeout',
+    function($scope, $http, common, $location, $cookieStore, $timeout) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userObj = u;
             }).fail(function() {
-                $location.path('/user/login');
+                common.utility.resetToken();
             });
         }();
 
@@ -805,8 +724,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-        var _saveUserAvatar = function(avatar) {
-
+        var _saveUserAvatar = function(avatar, cb) {
             var params = {
                 'avatar': avatar
             };
@@ -816,6 +734,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                     $scope.userObj.avatar = data.data.avatar;
                     $scope.userObj.host = data.data.host;
                     $cookieStore.put('userinfo', $scope.userObj);
+                    cb();
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -823,76 +742,25 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             common.utility.postData(url, params, true, true, success);
         }
 
-
         var takePicture = document.getElementById('takepicture');
-        //src="img/tx_1.png"
+
         $scope.takePicture = function() {
             takePicture.click();
         };
+
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
+                fileReader = new FileReader();
 
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-
-            }
-        };
-
-
-
-
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                $scope.userObj.avatar = imgurl;
-                _saveUserAvatar(imgurl);
-                $scope.$digest();
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                common.tempData.imgDataCallback = _saveUserAvatar;
+                $timeout(function() {
+                    $location.path('/image/crop/my_userinfo');
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
     }
@@ -1083,36 +951,29 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$scope',
     '$http',
     'Common',
-    function($scope, $http, common) {
-        $scope.fileChanged = function(e) {
-            var files = e.target.files;
+    '$location',
+    '$stateParams',
+    function($scope, $http, common, $location, $stateParams) {
+        if (!common.tempData.imgData) {
+            $location.path('/image/test');
+        } else {
+            $scope.imgSrc = common.tempData.imgData;
 
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(files[0]);
-
-            fileReader.onload = function(e) {
-                $scope.imgSrc = this.result;
-                $scope.$apply();
+            $scope.save = function() {
+                common.tempData.imgData = this.result;
+                $scope.imageCropStep = 1;
+                delete $scope.imgSrc;
+                delete $scope.result;
+                delete $scope.resultBlob;
+                if (common.tempData.imgDataCallback) {
+                    common.tempData.imgDataCallback(this.result, function(){
+                       $location.path('/' + $stateParams.from.split('_').join('/')); 
+                    });
+                } else {
+                    $location.path('/' + $stateParams.from.split('_').join('/'));
+                }
             };
         }
-
-        $scope.clear = function() {
-            $scope.imageCropStep = 1;
-            delete $scope.imgSrc;
-            delete $scope.result;
-            delete $scope.resultBlob;
-        };
-
-        $scope.upload = function() {
-            document.getElementById('fileInput').click();
-        };
-
-        $scope.xxx = function() {
-            this.initCrop = true;
-            // this.$apply();
-            console.log(this.result);
-        };
-
     }
 ])
 
@@ -1144,7 +1005,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
         $scope.$on('stateChangeSuccess', function() {
             $scope.loadMoreData();
-
         });
         $scope.changeLoadType = function(loadType) {
 
@@ -1239,8 +1099,6 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
                     }
 
-                    //$scope.activityList = angular.extend($scope.activityList,data.data.activityList);
-
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -1285,658 +1143,658 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 ])
 
 .controller('CorporationCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        'md5',
-        '$ionicActionSheet',
-        '$location',
-        function($http, $scope, common, $stateParams, md5, $ionicActionSheet, $location) {
-            var id = $stateParams.id;
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    '$ionicActionSheet',
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $ionicActionSheet, $location) {
+        var id = $stateParams.id;
 
-            $scope.switchPanel = function() {
-                this.pageModel.showActivity = !this.pageModel.showActivity;
+        $scope.switchPanel = function() {
+            this.pageModel.showActivity = !this.pageModel.showActivity;
+        };
+
+        $scope.btnClick = function() {
+            var paramsObj = {
+                corporation_id: id
             };
-
-            $scope.btnClick = function() {
-                var paramsObj = {
-                    corporation_id: id
-                };
-                if (this.pageModel.buttonStatus === 0) {
-                    // 社务管理
-                    var hideSheet = $ionicActionSheet.show({
-                        buttons: [{
-                            text: '发布活动'
-                        }, {
-                            text: '社员管理'
-                        }, {
-                            text: '发布公告'
-                        }, {
-                            text: '修改联名社资料'
-                        }],
-                        titleText: '社务管理',
-                        cancelText: '取消',
-                        cancel: function() {},
-                        buttonClicked: function(index) {
-                            var url = '/home';
-                            switch (index) {
-                                case 0:
-                                    url = '/joint/manage/releaseActivity/' + id;
-                                    break;
-                                case 1:
-                                    url = '/joint/manage/associator/' + id;
-                                    break;
-                                case 2:
-                                    //发布公告
-                                    url = '/joint/manage/notice/' + id
-                                    break;
-                                case 3:
-                                    //联名社资料编辑
-                                    common.tempData.corporationInfo = $scope.corpModel;
-                                    url = '/corporation/profile/edit/' + id;
-                                    break;
-                            }
-                            $location.path(url);
+            if (this.pageModel.buttonStatus === 0) {
+                // 社务管理
+                var hideSheet = $ionicActionSheet.show({
+                    buttons: [{
+                        text: '发布活动'
+                    }, {
+                        text: '社员管理'
+                    }, {
+                        text: '发布公告'
+                    }, {
+                        text: '修改联名社资料'
+                    }],
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        var url = '/home';
+                        switch (index) {
+                            case 0:
+                                url = '/joint/manage/releaseActivity/' + id;
+                                break;
+                            case 1:
+                                url = '/joint/manage/associator/' + id;
+                                break;
+                            case 2:
+                                //发布公告
+                                url = '/joint/manage/notice/' + id
+                                break;
+                            case 3:
+                                //联名社资料编辑
+                                common.tempData.corporationInfo = $scope.corpModel;
+                                url = '/corporation/profile/edit/' + id;
+                                break;
                         }
-                    });
-                }
-                if (this.pageModel.buttonStatus === 1) {
-                    //已申请
-                }
-                if (this.pageModel.buttonStatus === 2) {
-                    //申请加入
-                    common.utility.checkLogin().success(function(u) {
-                        paramsObj.uid = u.uid;
-                        paramsObj.token = u.token;
-                        paramsObj.type = 1;
-                        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-                        $http({
-                            method: 'post',
-                            url: common.API.joinExitCorporation,
-                            data: paramsObj
-                        }).success(function(data) {
-                            common.utility.handlePostResult(data, function(d) {
-                                common.utility.alert('提示', d.msg);
-                                $scope.pageModel.buttonStatus = 1;
-                            });
-                        });
-                    }).fail(function() {
-                        common.utility.resetToken();
-                    });
-                }
-            };
-
-            ! function() {
-                $scope.pageModel = {
-                    showActivity: false,
-                    buttonText: '加入',
-                    buttonStatus: 0,
-                    hideBtn: false
-                };
+                        $location.path(url);
+                    }
+                });
+            }
+            if (this.pageModel.buttonStatus === 1) {
+                //已申请
+            }
+            if (this.pageModel.buttonStatus === 2) {
+                //申请加入
                 common.utility.checkLogin().success(function(u) {
-                    var paramsObj = {
-                            corporation_id: id,
-                            uid: u.uid,
-                            token: u.token
-                        },
-                        assoParamsObj = {
-                            corporation_id: id
-                        };
+                    paramsObj.uid = u.uid;
+                    paramsObj.token = u.token;
+                    paramsObj.type = 1;
                     paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-                    assoParamsObj.accessSign = md5.createHash(common.utility.createSign(assoParamsObj));
-
-                    common.utility.loadingShow();
                     $http({
                         method: 'post',
-                        url: common.API.corporationDetail,
+                        url: common.API.joinExitCorporation,
                         data: paramsObj
                     }).success(function(data) {
                         common.utility.handlePostResult(data, function(d) {
-                            $scope.corpModel = d.data;
-                            $scope.corpModel.avatar = d.data.host + d.data.avatar;
-                            if (d.data.isPresident) {
-                                //如果是社长，显示社务管理
-                                $scope.pageModel.buttonText = '社务管理';
-                                $scope.pageModel.buttonStatus = 0;
-                            } else {
-                                if (d.data.joined) {
-                                    //如果已加入，隐藏按钮
-                                    $scope.pageModel.hideBtn = true;
-                                } else {
-                                    //如果没有加入时，判断是否申请，
-                                    if (d.data.applied) {
-                                        //已申请，显示 “已申请”
-                                        $scope.pageModel.buttonText = '已申请';
-                                        $scope.pageModel.buttonStatus = 1;
-                                    } else {
-                                        //显示“加入”
-                                        $scope.pageModel.buttonText = '加入';
-                                        $scope.pageModel.buttonStatus = 2;
-                                    }
-                                }
-                            }
-                            common.utility.loadingHide();
-                        });
-                    });
-
-                    $http({
-                        method: 'post',
-                        url: common.API.associatorList,
-                        data: assoParamsObj
-                    }).success(function(data) {
-                        common.utility.handlePostResult(data, function(d) {
-                            $scope.assoModel = d.data;
-                            common.utility.loadingHide();
-                        });
-                    });
-
-                    $http({
-                        method: 'post',
-                        url: common.API.activityList,
-                        data: paramsObj
-                    }).success(function(data) {
-                        common.utility.handlePostResult(data, function(d) {
-                            $scope.activityModel = d.data;
-                            common.utility.loadingHide();
+                            common.utility.alert('提示', d.msg);
+                            $scope.pageModel.buttonStatus = 1;
+                            $scope.pageModel.buttonText = '已申请';
                         });
                     });
                 }).fail(function() {
-
+                    common.utility.resetToken();
                 });
-            }();
-        }
-    ])
-    .controller('JointManageAssociatorCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        function($http, $scope, common, $stateParams) {
-            ! function() {
-                $scope.hasMore = true;
-                $scope.noData = false;
-                $scope.associatorApplyList = [];
-                $scope.host = "";
-                $scope.page = 1;
-                $scope.corpid = $stateParams.id; //社团id
-            }();
-
-            $scope.$on('stateChangeSuccess', function() {
-                $scope.loadMoreData();
-            });
-
-            $scope.loadMoreData = function() {
-                var newParams = {
-                    page: $scope.page,
-                    corporation_id: $scope.corpid
-                };
-                _loadList(newParams);
             }
+        };
 
-            $scope.deal = function(associatorUid, optType) {
-                var params = {
-                    corporation_id: $scope.corpid,
-                    associator_uid: associatorUid,
-                    type: optType
-                }
-                var url = common.API.associatorVet;
-                var success = function(data) {
-                    if (data.status === 200) {
-                        for (var i in $scope.associatorApplyList) {
-                            if ($scope.associatorApplyList[i]['uid'] == params.associator_uid) {
-                                $scope.associatorApplyList.splice(i, 1);
-                                break;
+        ! function() {
+            $scope.pageModel = {
+                showActivity: false,
+                buttonText: '加入',
+                buttonStatus: 0,
+                hideBtn: false
+            };
+            common.utility.checkLogin().success(function(u) {
+                var paramsObj = {
+                        corporation_id: id,
+                        uid: u.uid,
+                        token: u.token
+                    },
+                    assoParamsObj = {
+                        corporation_id: id
+                    };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                assoParamsObj.accessSign = md5.createHash(common.utility.createSign(assoParamsObj));
+
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.corporationDetail,
+                    data: paramsObj
+                }).success(function(data) {
+                    common.utility.handlePostResult(data, function(d) {
+                        $scope.corpModel = d.data;
+                        $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                        if (d.data.isPresident) {
+                            //如果是社长，显示社务管理
+                            $scope.pageModel.buttonText = '社务管理';
+                            $scope.pageModel.buttonStatus = 0;
+                        } else {
+                            if (d.data.joined) {
+                                //如果已加入，隐藏按钮
+                                $scope.pageModel.hideBtn = true;
+                            } else {
+                                //如果没有加入时，判断是否申请，
+                                if (d.data.applied) {
+                                    //已申请，显示 “已申请”
+                                    $scope.pageModel.buttonText = '已申请';
+                                    $scope.pageModel.buttonStatus = 1;
+                                } else {
+                                    //显示“加入”
+                                    $scope.pageModel.buttonText = '加入';
+                                    $scope.pageModel.buttonStatus = 2;
+                                }
                             }
                         }
-                    } else {
+                        common.utility.loadingHide();
+                    });
+                });
 
-                        common.utility.alert('提示', data.msg);
-                    }
-                }
-                common.utility.postData(url, params, true, true, success);
+                //获取社员列表
+                $http({
+                    method: 'post',
+                    url: common.API.associatorList,
+                    data: assoParamsObj
+                }).success(function(data) {
+                    common.utility.handlePostResult(data, function(d) {
+                        $scope.assoModel = d.data;
+                        common.utility.loadingHide();
+                    });
+                });
+
+                //获取活动列表
+                $http({
+                    method: 'post',
+                    url: common.API.activityList,
+                    data: paramsObj
+                }).success(function(data) {
+                    common.utility.handlePostResult(data, function(d) {
+                        d.data.activityList.map(function(a){
+                            a.activity_time = new Date(a.activity_time * 1000).format('MM/dd hh:mm');;
+                        });
+                        $scope.activityModel = d.data;
+                        common.utility.loadingHide();
+                    });
+                });
+            }).fail(function() {
+                common.utility.resetToken();
+            });
+        }();
+    }
+])
+
+.controller('JointManageAssociatorCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    function($http, $scope, common, $stateParams) {
+        ! function() {
+            $scope.hasMore = true;
+            $scope.noData = false;
+            $scope.associatorApplyList = [];
+            $scope.host = "";
+            $scope.page = 1;
+            $scope.corpid = $stateParams.id; //社团id
+        }();
+
+        $scope.$on('stateChangeSuccess', function() {
+            $scope.loadMoreData();
+        });
+
+        $scope.loadMoreData = function() {
+            var newParams = {
+                page: $scope.page,
+                corporation_id: $scope.corpid
+            };
+            _loadList(newParams);
+        }
+
+        $scope.deal = function(associatorUid, optType) {
+            var params = {
+                corporation_id: $scope.corpid,
+                associator_uid: associatorUid,
+                type: optType
             }
-
-            function _loadList(params) {
-
-                var url = common.API.associatorApplyList;
-                var success = function(data) {
-                    //common.utility.loadingHide();
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                    if (data.status === 200) {
-                        $scope.host = data.data.host;
-                        $scope.page = $scope.page + 1;
-                        if (data.data.applyList.length <= 0) {
-                            $scope.hasMore = false;
-                            $scope.noData = true;
-                            return;
+            var url = common.API.associatorVet;
+            var success = function(data) {
+                if (data.status === 200) {
+                    for (var i in $scope.associatorApplyList) {
+                        if ($scope.associatorApplyList[i]['uid'] == params.associator_uid) {
+                            $scope.associatorApplyList.splice(i, 1);
+                            break;
                         }
-                        _mergeList(data.data.applyList, $scope.associatorApplyList);
-                    } else {
+                    }
+                } else {
+
+                    common.utility.alert('提示', data.msg);
+                }
+            }
+            common.utility.postData(url, params, true, true, success);
+        }
+
+        function _loadList(params) {
+
+            var url = common.API.associatorApplyList;
+            var success = function(data) {
+                //common.utility.loadingHide();
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+                if (data.status === 200) {
+                    $scope.host = data.data.host;
+                    $scope.page = $scope.page + 1;
+                    if (data.data.applyList.length <= 0) {
                         $scope.hasMore = false;
                         $scope.noData = true;
-                        common.utility.alert('提示', data.msg);
+                        return;
                     }
-
+                    _mergeList(data.data.applyList, $scope.associatorApplyList);
+                } else {
+                    $scope.hasMore = false;
+                    $scope.noData = true;
+                    common.utility.alert('提示', data.msg);
                 }
-                common.utility.postData(url, params, true, true, success);
-            }
 
-            function _mergeList(List1, List2) {
-                angular.forEach(List1, function(value) {
-                    this.push(value);
-                }, List2);
             }
-
+            common.utility.postData(url, params, true, true, success);
         }
-    ])
+
+        function _mergeList(List1, List2) {
+            angular.forEach(List1, function(value) {
+                this.push(value);
+            }, List2);
+        }
+
+    }
+])
 
 .controller('JointManagereleaseActivityCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        'ionicDatePicker',
-        '$location',
-        function($http, $scope, common, $stateParams, ionicDatePicker, $location) {
-            ! function() {
-                $scope.corpid = $stateParams.id; //社团id
-                $scope.cadge_time_start = '';
-                $scope.cadge_time_end = '';
-                $scope.activity_time_ymd = '';
-                $scope.activity_time_his = '';
-                $scope.activity_time = '';
-                $scope.propaganda_pic = '';
-                $scope.modelInfo = {
-                    activity_name: '',
-                    activity_addr: '',
-                    introduction: '',
-                    send_count: 10
-                }
-            }();
-
-
-            $scope.timeSelect = function(type) {
-                var ipObj1 = {
-                    from: new Date(), //Optional
-                    to: new Date(2020, 10, 30), //Optional
-                    inputDate: new Date(), //Optional
-                    mondayFirst: true, //Optional
-                    disableWeekdays: [], //Optional
-                    closeOnSelect: false, //Optional
-                    templateType: 'popup' //Optional
-                };
-                if (type == 1) {
-                    ipObj1.callback = function(val) {
-                        var dateObj = new Date(val);
-                        $scope.cadge_time_start = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
-                        $scope.cadge_time_start_timestamp = dateObj;
-                    }
-
-                } else if (type == 2) {
-
-                    ipObj1.callback = function(val) {
-                        var dateObj = new Date(val);
-                        $scope.cadge_time_end = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
-                    }
-                } else if (type == 3) {
-                    ipObj1.callback = function(val) {
-                        var dateObj = new Date(val);
-                        $scope.activity_time_ymd = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
-                        document.getElementById('timeClick').click();
-                    }
-                }
-                ionicDatePicker.openDatePicker(ipObj1);
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'ionicDatePicker',
+    '$location',
+    function($http, $scope, common, $stateParams, ionicDatePicker, $location) {
+        ! function() {
+            $scope.corpid = $stateParams.id; //社团id
+            $scope.cadge_time_start = '';
+            $scope.cadge_time_end = '';
+            $scope.activity_time_ymd = '';
+            $scope.activity_time_his = '';
+            $scope.activity_time = '';
+            $scope.propaganda_pic = '';
+            $scope.modelInfo = {
+                activity_name: '',
+                activity_addr: '',
+                introduction: '',
+                send_count: 10
             }
+        }();
 
-
-            $scope.openDatePicker = function() {
-                ionicDatePicker.openDatePicker(ipObj1);
+        $scope.timeSelect = function(type) {
+            var ipObj1 = {
+                from: new Date(), //Optional
+                to: new Date(2020, 10, 30), //Optional
+                inputDate: new Date(), //Optional
+                mondayFirst: true, //Optional
+                disableWeekdays: [], //Optional
+                closeOnSelect: false, //Optional
+                templateType: 'popup' //Optional
             };
-
-            $scope.timePickerObject = {
-                inputEpochTime: ((new Date()).getHours() * 60 * 60), //Optional
-                step: 30, //Optional
-                format: 24, //Optional
-                titleLabel: '选择时间', //Optional
-                setLabel: '确定', //Optional
-                closeLabel: '取消', //Optional
-                setButtonType: 'button-positive', //Optional
-                closeButtonType: 'button-stable', //Optional
-                callback: function(val) { //Mandatory
-                    timePickerCallback(val);
+            if (type == 1) {
+                ipObj1.callback = function(val) {
+                    var dateObj = new Date(val);
+                    $scope.cadge_time_start = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
+                    $scope.cadge_time_start_timestamp = dateObj;
                 }
-            };
 
-            function timePickerCallback(val) {
-                if (typeof(val) === 'undefined') {
-                    $scope.activity_time = $scope.activity_time_ymd + ' 09:00';
-                } else {
-                    var selectedTime = new Date(val * 1000);
-                    var h = '00';
-                    var i = '00';
-                    if (selectedTime.getUTCHours() < 10) {
-                        h = "0" + selectedTime.getUTCHours();
-                    } else {
-                        h = selectedTime.getUTCHours();
-                    }
-                    if (selectedTime.getUTCMinutes() < 10) {
-                        i = selectedTime.getUTCMinutes() + '0';
-                    } else {
-                        i = selectedTime.getUTCMinutes();
-                    }
-                    $scope.activity_time_his = h + ':' + i;
-                    //console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
-                    $scope.activity_time = $scope.activity_time_ymd + ' ' + $scope.activity_time_his;
+            } else if (type == 2) {
+
+                ipObj1.callback = function(val) {
+                    var dateObj = new Date(val);
+                    $scope.cadge_time_end = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
+                }
+            } else if (type == 3) {
+                ipObj1.callback = function(val) {
+                    var dateObj = new Date(val);
+                    $scope.activity_time_ymd = dateObj.getFullYear() + '-' + (dateObj.getMonth() + 1) + '-' + dateObj.getDate();
+                    document.getElementById('timeClick').click();
                 }
             }
-
-            $scope.releaseActivity = function() {
-                var url = common.API.releaseActivity;
-                if ($scope.activity_time == '') {
-                    common.utility.alert('提示', '活动时间不得为空');
-                    return false;
-                }
-                if ($scope.cadge_time_start == '') {
-                    common.utility.alert('提示', '索片开始时间不得为空');
-                    return false;
-                }
-                if ($scope.cadge_time_end == '') {
-                    common.utility.alert('提示', '索片结束时间不得为空');
-                    return false;
-                }
-                if ($scope.modelInfo.activity_addr == '') {
-                    common.utility.alert('提示', '活动地点不得为空');
-                    return false;
-                }
-                if ($scope.modelInfo.activity_name == '') {
-                    common.utility.alert('提示', '活动时间不得为空');
-                    return false;
-                }
-                var params = {
-                    activity_time: $scope.activity_time,
-                    cadge_time_start: $scope.cadge_time_start,
-                    cadge_time_end: $scope.cadge_time_end,
-                    corporation_id: $scope.corpid,
-                    activity_addr: $scope.modelInfo.activity_addr,
-                    send_count: $scope.modelInfo.send_count,
-                    introduction: $scope.modelInfo.introduction,
-                    propaganda_pic: $scope.propaganda_pic,
-                    name: $scope.modelInfo.activity_name,
-                }
-                console.log(params);
-                var success = function(data) {
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                    if (data.status === 200) {
-                        $location.path('/joint/corporation/' + $scope.corpid);
-                    } else {
-                        common.utility.alert('提示', data.msg);
-                    }
-                }
-                common.utility.postData(url, params, true, true, success);
-            }
-
-
-            var _savePropagandaPic = function(pic) {
-
-                var params = {
-                    'propaganda_pic': pic,
-                    'corporation_id': $scope.corpid
-                };
-                var url = common.API.uploadActivityPic;
-                var success = function(data) {
-                    if (data.status === 200) {
-                        $scope.propaganda_pic = data.data.propaganda_pic;
-                        $scope.showPic = true;
-                        console.log($scope.propaganda_pic);
-                    } else {
-                        common.utility.alert('提示', data.msg);
-                    }
-                }
-                common.utility.postData(url, params, true, true, success);
-            }
-
-
-            var takePicture = document.getElementById('takepicture');
-            //src="img/tx_1.png"
-            $scope.takePicture = function() {
-
-                takePicture.click();
-            };
-            takePicture.onchange = function(event) {
-                var files = event.target.files,
-                    file;
-                if (files && files.length > 0) {
-                    file = files[0];
-                    try {
-                        var URL = window.URL || window.webkitURL;
-                        var blob = URL.createObjectURL(file);
-                        _compressPicture(blob);
-
-                    } catch (e) {
-                        try {
-                            var fileReader = new FileReader();
-                            fileReader.onload = function(event) {
-                                _compressPicture(event.target.result);
-                            };
-                            fileReader.readAsDataURL(file);
-                        } catch (e) {
-                            common.utility.alert('error');
-                        }
-                    }
-
-                }
-            };
-
-
-
-
-            /**
-             * 压缩照片
-             * @param blob 照片的url
-             */
-            var _compressPicture = function(blob) {
-                var quality = 0.5,
-                    image = new Image();
-                image.src = blob;
-                image.onload = function() {
-                    var that = this;
-                    // 生成比例
-                    var width = that.width,
-                        height = that.height;
-                    width = width / 4;
-                    height = height / 4;
-                    // 生成canvas画板
-                    var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext('2d');
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(that, 0, 0, width, height);
-                    // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                    var imgurl = canvas.toDataURL('image/jpeg', quality);
-                    // 修复IOS兼容问题
-                    if (navigator.userAgent.match(/iphone/i)) {
-                        var mpImg = new MegaPixImage(image);
-                        mpImg.render(canvas, {
-                            maxWidth: width,
-                            maxHeight: height,
-                            quality: quality
-                        });
-                        imgurl = canvas.toDataURL('image/jpeg', quality);
-                    }
-                    $scope.propagandaPic = imgurl;
-                    _savePropagandaPic(imgurl);
-                    $scope.$digest();
-                };
-
-            };
-
+            ionicDatePicker.openDatePicker(ipObj1);
         }
-    ])
-    .controller('JointManageCadgeListCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        function($http, $scope, common, $stateParams) {
-            ! function() {
-                $scope.hasMore = true;
-                $scope.noData = false;
-                $scope.cadgeList = [];
-                $scope.activityName = '';
-                $scope.totalCount = '';
-                $scope.joinCount = '';
-                $scope.host = "";
-                $scope.page = 1;
-                $scope.activityId = $stateParams.activityId; //社团id
-                $scope.corporationId = $stateParams.corporationId; //社团id
-            }();
 
-            $scope.$on('stateChangeSuccess', function() {
-                $scope.loadMoreData();
-            });
+        $scope.openDatePicker = function() {
+            ionicDatePicker.openDatePicker(ipObj1);
+        };
 
-            $scope.loadMoreData = function() {
-                var newParams = {
-                    page: $scope.page,
-                    corporation_id: $scope.corporationId,
-                    activity_id: $scope.activityId
-                };
-                _loadList(newParams);
+        $scope.timePickerObject = {
+            inputEpochTime: ((new Date()).getHours() * 60 * 60), //Optional
+            step: 30, //Optional
+            format: 24, //Optional
+            titleLabel: '选择时间', //Optional
+            setLabel: '确定', //Optional
+            closeLabel: '取消', //Optional
+            setButtonType: 'button-positive', //Optional
+            closeButtonType: 'button-stable', //Optional
+            callback: function(val) { //Mandatory
+                timePickerCallback(val);
+            }
+        };
+
+        function timePickerCallback(val) {
+            if (typeof(val) === 'undefined') {
+                $scope.activity_time = $scope.activity_time_ymd + ' 09:00';
+            } else {
+                var selectedTime = new Date(val * 1000);
+                var h = '00';
+                var i = '00';
+                if (selectedTime.getUTCHours() < 10) {
+                    h = "0" + selectedTime.getUTCHours();
+                } else {
+                    h = selectedTime.getUTCHours();
+                }
+                if (selectedTime.getUTCMinutes() < 10) {
+                    i = selectedTime.getUTCMinutes() + '0';
+                } else {
+                    i = selectedTime.getUTCMinutes();
+                }
+                $scope.activity_time_his = h + ':' + i;
+                //console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+                $scope.activity_time = $scope.activity_time_ymd + ' ' + $scope.activity_time_his;
+            }
+        }
+
+        $scope.releaseActivity = function() {
+            var url = common.API.releaseActivity;
+            if ($scope.activity_time == '') {
+                common.utility.alert('提示', '活动时间不得为空');
+                return false;
+            }
+            if ($scope.cadge_time_start == '') {
+                common.utility.alert('提示', '索片开始时间不得为空');
+                return false;
+            }
+            if ($scope.cadge_time_end == '') {
+                common.utility.alert('提示', '索片结束时间不得为空');
+                return false;
+            }
+            if ($scope.modelInfo.activity_addr == '') {
+                common.utility.alert('提示', '活动地点不得为空');
+                return false;
+            }
+            if ($scope.modelInfo.activity_name == '') {
+                common.utility.alert('提示', '活动时间不得为空');
+                return false;
+            }
+            var params = {
+                activity_time: $scope.activity_time,
+                cadge_time_start: $scope.cadge_time_start,
+                cadge_time_end: $scope.cadge_time_end,
+                corporation_id: $scope.corpid,
+                activity_addr: $scope.modelInfo.activity_addr,
+                send_count: $scope.modelInfo.send_count,
+                introduction: $scope.modelInfo.introduction,
+                propaganda_pic: $scope.propaganda_pic,
+                name: $scope.modelInfo.activity_name,
             }
 
+            var success = function(data) {
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+                if (data.status === 200) {
+                    $location.path('/joint/corporation/' + $scope.corpid);
+                } else {
+                    common.utility.alert('提示', data.msg);
+                }
+            }
+            common.utility.postData(url, params, true, true, success);
+        }
 
-            function _loadList(params) {
+        var _savePropagandaPic = function(pic) {
 
-                var url = common.API.cadgeListManage;
-                var success = function(data) {
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                    if (data.status === 200) {
-                        //$scope.host = data.data.host;
-                        if ($scope.page == 1) {
-                            $scope.totalCount = data.data.totalCount;
-                            $scope.activityName = data.data.activityName;
-                            $scope.joinCount = data.data.joinCount;
-                        }
+            var params = {
+                'propaganda_pic': pic,
+                'corporation_id': $scope.corpid
+            };
+            var url = common.API.uploadActivityPic;
+            var success = function(data) {
+                if (data.status === 200) {
+                    $scope.propaganda_pic = data.data.propaganda_pic;
+                    $scope.showPic = true;
+                } else {
+                    common.utility.alert('提示', data.msg);
+                }
+            }
+            common.utility.postData(url, params, true, true, success);
+        }
 
-                        $scope.page = $scope.page + 1;
-                        if (data.data.joinUserList.length <= 0) {
-                            $scope.hasMore = false;
-                            $scope.noData = true;
-                            return;
-                        }
-                        _mergeList(data.data.joinUserList, $scope.cadgeList);
-                    } else {
+        var takePicture = document.getElementById('takepicture');
+        //src="img/tx_1.png"
+        $scope.takePicture = function() {
+
+            takePicture.click();
+        };
+        takePicture.onchange = function(event) {
+            var files = event.target.files,
+                file;
+            if (files && files.length > 0) {
+                file = files[0];
+                try {
+                    var URL = window.URL || window.webkitURL;
+                    var blob = URL.createObjectURL(file);
+                    _compressPicture(blob);
+
+                } catch (e) {
+                    try {
+                        var fileReader = new FileReader();
+                        fileReader.onload = function(event) {
+                            _compressPicture(event.target.result);
+                        };
+                        fileReader.readAsDataURL(file);
+                    } catch (e) {
+                        common.utility.alert('error');
+                    }
+                }
+
+            }
+        };
+
+        /**
+         * 压缩照片
+         * @param blob 照片的url
+         */
+        var _compressPicture = function(blob) {
+            var quality = 0.5,
+                image = new Image();
+            image.src = blob;
+            image.onload = function() {
+                var that = this;
+                // 生成比例
+                var width = that.width,
+                    height = that.height;
+                width = width / 4;
+                height = height / 4;
+                // 生成canvas画板
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(that, 0, 0, width, height);
+                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+                var imgurl = canvas.toDataURL('image/jpeg', quality);
+                // 修复IOS兼容问题
+                if (navigator.userAgent.match(/iphone/i)) {
+                    var mpImg = new MegaPixImage(image);
+                    mpImg.render(canvas, {
+                        maxWidth: width,
+                        maxHeight: height,
+                        quality: quality
+                    });
+                    imgurl = canvas.toDataURL('image/jpeg', quality);
+                }
+                $scope.propagandaPic = imgurl;
+                _savePropagandaPic(imgurl);
+                $scope.$digest();
+            };
+
+        };
+    }
+])
+
+.controller('JointManageCadgeListCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    function($http, $scope, common, $stateParams) {
+        ! function() {
+            $scope.hasMore = true;
+            $scope.noData = false;
+            $scope.cadgeList = [];
+            $scope.activityName = '';
+            $scope.totalCount = '';
+            $scope.joinCount = '';
+            $scope.host = "";
+            $scope.page = 1;
+            $scope.activityId = $stateParams.activityId; //社团id
+            $scope.corporationId = $stateParams.corporationId; //社团id
+        }();
+
+        $scope.$on('stateChangeSuccess', function() {
+            $scope.loadMoreData();
+        });
+
+        $scope.loadMoreData = function() {
+            var newParams = {
+                page: $scope.page,
+                corporation_id: $scope.corporationId,
+                activity_id: $scope.activityId
+            };
+            _loadList(newParams);
+        }
+
+
+        function _loadList(params) {
+
+            var url = common.API.cadgeListManage;
+            var success = function(data) {
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+                if (data.status === 200) {
+                    //$scope.host = data.data.host;
+                    if ($scope.page == 1) {
+                        $scope.totalCount = data.data.totalCount;
+                        $scope.activityName = data.data.activityName;
+                        $scope.joinCount = data.data.joinCount;
+                    }
+
+                    $scope.page = $scope.page + 1;
+                    if (data.data.joinUserList.length <= 0) {
                         $scope.hasMore = false;
                         $scope.noData = true;
-                        common.utility.alert('提示', data.msg);
+                        return;
                     }
-
+                    _mergeList(data.data.joinUserList, $scope.cadgeList);
+                } else {
+                    $scope.hasMore = false;
+                    $scope.noData = true;
+                    common.utility.alert('提示', data.msg);
                 }
-                common.utility.postData(url, params, true, true, success);
-            }
 
-            function _mergeList(List1, List2) {
-                angular.forEach(List1, function(value) {
-                    this.push(value);
-                }, List2);
             }
-
+            common.utility.postData(url, params, true, true, success);
         }
-    ])
-    .controller('JointActivityCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        'md5',
-        function($http, $scope, common, $stateParams, md5) {
-            var id = $stateParams.id,
-                paramsObj = {
-                    activity_id: id
-                };
-            $scope.buttonObj = {
-                joined: false,
-                buttonText: ''
-            };
-            $scope.joinActivity = function() {
-                if (!this.buttonObj.joined) {
-                    common.utility.checkLogin().success(function(u) {
-                        paramsObj.uid = u.uid;
-                        paramsObj.token = u.token;
-                        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-                        common.utility.loadingShow();
-                        $http({
-                            method: 'post',
-                            url: common.API.joinActivity,
-                            data: paramsObj
-                        }).success(function(data) {
-                            common.utility.loadingHide();
-                            common.utility.handlePostResult(data, function(d) {
-                                common.utility.alert('提示', d.msg);
-                            });
-                        });
-                    }).fail(function() {
-                        common.utility.resetToken();
-                    });
-                }
-            };
 
-            ! function() {
-                common.utility.checkLogin().always(function(u) {
+        function _mergeList(List1, List2) {
+            angular.forEach(List1, function(value) {
+                this.push(value);
+            }, List2);
+        }
+
+    }
+])
+
+.controller('JointActivityCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id,
+            paramsObj = {
+                activity_id: id
+            };
+        $scope.buttonObj = {
+            joined: false,
+            buttonText: ''
+        };
+        $scope.joinActivity = function() {
+            if (!this.buttonObj.joined) {
+                common.utility.checkLogin().success(function(u) {
                     paramsObj.uid = u.uid;
                     paramsObj.token = u.token;
                     paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                     common.utility.loadingShow();
                     $http({
                         method: 'post',
-                        url: common.API.activityDetail,
+                        url: common.API.joinActivity,
                         data: paramsObj
                     }).success(function(data) {
                         common.utility.loadingHide();
                         common.utility.handlePostResult(data, function(d) {
-                            d.data.activity_time = new Date(d.data.activity_time * 1000).format('yyyy-MM-dd hh:mm:ss');
-                            d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
-                            d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
-                            $scope.activityModel = d.data;
-                            $scope.buttonObj.joined = d.data.joined;
-                            $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片'
+                            common.utility.alert('提示', d.msg);
                         });
                     });
                 }).fail(function() {
-                    // common.utility.resetToken();
+                    common.utility.resetToken();
                 });
-            }();
-        }
-    ])
-    .controller('ActivityMemberCtrl', [
-        '$http',
-        '$scope',
-        'Common',
-        '$stateParams',
-        'md5',
-        function($http, $scope, common, $stateParams, md5) {
-            var id = $stateParams.id;
+            }
+        };
 
-            ! function() {
-                common.utility.loadingShow();
-                var paramsObj = {
-                    activity_id: id
-                };
+        ! function() {
+            common.utility.checkLogin().always(function(u) {
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
                 $http({
                     method: 'post',
-                    url: common.API.joinUserList,
+                    url: common.API.activityDetail,
                     data: paramsObj
                 }).success(function(data) {
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d) {
-                        $scope.memberList = d.data;
+                        d.data.activity_time = new Date(d.data.activity_time * 1000).format('yyyy-MM-dd hh:mm:ss');
+                        d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
+                        d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
+                        $scope.activityModel = d.data;
+                        $scope.buttonObj.joined = d.data.joined;
+                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片'
                     });
                 });
-            }();
-        }
-    ])
+            }).fail(function() {
+                common.utility.resetToken();
+            });
+        }();
+    }
+])
+
+.controller('ActivityMemberCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id;
+
+        ! function() {
+            common.utility.loadingShow();
+            var paramsObj = {
+                activity_id: id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.joinUserList,
+                data: paramsObj
+            }).success(function(data) {
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d) {
+                    $scope.memberList = d.data;
+                });
+            });
+        }();
+    }
+])
 
 .controller('myCorporationCtrl', [
     '$http',
@@ -1999,7 +1857,8 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
     '$stateParams',
     'md5',
     '$location',
-    function($http, $scope, common, $stateParams, md5, $location) {
+    '$timeout',
+    function($http, $scope, common, $stateParams, md5, $location, $timeout) {
         var id = $stateParams.id,
             paramsObj = {
                 corporation_id: id
@@ -2010,6 +1869,9 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             if (common.tempData.corporationInfo) {
                 $scope.corpModel = common.tempData.corporationInfo;
             }
+            if (common.tempData.imgData) {
+                $scope.corpModel.avatar = common.tempData.imgData;
+            }
         }).fail(function() {
             common.utility.resetToken();
         });
@@ -2017,6 +1879,7 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
 
         $scope.save = function() {
             paramsObj.name = $scope.corpModel.name;
+            paramsObj.avatar = $scope.corpModel.avatar;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             $http({
                 method: 'post',
@@ -2024,8 +1887,9 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
                 data: paramsObj
             }).success(function(data) {
                 common.utility.handlePostResult(data, function(d) {
-                    common.utility.alert('提示', d.msg);
-                    $location.path('/joint/corporation/' + id);
+                    common.utility.alert('提示', d.msg).then(function(){
+                        $location.path('/joint/corporation/' + id);
+                    });
                 });
             });
         };
@@ -2034,62 +1898,16 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
         var takePicture = document.getElementById('takepicture');
         takePicture.onchange = function(event) {
             var files = event.target.files,
-                file;
-            if (files && files.length > 0) {
-                file = files[0];
-                try {
-                    var URL = window.URL || window.webkitURL;
-                    var blob = URL.createObjectURL(file);
-                    _compressPicture(blob);
-                } catch (e) {
-                    try {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function(event) {
-                            _compressPicture(event.target.result);
-                        };
-                        fileReader.readAsDataURL(file);
-                    } catch (e) {
-                        common.utility.alert('error');
-                    }
-                }
-            }
-        };
+                fileReader = new FileReader();
 
-        /**
-         * 压缩照片
-         * @param blob 照片的url
-         */
-        var _compressPicture = function(blob) {
-            var quality = 0.5,
-                image = new Image();
-            image.src = blob;
-            image.onload = function() {
-                var that = this;
-                // 生成比例
-                var width = that.width,
-                    height = that.height;
-                width = width / 4;
-                height = height / 4;
-                // 生成canvas画板
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(that, 0, 0, width, height);
-                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
-                var imgurl = canvas.toDataURL('image/jpeg', quality);
-                // 修复IOS兼容问题
-                if (navigator.userAgent.match(/iphone/i)) {
-                    var mpImg = new MegaPixImage(image);
-                    mpImg.render(canvas, {
-                        maxWidth: width,
-                        maxHeight: height,
-                        quality: quality
-                    });
-                    imgurl = canvas.toDataURL('image/jpeg', quality);
-                }
-                paramsObj.avatar = imgurl;
-                $scope.corpModel.avatar = imgurl;
+            fileReader.readAsDataURL(files[0]);
+            fileReader.onload = function(e) {
+                common.utility.loadingShow();
+                common.tempData.imgData = this.result;
+                $timeout(function() {
+                    $location.path('/image/crop/corporation_profile_edit_' + id);
+                    common.utility.loadingHide();
+                }, 1000);
             };
         };
 
@@ -2128,8 +1946,9 @@ angular.module('xinrenshe.controllers', ['ngCookies', 'angular-md5', 'ImageCropp
             }).success(function(data) {
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d) {
-                    common.utility.alert('提示', d.msg);
-                    $location.path('/joint/corporation/' + id);
+                    common.utility.alert('提示', d.msg).then(function(){
+                        $location.path('/joint/corporation/' + id);
+                    });
                 });
             });
         };

@@ -16,11 +16,11 @@ body{
     background: #ff8c9b;
 }
 .bar.bar-stable .title{
-    color: #fff;
-    background: #ff8c9b;
+    /*color: #fff;*/
+    /*background: #ff8c9b;*/
 }
 .bar-stable .button.button-clear{
-    color: #fff;
+    /*color: #fff;*/
 }
 .item{
     border-color: #f1f1f1;
@@ -65,6 +65,8 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     background-size: 100%;
     min-height: 210px;
     overflow: hidden;*/
+    padding-bottom: 10px;
+    background: #fff;
 }
 /*.home-card div{
     background: rgba(239, 108, 126, 0.9);
@@ -75,6 +77,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }*/
 .home-send{
     background: url(../img/home_2.png) no-repeat;
+    /*background: #fdadb8;*/
     background-size: 100%;
     min-height: 370px;
     margin-top: 30px;
@@ -83,6 +86,15 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .home-send div{
     width: 80%;
     margin: 43% auto 0;
+    position: relative;
+}
+.home-send section{
+    position: absolute;
+    left: 120px;
+    top: 0;
+}
+.home-send section img{
+    margin-right: 4px;
 }
 .home-send a{
     display: block;
@@ -117,7 +129,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .avatar-container{
     position: absolute;
-    top: 20px;
+    top: 10px;
     width: 100%;
     text-align: center;
 }
@@ -172,8 +184,13 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .send-userinfo p{
     width: 80%;
     margin: 0 auto;
-    line-height: 60px;
-    font-size: 16px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #808080;
+}
+.send-userinfo label{
+    width: 35%;
+    display: inline-block;
 }
 .receive-header span{
     display: inline-block;
@@ -181,16 +198,20 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     margin-left: 20px;
 }
 .card-item{
-    border: solid 1px #cdcdcd;
+    border-top: solid 1px #cdcdcd;
+    border-bottom: solid 1px #cdcdcd;
     background: #fff;
     margin: 8px 0;
+    color: #303030;
 }
 .card-item .header{
     border-bottom: solid 1px #cdcdcd;
     padding: 10px 0;
+    position: relative;
 }
 .card-item .header a{
     color: #ff8c9b;
+    text-decoration: none;
 }
 .card-item .header div, .card-item .footer div{
     display: inline-block;
@@ -199,8 +220,9 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .card-item .footer div{
     vertical-align: top;
-    height: 100px;
+    height: 80px;
     position: relative;
+    font-size: 12px;
 }
 .card-item .footer .username, .card-item .footer .code{
     position: absolute;
@@ -221,19 +243,22 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     line-height: 24px;
+    width: 60px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
 }
 .card-item .footer{
-    padding: 20px 0;
+    padding: 10px 0;
     overflow: hidden;
 }
 .footer img.cardimg{
     width: 25%;
-    min-height: 100px;
+    min-height: 80px;
 }
 .footer .address{
     display: block;
-    line-height: 30px;
-    font-size: 15px;
+    font-size: 14px;
 }
 .footer .left, .footer .center, .footer .right{
     float: left;
@@ -309,8 +334,6 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     display: -webkit-flex;
     justify-content: space-around;
     align-items: center;*/
-    /*height: 130px;*/
-    /*background: url(../img/bj_1.png);*/
     color: #fff;
     font-size: 12px;
 }
@@ -332,6 +355,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .corp-header .right span{
     line-height: 36px;
+    font-size: 14px;
 }
 
 .corp-header div{
@@ -348,6 +372,9 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .notice{
     margin: 0 auto 10px;
     background: #fff;
+    padding: 10px;
+    color: #bababa;
+    font-size: 12px;
 }
 .member-item div{
     position: absolute;
@@ -460,7 +487,7 @@ i.gender0{
     /*padding: 10px 0;*/
     padding-top: 10px;
     padding-bottom: 10px;
-    color: #c4c4c4;
+    color: #808080;
 }
 .member-list .item{
     font-size: 14px;
@@ -481,8 +508,24 @@ i.gender0{
 span.red{
     color: red;
 }
-
-
+h4{
+    font-size: 15px;
+}
+ul.send-tip{
+    list-style: disc outside none;
+}
+.send-tip li{
+    list-style: disc outside none;
+    margin: 10px 0;
+    color: #858585;
+}
+.user-list .item{
+    background: #fff;
+    color: #858585;
+}
+.user-list .icon{
+    color: #858585;
+}
 
 
 
