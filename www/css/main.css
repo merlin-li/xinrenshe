@@ -2,6 +2,9 @@
 body{
     /*font-size: 62.5%;*/
 }
+.tabs-striped .tab-item.activated, .tabs-striped .tab-item.active, .tabs-striped .tab-item.tab-item-active{
+    border-color: #fff;
+}
 .button.button-positive{
     background: #ff8c9b;
     border-color: #ff8c9b;
@@ -358,15 +361,17 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     position: absolute;
     left: 100px;
     top: 9px;
+    width: 240px;
 }
 .corp-header .right span{
     line-height: 36px;
     font-size: 14px;
 }
 
-.corp-header div{
-/*    height: 100px;
-    display: inline-block;*/
+.corp-header .right .button{
+    position: absolute;
+    bottom: 10px;
+    right: 0;
 }
 .asso-avatar{
     width: 50px;
@@ -388,6 +393,10 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     left: 80px;
     font-size: 12px;
 }
+.member-item span{
+    font-size: 14px;
+    color: #9c9c9c;
+}
 .member-item label{
     display: block;
     font-size: 12px;
@@ -397,7 +406,7 @@ i.gender{
     height: 20px;
     display: inline-block;
     position: relative;
-    top: 6px;
+    top: 5px;
 }
 i.gender1{
     background: url(../img/baom_1.png);

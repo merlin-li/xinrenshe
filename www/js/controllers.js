@@ -363,13 +363,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         };
 
         $scope.goAddress = function() {
-            common.tempData.userAddressInfo = this.userModel;
+            // common.tempData.userAddressInfo = this.userModel;
+            common.utility.cookieStore.put('useraddressinfo', this.userModel);
             $location.path('/city/setting/type/');
         };
 
         ! function() {
-            if (common.tempData.userAddressInfo) {
-                $scope.userModel = common.tempData.userAddressInfo;
+            // if (common.tempData.userAddressInfo) {
+            //     $scope.userModel = common.tempData.userAddressInfo;
+            // }
+            if (common.utility.cookieStore.get('useraddressinfo')) {
+                $scope.userModel = common.utility.cookieStore.get('useraddressinfo');
             }
             if (common.utility.cookieStore.get('areainfo1') && common.utility.cookieStore.get('areainfo2') && common.utility.cookieStore.get('areainfo3')) {
                 var areaObj1 = common.utility.cookieStore.get('areainfo1'),
@@ -383,6 +387,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             common.utility.cookieStore.remove('areainfo1'),
             common.utility.cookieStore.remove('areainfo2'),
             common.utility.cookieStore.remove('areainfo3');
+            common.utility.cookieStore.remove('useraddressinfo');
         }();
     }
 ])
@@ -1199,8 +1204,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                     data: paramsObj
                 }).success(function(data) {
                     common.utility.handlePostResult(data, function(d) {
+                        d.data.avatar = d.data.host + d.data.avatar;
                         $scope.corpModel = d.data;
-                        $scope.corpModel.avatar = d.data.host + d.data.avatar;
+                        // $scope.corpModel.avatar = d.data.host + d.data.avatar;
                         if (d.data.isPresident) {
                             //如果是社长，显示社务管理
                             $scope.pageModel.buttonText = '社务管理';
@@ -1777,8 +1783,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 
         $scope.save = function() {
             paramsObj.name = $scope.corpModel.name;
-            paramsObj.avatar = $scope.corpModel.avatar;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            paramsObj.avatar = $scope.corpModel.avatar;
             $http({
                 method: 'post',
                 url: common.API.saveCorporation,
