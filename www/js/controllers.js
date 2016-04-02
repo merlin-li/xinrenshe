@@ -505,7 +505,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                     $scope.userObj = data.data.userInfo;
                     $scope.userObj.avatar = data.data.host + $scope.userObj.avatar;
                     var dateObj = new Date(data.data.userInfo.create_at * 1000);
-                    $scope.userObj.create_at = dateObj.getFullYear() + '年' + dateObj.getMonth() + '月' + dateObj.getDate() + '日';
+                    $scope.userObj.create_at = new Date($scope.userObj.create_at * 1000).format('yyyy-MM-dd');
                 } else if(data.status === 402) {
                     common.utility.resetToken();
                 } else if (data.status === 501) {
