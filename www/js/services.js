@@ -7,7 +7,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
     '$http',
     '$location',
     'md5',
-    function($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, md5) {
+    '$ionicActionSheet',
+    function($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, md5, $ionicActionSheet) {
 
         var offline = false,
             location = window.location.search,
@@ -213,7 +214,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     _alert('提示', d.msg);
                 }
             },
-            _takePicture = function(cordovaCamera, successFn, errFn){
+            _takePicture = function(cordovaCamera, successFn, errFn) {
                 var options = {
                     quality: 90,
                     destinationType: Camera.DestinationType.DATA_URL,
@@ -232,6 +233,25 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 }, function(err) {
                     if (errFn) {
                         errFn(err);
+                    }
+                });
+            },
+            _takePictureSheet = function(fn1, fn2) {
+                var pictureSheet = $ionicActionSheet.show({
+                    buttons: [{
+                        text: '拍照'
+                    }, {
+                        text: '从相册中选取'
+                    }],
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        if (index === 0) {
+                            fn1();
+                        }
+                        if (index === 1) {
+                            fn2();
+                        }
                     }
                 });
             };
@@ -270,7 +290,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 joinActivity: apiBaseUrl + 'jointly/joinActivity',
                 corporationListManage: apiBaseUrl + 'jointlyManage/corporationList',
                 saveCorporation: apiBaseUrl + 'jointlyManage/saveCorporation',
-                releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice'
+                releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice',
+
+                createCorporation: apiBaseUrl + 'jointly/createCorporation'
             },
             SOURCE: {
                 'home': '/home'
@@ -303,7 +325,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'postData': _postData,
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
-                'takePicture': _takePicture
+                'takePicture': _takePicture,
+                'takePictureSheet': _takePictureSheet
             },
             tempData: {
                 userAddressInfo: '',

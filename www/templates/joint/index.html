@@ -1,5 +1,9 @@
 <ion-view view-title="联名" hide-back-button="true">
-    <div class="joint-tabs tabs-striped tabs-top    ">
+    <ion-nav-buttons side="right">
+        <a href="#/corporation/create" class="button">创建联名社</a>
+    </ion-nav-buttons>
+
+    <div class="joint-tabs tabs-striped tabs-top">
         <div class="tabs">
             <a class="tab-item" ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
                 联名活动

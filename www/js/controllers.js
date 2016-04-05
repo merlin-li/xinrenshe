@@ -418,7 +418,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 url: common.API.getRegion,
                 data: paramsObj
             }).success(function(data) {
-                // console.log(data);
                 if (data.status === 200) {
                     $scope.areaData = data.data.regionList;
                 } else {
@@ -447,14 +446,22 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             if (i.type === 1) {
                 //表示省份
                 common.utility.cookieStore.put('areainfo1', i);
+                $location.path('/city/setting/' + i.id);
             } else if (i.type === 2) {
                 //表示市
                 common.utility.cookieStore.put('areainfo2', i);
+
+                if (common.utility.cookieStore.get('citySetType') === 'corporation') {
+                    //如果是创建联名社的选择时候，进行跳转
+                    $location.path('/corporation/create');
+                } else {
+                    $location.path('/city/setting/' + i.id);
+                }
             } else if (i.type === 3) {
                 //表示区县
                 common.utility.cookieStore.put('areainfo3', i);
+                $location.path('/city/setting/' + i.id);
             }
-            $location.path('/city/setting/' + i.id);
         };
 
         _init(1);
@@ -1845,4 +1852,98 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             });
         };
     }
-]);
+])
+
+.controller('CorporationCreateCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    '$location',
+    '$cordovaCamera',
+    '$ionicActionSheet',
+    function($http, $scope, common, $stateParams, md5, $location, $cordovaCamera, $ionicActionSheet) {
+
+        $scope.corModel = {
+            name: '',
+            addr_province: '',
+            addr_city: '',
+            uid: '',
+            token: ''
+        };
+        $scope.corAvatar = 'img/icon_touxiang.png';
+
+        //确认提交
+        $scope.save = function(){
+            if ($scope.corModel.name === '' || $scope.addr_province === '' || $scope.addr_city === '') {
+                common.utility.alert('提示', '社名或地点不能为空！');
+            } else {
+                var paramsObj = $scope.corModel;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                paramsObj.avatar = $scope.corAvatar;
+
+                $http({
+                    method: 'POST',
+                    url: common.API.createCorporation,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        common.utility.alert('提示', data.msg).then(function(){
+                            $location.path('/joint');
+                        });
+                    });
+                });
+            }
+        };
+
+        $scope.takePicture = function(){
+            common.utility.takePictureSheet(function(){
+                common.utility.takePicture($cordovaCamera, function(s){
+                    $scope.corModel.avatar = s;
+                });
+            }, function(){
+
+            });
+        };
+
+        $scope.goAddress = function(){
+            $location.path('/city/setting/type/corporation');
+        };
+
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                $scope.corModel.uid = u.uid;
+                $scope.corModel.token = u.token;
+                common.utility.cookieStore.remove('citySetType');
+                if (common.utility.cookieStore.get('areainfo1')) {
+                    $scope.corModel.addr_province = common.utility.cookieStore.get('areainfo1').name;
+                }
+                if (common.utility.cookieStore.get('areainfo2')) {
+                    $scope.corModel.addr_city = common.utility.cookieStore.get('areainfo2').name;
+                }
+            });
+        }();
+    }
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;

@@ -197,31 +197,31 @@ angular.module('xinrenshe', [
         })
 
         .state('activity_member', {
-                url: '/joint/activity/:id/member',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/activity/memberlist.html',
-                        controller: 'ActivityMemberCtrl'
-                    }
+            url: '/joint/activity/:id/member',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/memberlist.html',
+                    controller: 'ActivityMemberCtrl'
                 }
-            }).state('my_corporation_list', {
-                url: '/joint/manage/myCorporation',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/manage/mycorporationList.html',
-                        controller: 'myCorporationCtrl'
-                    }
+            }
+        }).state('my_corporation_list', {
+            url: '/joint/manage/myCorporation',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/mycorporationList.html',
+                    controller: 'myCorporationCtrl'
                 }
-            })
-            .state('corporation_notice', {
-                url: '/joint/manage/notice/:id',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/manage/notice.html',
-                        controller: 'CorporationNoticeCtrl'
-                    }
+            }
+        })
+        .state('corporation_notice', {
+            url: '/joint/manage/notice/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/notice.html',
+                    controller: 'CorporationNoticeCtrl'
                 }
-            })
+            }
+        })
 
         .state('corporation_edit', {
             url: '/corporation/profile/edit/:id',
@@ -229,6 +229,16 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/joint/edit/profile.html',
                     controller: 'CorporationEditCtrl'
+                }
+            }
+        })
+
+        .state('corporation_create', {
+            url: '/corporation/create',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/edit/create.html',
+                    controller: 'CorporationCreateCtrl'
                 }
             }
         })

@@ -1,0 +1,23 @@
+<ion-view view-title="创建联名社">
+    <ion-content>
+        <div class="corporation-info">
+            <img ng-src="{{corAvatar}}" ng-click="takePicture()">
+            <span class="ion-compose edit-avatar-btn"></span>
+        </div>
+
+        <div class="list">
+            <a class="item item-icon-right" ng-click="goAddress()">
+                地点
+                <i class="icon ion-ios-arrow-right"></i>
+                <span class="item-note">{{corModel.addr_province + corModel.addr_city}}</span>
+            </a>
+            <label class="item item-input">
+                <span class="input-label">社名</span>
+                <input ng-model="corModel.name" type="text" placeholder="请输入社名">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="save()">确认提交</button>
+        </div>
+    </ion-content>
+</ion-view>

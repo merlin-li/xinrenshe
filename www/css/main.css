@@ -548,7 +548,15 @@ ul.send-tip{
 .user-list .icon{
     color: #858585;
 }
-
+.corporation-info{
+    height: 150px;
+    text-align: center;
+}
+.corporation-info img{
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+}
 
 
 
