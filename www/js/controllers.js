@@ -1499,6 +1499,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 introduction: $scope.modelInfo.introduction,
                 propaganda_pic: $scope.propaganda_pic,
                 name: $scope.modelInfo.activity_name,
+                question: $scope.modelInfo.question
             }
 
             var success = function(data) {

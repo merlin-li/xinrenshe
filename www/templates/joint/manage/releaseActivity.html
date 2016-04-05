@@ -1,79 +1,84 @@
 <ion-view title="发布活动">
-  <ion-content has-header="true" style="background: #f2f2f2;color: #a4a4a4">
-    <div class="release-activity" >
-      <label class="s-label item item-input">
-        <input type="text" ng-model="modelInfo.activity_name" placeholder="活动名称(4-25字)" maxlength="25" minlength="4">
-      </label>
+    <ion-content has-header="true" style="background: #f2f2f2;color: #a4a4a4">
+        <div class="release-activity" >
+            <label class="s-label item item-input">
+                <input type="text" ng-model="modelInfo.activity_name" placeholder="活动名称(4-25字)" maxlength="25" minlength="4">
+            </label>
 
-      <label class="s-label item item-input"style="padding: 6px" ng-click="takePicture()">
-        <span style="height: 100px;border: dashed 1px #ddd;width: 100%;text-align: center">
-          <img ng-src="{{host+propagandaPic}}" ng-show="showPic" style="width: 100%;
-    height: 100px;" alt=""/>
-          <label style="color:#999;margin-top: 40px;display: inline-block;">
-                上传海报
+            <label class="s-label item item-input"style="padding: 6px" ng-click="takePicture()">
+                <span style="height: 100px;border: dashed 1px #ddd;width: 100%;text-align: center">
+                    <img ng-src="{{host+propagandaPic}}" ng-show="showPic" style="width: 100%;
+        height: 100px;" alt=""/>
+                    <label style="color:#999;margin-top: 40px;display: inline-block;">
+                                上传海报
 
-              </label>
-        </span>
+                            </label>
+                </span>
 
-      </label>
+            </label>
 
-      <label class="item item-input" style="margin-top: 15px" ng-click="timeSelect(1)">
-        <div class="input-label">
-          索片开始时间
+            <label class="item item-input" style="margin-top: 15px" ng-click="timeSelect(1)">
+                <div class="input-label">
+                    索片开始时间
+                </div>
+                <span ng-bind="cadge_time_start" style="float: right"></span>
+            </label>
+            <label class="item item-input" ng-click="timeSelect(2)">
+                <div class="input-label">
+                    索片结束时间
+                </div>
+                <span ng-bind="cadge_time_end"></span>
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    送片数量
+                </div>
+                <select ng-model="modelInfo.send_count">
+                    <option selected>10</option>
+                    <option >20</option>
+                    <option>30</option>
+                    <option>50</option>
+                    <option>80</option>
+                    <option>100</option>
+                    <option>200</option>
+                </select>
+            </label>
+
+            <label class="item item-input" style="margin-top: 15px" ng-click="timeSelect(3)">
+                <div class="input-label">
+                    活动时间
+                </div>
+                <span ng-bind="activity_time"></span>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">活动地点</span>
+                <input type="text" ng-model="modelInfo.activity_addr" maxlength="20">
+            </label>
+
+            <label class="item item-input item-stacked-label" style="margin-top: 10px;padding: 6px 0 5px 0px;">
+                <textarea name="" id="" cols="30" rows="10" ng-model="modelInfo.introduction" value='' placeholder="活动介绍">
+                </textarea>
+            </label>
+
+            <label class="item item-input item-stacked-label" style="margin-top: 10px;padding: 6px 0 5px 0px;">
+                <textarea name="" id="" cols="30" rows="10" ng-model="modelInfo.question" value='' placeholder="活动问题">
+                </textarea>
+            </label>
+
+            <div class="padding">
+                <button class="button button-block button-positive" ng-click="releaseActivity()">发布</button>
+            </div>
         </div>
-        <span ng-bind="cadge_time_start" style="float: right"></span>
-      </label>
-      <label class="item item-input" ng-click="timeSelect(2)">
-        <div class="input-label">
-          索片结束时间
-        </div>
-        <span ng-bind="cadge_time_end"></span>
-      </label>
-      <label class="item item-input item-select">
-        <div class="input-label">
-          送片数量
-        </div>
-        <select ng-model="modelInfo.send_count">
-          <option selected>10</option>
-          <option >20</option>
-          <option>30</option>
-          <option>50</option>
-          <option>80</option>
-          <option>100</option>
-          <option>200</option>
-        </select>
-      </label>
+        <!--拍照-->
+        <!-- <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none"> -->
 
-      <label class="item item-input" style="margin-top: 15px" ng-click="timeSelect(3)">
-        <div class="input-label">
-          活动时间
-        </div>
-        <span ng-bind="activity_time"></span>
-      </label>
-      <label class="item item-input">
-        <span class="input-label">活动地点</span>
-        <input type="text" ng-model="modelInfo.activity_addr" maxlength="20">
-      </label>
-
-      <label class="item item-input item-stacked-label" style="margin-top: 10px;padding: 6px 0 5px 0px;">
-        <textarea name="" id="" cols="30" rows="10" ng-model="modelInfo.introduction" value='' placeholder="活动介绍">
-        </textarea>
-      </label>
-
-      <div class="padding">
-        <button class="button button-block button-positive" ng-click="releaseActivity()">发布</button>
-      </div>
-    </div>
-    <!--拍照-->
-    <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
-
-    <ionic-timepicker input-obj="timePickerObject" >
-      <button id="timeClick" style="filter:alpha(opacity=0);
-      -moz-opacity:0;
-      -khtml-opacity: 0;
-      opacity: 0;  " >
-        <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
-      </button>
-    </ionic-timepicker>
-  </ion-content>
+        <ionic-timepicker input-obj="timePickerObject" >
+            <button id="timeClick" style="filter:alpha(opacity=0);
+            -moz-opacity:0;
+            -khtml-opacity: 0;
+            opacity: 0;    " >
+                <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
+            </button>
+        </ionic-timepicker>
+    </ion-content>
 </ion-view>
