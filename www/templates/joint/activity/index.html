@@ -14,9 +14,20 @@
                 {{activityModel.addr_city}} &nbsp;
                 {{activityModel.activity_addr}} 
             </div>
-            <div class="item">
+            <div class="item item-icon-left">
+                <i class="icon ion-ios-photos-outline"></i>
                 主办单位：{{activityModel.corporation_name}}
             </div>
+        </div>
+
+        <div class="list activity-list">
+            <div class="item">
+                活动已报名{{activityModel.postcardUserList.length}}人
+            </div>
+            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/member">
+                <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.postcardUserList">
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
         </div>
 
         <div class="list activity-list">

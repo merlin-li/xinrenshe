@@ -510,7 +510,7 @@ i.gender0{
     color: #c4c4c4;
 }
 .activity-list .item.title{
-    color: #9d9d9d;
+    color: #000;
 }
 .activity-list .item-thumbnail-left .item-content>img:first-child{
     max-width: 100px;

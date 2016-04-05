@@ -25,7 +25,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
         if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
             loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
         } else {
-            loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
+            loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
+            
+            // loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
         }
         Date.prototype.format = function(fmt) {
             var o = {
@@ -235,6 +237,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                         errFn(err);
                     }
                 });
+
+
             },
             _takePictureSheet = function(fn1, fn2) {
                 var pictureSheet = $ionicActionSheet.show({
@@ -293,7 +297,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice',
 
                 createCorporation: apiBaseUrl + 'jointly/createCorporation',
-                
+
             },
             SOURCE: {
                 'home': '/home'
