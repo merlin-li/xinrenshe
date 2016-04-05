@@ -1164,12 +1164,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             if (this.pageModel.buttonStatus === 1) {
                 //已申请
             }
-            if (this.pageModel.buttonStatus === 2) {
-                //申请加入
+            if (this.pageModel.buttonStatus === 2 || this.pageModel.buttonStatus === 3) {
+                //2表示申请加入
+                //3表示退出
                 common.utility.checkLogin().success(function(u) {
                     paramsObj.uid = u.uid;
                     paramsObj.token = u.token;
-                    paramsObj.type = 1;
+                    paramsObj.type = $scope.pageModel.buttonStatus === 2 ? 1 : 2;
                     paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                     $http({
                         method: 'post',
@@ -1178,8 +1179,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                     }).success(function(data) {
                         common.utility.handlePostResult(data, function(d) {
                             common.utility.alert('提示', d.msg);
-                            $scope.pageModel.buttonStatus = 1;
-                            $scope.pageModel.buttonText = '已申请';
+                            if ($scope.pageModel.buttonStatus === 2) {
+                                $scope.pageModel.buttonStatus = 1;
+                                $scope.pageModel.buttonText = '已申请';
+                            }
+                            if ($scope.pageModel.buttonStatus === 3) {
+                                $scope.pageModel.buttonStatus = 2;
+                                $scope.pageModel.buttonText = '加入';   
+                            }
                         });
                     });
                 }).fail(function() {
@@ -1224,7 +1231,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                         } else {
                             if (d.data.joined) {
                                 //如果已加入，隐藏按钮
-                                $scope.pageModel.hideBtn = true;
+                                $scope.pageModel.hideBtn = false;
+                                $scope.pageModel.buttonText = '退出联名社';
+                                $scope.pageModel.buttonStatus = 3;
                             } else {
                                 //如果没有加入时，判断是否申请，
                                 if (d.data.applied) {
@@ -1854,6 +1863,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     }
 ])
 
+//创建联名社
 .controller('CorporationCreateCtrl', [
     '$http',
     '$scope',
