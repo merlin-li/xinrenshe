@@ -214,7 +214,19 @@ angular.module('xinrenshe', [
                     controller: 'ActivityMemberCtrl'
                 }
             }
-        }).state('my_corporation_list', {
+        })
+
+        .state('activity_join_member', {
+            url: '/joint/activity/:id/joinmember',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/joinuserlist.html',
+                    controller: 'JoinUserListCtrl'
+                }
+            }
+        })
+
+        .state('my_corporation_list', {
             url: '/joint/manage/myCorporation',
             views: {
                 'content': {

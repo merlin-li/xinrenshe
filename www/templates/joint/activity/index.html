@@ -22,9 +22,9 @@
 
         <div class="list activity-list">
             <div class="item">
-                活动已报名{{activityModel.postcardUserList.length}}人
+                活动已报名写片{{activityModel.postcardUserList.length}}人
             </div>
-            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/member">
+            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/joinmember">
                 <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.postcardUserList">
                 <i class="icon ion-ios-arrow-right"></i>
             </a>
@@ -53,7 +53,7 @@
             </div>
         </div>
         
-        <div class="padding">
+        <div class="padding" ng-hide="activityModel.isPresident">
             <button class="button button-block {{buttonObj.joined ? '' : 'button-positive'}}" ng-click="joinActivity()">{{buttonObj.buttonText}}</button>
         </div>
     </ion-content>

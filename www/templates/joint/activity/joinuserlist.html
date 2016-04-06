@@ -1,0 +1,19 @@
+<ion-view view-title="报名列表">
+    <ion-content>
+        <ion-list class="list joint-list" style="top:0">
+            <a class="item item-avatar" ng-repeat="associator in memberList.postcardUserList">
+                <img ng-src="{{memberList.host + associator.avatar}}">
+                <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,1)">同意</button>
+                <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,2)">拒绝</button>
+                <h2>
+                    <span ng-bind="associator.username"></span>
+                    <span ng-switch on="associator.sex">
+                        <span class="sex-icon ion-female" data-pack="default" data-tags="lady, girl, dudette" ng-switch-when="0"></span>
+                        <span class="sex-icon ion-male" data-pack="default" data-tags="male, guy, boy, dude" ng-switch-when="1"></span>
+                    </span>
+                </h2>
+                <p ng-bind="associator.province+' '+associator.city"></p>
+            </a>
+        </ion-list>
+    </ion-content>
+</ion-view>

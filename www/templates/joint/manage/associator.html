@@ -1,28 +1,28 @@
 <ion-view title="社员管理">
-  <ion-content has-header="true" style="background: #f2f2f2">
-    <div class="joint-list" style="top:0px">
-      <ion-list class="list">
-        <a class="item item-avatar" href="#" ng-repeat="associator in associatorApplyList">
-          <img ng-src="{{host+associator.avatar}}">
-          <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,1)">同意</button>
-          <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,2)">拒绝</button>
-          <h2>
-            <span ng-bind="associator.username"></span>
-            <span ng-switch on="associator.sex">
-              <span class="sex-icon ion-female" data-pack="default" data-tags="lady, girl, dudette" ng-switch-when="0"></span>
-              <span class="sex-icon ion-male" data-pack="default" data-tags="male, guy, boy, dude" ng-switch-when="1"></span>
-            </span>
-          </h2>
-          <p ng-bind="associator.province+' '+associator.city"></p>
-        </a>
-      </ion-list>
-      <div class="bottom" ng-show="noData">
-        没有更多
-      </div>
-      <ion-infinite-scroll
-        on-infinite="loadMoreData()" distance="5%" ng-if="hasMore">
-      </ion-infinite-scroll>
-    </div>
-  </ion-content>
+    <ion-content has-header="true" style="background: #f2f2f2">
+        <div class="joint-list" style="top:0px">
+            <ion-list class="list">
+                <a class="item item-avatar" href="#" ng-repeat="associator in associatorApplyList">
+                    <img ng-src="{{host+associator.avatar}}">
+                    <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,1)">同意</button>
+                    <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,2)">拒绝</button>
+                    <h2>
+                        <span ng-bind="associator.username"></span>
+                        <span ng-switch on="associator.sex">
+                            <span class="sex-icon ion-female" data-pack="default" data-tags="lady, girl, dudette" ng-switch-when="0"></span>
+                            <span class="sex-icon ion-male" data-pack="default" data-tags="male, guy, boy, dude" ng-switch-when="1"></span>
+                        </span>
+                    </h2>
+                    <p ng-bind="associator.province+' '+associator.city"></p>
+                </a>
+            </ion-list>
+            <div class="bottom" ng-show="noData">
+                没有更多
+            </div>
+            <ion-infinite-scroll
+                on-infinite="loadMoreData()" distance="5%" ng-if="hasMore">
+            </ion-infinite-scroll>
+        </div>
+    </ion-content>
 </ion-view>
 

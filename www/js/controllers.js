@@ -1631,7 +1631,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'Common',
     '$stateParams',
     'md5',
-    function($http, $scope, common, $stateParams, md5) {
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $location) {
         var id = $stateParams.id,
             paramsObj = {
                 activity_id: id
@@ -1644,8 +1645,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 
         $scope.joinActivity = function() {
             //如果是社员，进行 报名写片 的操作，如果是普通会员，进行 报名活动的操作
-            var isAssociator = $scope.buttonObj.status === 1,
-                isJoined = $scope.buttonObj.joined;
+            var isAssociator = $scope.buttonObj.status === 1, //是否是社员
+                isJoined = $scope.buttonObj.joined; //是否已经索片
 
             common.utility.checkLogin().success(function(u){
                 var postUrl = common.API.joinActivity;
@@ -1653,11 +1654,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-
-                if (!isJoined) {
-                    // postUrl = common.API.joinActivity;
-                    $location.path('/joint/activity/' + id + '/question');
-                }
 
                 if (isAssociator) {
                     postUrl = common.API.joinPostcard;
@@ -1671,6 +1667,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                             common.utility.alert('提示', d.msg);
                         });
                     });
+                } else {
+                    //非社员情况
+                    if (!isJoined) {
+                        // postUrl = common.API.joinActivity;
+                        $location.path('/joint/activity/' + id + '/question');
+                    }
                 }
             }).fail(function(){
                 common.utility.resetToken();
@@ -1783,6 +1785,35 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             $http({
                 method: 'post',
                 url: common.API.joinUserList,
+                data: paramsObj
+            }).success(function(data) {
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d) {
+                    $scope.memberList = d.data;
+                });
+            });
+        }();
+    }
+])
+
+.controller('JoinUserListCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id;
+
+        ! function() {
+            common.utility.loadingShow();
+            var paramsObj = {
+                activity_id: id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.postcardUserList,
                 data: paramsObj
             }).success(function(data) {
                 common.utility.loadingHide();
