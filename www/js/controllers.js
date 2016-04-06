@@ -212,7 +212,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                                         $interval.cancel(beginTime);
                                         $scope.signupModel.getCode = {
                                             'value': '\u83b7\u53d6\u9a8c\u8bc1\u7801',
-                                            'class': 'button-positive'
+                                            'class': 'goods-btn'
                                         };
                                     }
                                 }, 1000);
@@ -1059,7 +1059,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                         }
                     } else {
                         _mergeList(data.data.corporationList, $scope.corporationList);
-
                     }
 
                 } else {
@@ -1822,6 +1821,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 });
             });
         }();
+
+
+        $scope.deal = function(id, t){
+            console.log(id);
+            console.log(t);
+        }
     }
 ])
 
