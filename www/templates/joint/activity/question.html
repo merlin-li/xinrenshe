@@ -1,0 +1,17 @@
+<ion-view view-title="索片问答">
+    <ion-content style="background:#f5f5f5">
+        <div class="list">
+            <div class="item">
+                {{modelInfo.question}}
+            </div>
+
+            <div class="item">
+                <textarea rows="10" style="width:100%" ng-model="modelInfo.answer" value='' placeholder="回答"></textarea>
+            </div>
+
+            <div class="padding">
+                <button class="button button-block button-positive" ng-click="save()">提交</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

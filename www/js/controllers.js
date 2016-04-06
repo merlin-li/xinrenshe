@@ -1638,18 +1638,32 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             };
         $scope.buttonObj = {
             joined: false,
-            buttonText: ''
+            buttonText: '',
+            status: 0
         };
+
         $scope.joinActivity = function() {
-            if (!this.buttonObj.joined) {
-                common.utility.checkLogin().success(function(u) {
-                    paramsObj.uid = u.uid;
-                    paramsObj.token = u.token;
-                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-                    common.utility.loadingShow();
+            //如果是社员，进行 报名写片 的操作，如果是普通会员，进行 报名活动的操作
+            var isAssociator = $scope.buttonObj.status === 1,
+                isJoined = $scope.buttonObj.joined;
+
+            common.utility.checkLogin().success(function(u){
+                var postUrl = common.API.joinActivity;
+
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+                if (!isJoined) {
+                    // postUrl = common.API.joinActivity;
+                    $location.path('/joint/activity/' + id + '/question');
+                }
+
+                if (isAssociator) {
+                    postUrl = common.API.joinPostcard;
                     $http({
                         method: 'post',
-                        url: common.API.joinActivity,
+                        url: postUrl,
                         data: paramsObj
                     }).success(function(data) {
                         common.utility.loadingHide();
@@ -1657,10 +1671,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                             common.utility.alert('提示', d.msg);
                         });
                     });
-                }).fail(function() {
-                    common.utility.resetToken();
-                });
-            }
+                }
+            }).fail(function(){
+                common.utility.resetToken();
+            });
         };
 
         ! function() {
@@ -1681,13 +1695,73 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                         d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
                         $scope.activityModel = d.data;
                         $scope.buttonObj.joined = d.data.joined;
-                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片'
+                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片';
+
+                        //普通用户显示 “报名索片”
+                        //社员，社长显示 “报名写片”
+                        if (d.data.isPresident || d.data.isAssociator) {
+                            $scope.buttonObj.buttonText = '报名写片';
+                            $scope.buttonObj.status = 1;
+                        }
                     });
                 });
             }).fail(function() {
                 common.utility.resetToken();
             });
         }();
+    }
+])
+
+.controller('JointActivityQuestionCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    'md5',
+    function($http, $scope, common, $stateParams, md5) {
+        var id = $stateParams.id,
+            paramsObj = {
+                activity_id: id
+            };
+        $scope.modelInfo = {
+            question: '',
+            answer: ''
+        };
+        common.utility.checkLogin().success(function(u){
+            paramsObj.uid = u.uid;
+            paramsObj.token = u.token;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            $http({
+                method: 'post',
+                url: common.API.activityDetail,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    $scope.modelInfo.question = d.data.question;
+                });
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+
+        $scope.save = function(){
+            paramsObj.answer = this.modelInfo.answer;
+            $http({
+                method: 'post',
+                url: common.API.joinActivity,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg).then(function(){
+                        //跳转到详情页面
+                        $location.path('/joint/activity/' + id);
+                    });
+                });
+            });
+        };
+
     }
 ])
 

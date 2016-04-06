@@ -196,6 +196,16 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('activity_question', {
+            url: '/joint/activity/:id/question',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/question.html',
+                    controller: 'JointActivityQuestionCtrl'
+                }
+            }
+        })
+
         .state('activity_member', {
             url: '/joint/activity/:id/member',
             views: {

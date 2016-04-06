@@ -297,6 +297,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice',
 
                 createCorporation: apiBaseUrl + 'jointly/createCorporation',
+                joinPostcard: apiBaseUrl + 'jointly/joinPostcard'
 
             },
             SOURCE: {
