@@ -557,7 +557,11 @@ ul.send-tip{
     height: 100px;
     margin: 20px auto;
 }
-
+.feedback{
+    color: #9f9f9f;
+    width: 86%;
+    margin: 50px auto;
+}
 
 
 

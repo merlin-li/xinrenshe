@@ -29,6 +29,14 @@ angular.module('xinrenshe', [
                     }
                 }
             })
+            .state('app_feedback', {
+                url: '/feedback',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/feedback/index.html'
+                    }
+                }
+            })
             .state('img_crop', {
                 url: '/image/crop/:from',
                 views: {
