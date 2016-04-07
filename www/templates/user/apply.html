@@ -1,0 +1,13 @@
+<ion-view view-title="寄收申请">
+    <ion-content>
+        <ion-list class="list">
+            <a class="item item-thumbnail-left" ng-repeat="cadge in cadgeModel.cadgeList">
+                <img ng-src="{{cadgeModel.host + cadge.activity_avatar}}">
+                <h2>{{cadge.activity_name}}</h2>
+                <p>{{cadge.corporation_name}}</p>
+
+                <p>{{cadge.status}}</p>
+            </a>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -303,7 +303,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 dealPostcardUser: apiBaseUrl + 'jointlyManage/dealPostcardUser',
                 corpSendOrderList: apiBaseUrl + 'jointlyManage/corpSendOrderList',
                 cadgeUserList: apiBaseUrl + 'jointlyManage/cadgeUserList',
-                cadgeUserDeal: apiBaseUrl + 'jointlyManage/cadgeUserDeal'
+                cadgeUserDeal: apiBaseUrl + 'jointlyManage/cadgeUserDeal',
+                cadgeList: apiBaseUrl + 'createOrders/cadgeList'
             },
             SOURCE: {
                 'home': '/home'

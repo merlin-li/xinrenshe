@@ -2415,6 +2415,35 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 ])
 
 
+.controller('MyApplyCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        
+
+        common.utility.checkLogin().success(function(u){
+            var obj = {
+                uid: u.uid,
+                token: u.token
+            };
+            obj.accessSign = md5.createHash(common.utility.createSign(obj));
+            $http({
+                method: 'post',
+                url: common.API.cadgeList,
+                data: obj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    $scope.cadgeModel = d.data;
+                });
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+    }
+]);
+
 
 
 

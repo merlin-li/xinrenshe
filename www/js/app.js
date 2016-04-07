@@ -293,6 +293,16 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('app_apply', {
+            url: '/my/apply',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/apply.html',
+                    controller: 'MyApplyCtrl'
+                }
+            }
+        })
+
         // .state('app_regist_agreement', {
         //     url: '/agreement/register',
         //     views: { 'content': { templateUrl: 'templates/agreement/register.html' } }
