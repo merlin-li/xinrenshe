@@ -267,6 +267,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 login: apiBaseUrl + 'login/loginAuth',
                 signup: apiBaseUrl + 'register/registerAuth',
                 regCode: apiBaseUrl + 'register/getVerifyCode',
+                loginCode: apiBaseUrl + 'login/getVerifyCode',
+                setNewPasswd: apiBaseUrl + 'login/setNewPasswd',
                 setUserInfo: apiBaseUrl + 'register/setUserInfo',
                 setConsigneeInfo: apiBaseUrl + 'register/setConsigneeInfo',
                 getRegion: apiBaseUrl + 'common/getRegion',

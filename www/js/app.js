@@ -63,7 +63,17 @@ angular.module('xinrenshe', [
                         controller: 'SignupCtrl'
                     }
                 }
-            }).state('app_user', {
+            })
+            .state('app_forgetpwd', {
+                url: '/user/forgetpwd',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/user/forgetpwd.html',
+                        controller: 'ForgetpwdCtrl'
+                    }
+                }
+            })
+            .state('app_user', {
                 url: '/user',
                 views: {
                     'content': {

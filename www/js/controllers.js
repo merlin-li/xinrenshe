@@ -80,6 +80,127 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     }
 ])
 
+.controller('ForgetpwdCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    '$stateParams',
+    'md5',
+    function($scope, $http, common, $location, $stateParams, md5) {
+        $scope.signupModel = {
+            phone: '',
+            code: '',
+            pwd: '',
+            getCode: {
+                'class': 'goods-btn',
+                'value': '获取验证码'
+            },
+            msg: {
+                'class': '',
+                'value': ''
+            }
+        };
+
+        //发送验证码
+        $scope.sendcode = function() {
+            var _m = $scope.signupModel;
+
+            if ($scope.signupModel.getCode.class === 'goods-btn') {
+                //表示可以发送验证码
+                var pnum = _m.phone,
+                    checkResult = common.utility.checkPhone(pnum),
+                    paramsObj = {
+                        phone: pnum
+                    };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                if (checkResult) {
+                    //send code request
+                    $http({
+                        method: 'POST',
+                        url: common.API.loginCode,
+                        data: paramsObj
+                    }).success(function(data) {
+                        if (data.status === 200) {
+                            $scope.signupModel.msg = {
+                                'class': 'positive',
+                                'value': common.MESSAGE.reg_code_success_tip
+                            };
+                            var iv = 60,
+                                beginTime = $interval(function() {
+                                    iv--;
+                                    if (iv >= 0) {
+                                        $scope.signupModel.getCode.class = 'button-stable';
+                                        $scope.signupModel.getCode.value = iv + '\u79d2\u540e\u91cd\u65b0\u53d1\u9001';
+                                    } else {
+                                        $interval.cancel(beginTime);
+                                        $scope.signupModel.getCode = {
+                                            'value': '\u83b7\u53d6\u9a8c\u8bc1\u7801',
+                                            'class': 'goods-btn'
+                                        };
+                                    }
+                                }, 1000);
+                        } else {
+                            $scope.signupModel.msg = {
+                                'class': 'assertive',
+                                'value': data.msg
+                            };
+                        }
+                    }).error(function() {
+                        /* Act on the event */
+                        $scope.signupModel.msg = {
+                            'class': 'assertive',
+                            'value': common.MESSAGE.network_error
+                        };
+                    });
+                } else {
+                    //输入的手机号不正确
+                    $scope.signupModel.msg = {
+                        'class': 'assertive',
+                        'value': common.MESSAGE.invalid_phone
+                    };
+                }
+            }
+        };
+
+        $scope.save = function() {
+            var signupModel = $scope.signupModel,
+                paramsObj;
+            if (signupModel.phone === '') {
+                common.utility.alert('提示', '请输入手机号码！');
+            } else if (signupModel.code === '') {
+                common.utility.alert('提示', '验证码不能为空！');
+            } else if (signupModel.pwd === '') {
+                common.utility.alert('提示', '密码不能为空！');
+            } else {
+                paramsObj = {
+                    phone: signupModel.phone,
+                    verfiyCode: signupModel.code,
+                    password: signupModel.pwd
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'POST',
+                    url: common.API.setNewPasswd,
+                    data: paramsObj
+                }).success(function(data) {
+                    if (data.status === 200) {
+                        common.utility.alert('提示', '重置密码成功！').then(function(){
+                            // common.utility.cookieStore.put('userinfo', data.data);
+                            $location.path('/user/login');
+                        });
+                    } else {
+                        $scope.signupModel.msg = {
+                            'class': 'assertive',
+                            'value': data.msg
+                        };
+                    }
+                });
+            }
+        };
+    }
+])
+
 .controller('UserCtrl', [
     '$scope',
     '$http',

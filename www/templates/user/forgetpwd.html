@@ -1,0 +1,22 @@
+<ion-view view-title="忘记密码">
+    <ion-content>
+        <label class="item item-input item-stacked-label">
+            <input ng-model="signupModel.phone" type="tel" placeholder="注册手机号">
+        </label>
+        <label class="item item-input">
+            <button ng-click="sendcode()" class="button-code {{signupModel.getCode.class}}">{{signupModel.getCode.value}}</button>
+        </label>
+        <label class="item item-input-inset">
+            <input ng-model="signupModel.code" type="tel" placeholder="验证码">
+        </label>
+
+        <label class="item item-input item-stacked-label">
+            <input ng-model="signupModel.pwd" type="password" placeholder="6-20长度的新密码">
+        </label>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="save()">保存</button>
+
+            <p style="display:inline-block;line-height:" class="{{signupModel.msg.class}}">{{signupModel.msg.value}}</p>
+        </div>
+    </ion-content>
+</ion-view>
