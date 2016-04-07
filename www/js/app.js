@@ -234,8 +234,18 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('activity_membercard', {
+            url: '/joint/activity/:id/membercard',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/activity/membercard.html',
+                    controller: 'MemberCardCtrl'
+                }
+            }
+        })
+
         .state('activity_join_member', {
-            url: '/joint/activity/:id/joinmember',
+            url: '/joint/activity/:id/joinmember/:show',
             views: {
                 'content': {
                     templateUrl: 'templates/joint/activity/joinuserlist.html',

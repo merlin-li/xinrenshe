@@ -14,7 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        apiBaseUrl = offline ? 'http://appdev.billowton.com/v1.0/' : 'http://xiaoyeshu.billowton.com/v1.0/';
+        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.0/' : 'http://xiaoyeshu.xinrenclub.com/v1.0/';
 
         //判断是不是stage环境
         // if (location.indexOf('?stage') >= 0) {
@@ -289,7 +289,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 cadgeListManage: apiBaseUrl + 'jointlyManage/joinUserList',
                 associatorList: apiBaseUrl + 'jointly/associatorList',
                 activityList: apiBaseUrl + 'jointly/activityList',
-                activityDetail: apiBaseUrl + '/jointly/activityDetail',
+                activityDetail: apiBaseUrl + 'jointly/activityDetail',
                 corporationList: apiBaseUrl + 'jointly/getCorporationList',
                 joinExitCorporation: apiBaseUrl + 'jointly/joinExitCorporation',
                 joinUserList: apiBaseUrl + 'jointly/joinUserList',
@@ -299,7 +299,11 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 releaseNotice: apiBaseUrl + 'jointlyManage/releaseNotice',
                 createCorporation: apiBaseUrl + 'jointly/createCorporation',
                 joinPostcard: apiBaseUrl + 'jointly/joinPostcard',
-                postcardUserList: apiBaseUrl + 'jointly/postcardUserList'
+                postcardUserList: apiBaseUrl + 'jointly/postcardUserList',
+                dealPostcardUser: apiBaseUrl + 'jointlyManage/dealPostcardUser',
+                corpSendOrderList: apiBaseUrl + 'jointlyManage/corpSendOrderList',
+                cadgeUserList: apiBaseUrl + 'jointlyManage/cadgeUserList',
+                cadgeUserDeal: apiBaseUrl + 'jointlyManage/cadgeUserDeal'
             },
             SOURCE: {
                 'home': '/home'

@@ -3,8 +3,10 @@
         <ion-list class="list joint-list" style="top:0">
             <a class="item item-avatar" ng-repeat="associator in memberList.postcardUserList">
                 <img ng-src="{{memberList.host + associator.avatar}}">
-                <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,1)">同意</button>
-                <button class="agree-refuse-btn button button-small" ng-click="deal(associator.uid,2)">拒绝</button>
+
+                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 1)">同意</button>
+                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 2)">拒绝</button>
+
                 <h2>
                     <span ng-bind="associator.username"></span>
                     <span ng-switch on="associator.sex">

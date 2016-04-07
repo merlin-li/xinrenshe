@@ -799,6 +799,214 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     }
 ])
 
+.controller('MemberCardCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    '$cordovaCamera',
+    '$stateParams',
+    function($scope, $http, common, $location, md5, $cordovaCamera, $stateParams) {
+        $scope.showTip = true;
+        var paramsObj = {
+                type: 1,
+                uid: '',
+                token: ''
+            },
+            activityId = $stateParams.id,
+            userCookie = common.utility.getUserCookie();
+
+        var _loadPicture = function(imgurl) {
+            // 上传寄片照片的操作
+            var picParamsObj = {
+                order_id: $scope.selectCardIndex,
+                uid: userCookie.uid,
+                token: userCookie.token
+            };
+            picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
+            picParamsObj.picture = imgurl;
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.uploadPic,
+                data: picParamsObj
+            }).success(function(data) {
+                common.utility.loadingHide();
+            }).error(function() {});
+
+            //替换当前的上传图片缩略图
+            $scope.cardModel.orderList.map(function(t){
+                // alert(t.id);
+                // alert($scope.selectCardIndex);
+                if (t.id == $scope.selectCardIndex) {
+                    t.picture = imgurl;
+                }
+            });
+            $scope.$apply();
+        };
+
+        $scope.statusObj = {
+            txt: '已旅行',
+            hide: true
+        };
+        $scope.modelStyle = {
+            'display': 'none'
+        };
+        $scope.selectIndex = 1;
+
+        $scope.readHandleList = function() {
+            $scope.selectIndex = 0;
+            $scope.btnClass0 = 'button-positivehover';
+            $scope.btnClass1 = 'button';
+            $scope.btnClass2 = 'button';
+            $scope.btnClass3 = 'button';
+
+            var pObj = {
+                uid: userCookie.uid,
+                token: userCookie.token,
+                activity_id: activityId
+            };
+            pObj.accessSign = md5.createHash(common.utility.createSign(pObj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.cadgeUserList,
+                data: pObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.memberList = d.data;
+                });
+            });
+        };
+
+        $scope.readCardList = function(t) {
+            $scope.selectIndex = t || 1;
+            if (this.selectIndex === 1) {
+                $scope.btnClass0 = 'button';
+                $scope.btnClass1 = 'button-positivehover';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button';
+                this.statusObj.hide = true;
+            }
+            if (this.selectIndex === 2) {
+                $scope.btnClass0 = 'button';
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button-positivehover';
+                $scope.btnClass3 = 'button';
+                this.statusObj.hide = false;
+                this.statusObj.txt = '已旅行';
+            }
+            if (this.selectIndex === 3) {
+                $scope.btnClass0 = 'button';
+                $scope.btnClass1 = 'button';
+                $scope.btnClass2 = 'button';
+                $scope.btnClass3 = 'button-positivehover';
+                this.statusObj.hide = false;
+                this.statusObj.txt = '共旅行';
+            }
+            paramsObj.type = $scope.selectIndex;
+            paramsObj.activity_id = activityId;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.corpSendOrderList,
+                data: paramsObj
+            }).success(function(data) {
+                //处理card的示例图
+                common.utility.handlePostResult(data, function(d){
+                    d.data.orderList.map(function(order) {
+                        if (order.picture) {
+                            order.picture = d.data.host + order.picture;
+                        } else {
+                            order.picture = 'img/xjbj_1.png';
+                        }
+                    });
+                    $scope.cardModel = d.data;
+                    $scope.showTip = (d.data.orderList.length > 0);
+                });
+                common.utility.loadingHide();
+            }).error(function() {
+                common.utility.loadingHide();
+            });
+        };
+
+        $scope.send = function(i) {
+            var sendParamsObj = {
+                order_ids: [i.id],
+                token: userCookie.token,
+                uid: userCookie.uid
+            };
+            sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
+
+            $http({
+                method: 'post',
+                url: common.API.send,
+                data: sendParamsObj
+            }).success(function(data) {
+                common.utility.alert('提示', data.msg);
+                $scope.readCardList();
+            });
+        };
+
+        $scope.show = function() {
+            $scope.modelStyle = {
+                'display': 'block'
+            };
+        };
+
+        $scope.hide = function() {
+            $scope.modelStyle = {
+                'display': 'none'
+            };
+        };
+
+        $scope.takePic = function(c) {
+            //保存当前选中的编号
+            if ($scope.selectIndex === 1){
+                $scope.selectCardIndex = c.id;
+                common.utility.takePicture($cordovaCamera, _loadPicture);
+            }
+        };
+
+        $scope.deal = function(i, t){
+            var obj = {
+                uid: userCookie.uid,
+                token: userCookie.token,
+                activity_id: activityId,
+                type: t,
+                cadge_id: i
+            };
+            obj.accessSign = md5.createHash(common.utility.createSign(obj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.cadgeUserDeal,
+                data: obj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                    $scope.readHandleList();
+                });
+                common.utility.loadingHide();
+            });
+        };
+
+        common.utility.checkLogin().success(function(u){
+            paramsObj.uid = u.uid;
+            paramsObj.token = u.token;
+            $scope.readHandleList();
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+    }
+])
+
+
+
 .controller('MyUserInfoCtrl', [
     '$scope',
     '$http',
@@ -1092,11 +1300,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         $scope.$on('stateChangeSuccess', function() {
             $scope.loadMoreData();
         });
-        $scope.changeLoadType = function(loadType) {
 
+        $scope.changeLoadType = function(loadType) {
             if ($scope.loadType == loadType) {
                 return false;
             }
+
             var listdom = document.getElementsByClassName('scroll');
             angular.element(listdom).css('transform', 'translate3d(0px, 0px, 0px)');
             if (loadType == 'activity') {
@@ -1119,8 +1328,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             //document.documentElement.scrollTop = document.body.scrollTop =0;
             common.utility.loadingShow();
             $scope.loadMoreData();
-            //common.utility.loadingHide();
         }
+
+
         $scope.loadMoreData = function() {
             var newParams = {
                 page: $scope.page
@@ -1799,6 +2009,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
             });
         };
 
+        $scope.goMember = function() {
+            if  ($scope.activityModel.isPresident || $scope.activityModel.isAssociator) {
+                $location.path('/joint/activity/' + $scope.activityModel.id + '/membercard');
+            } else {
+                $location.path('/joint/activity/' + $scope.activityModel.id + '/member');
+            }
+        };
+
         ! function() {
             common.utility.checkLogin().always(function(u) {
                 paramsObj.uid = u.uid;
@@ -1923,33 +2141,60 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     '$stateParams',
     'md5',
     function($http, $scope, common, $stateParams, md5) {
-        var id = $stateParams.id;
+        var id = $stateParams.id,
+            show = $stateParams.show === 'true', uid, token;
 
-        ! function() {
-            common.utility.loadingShow();
+        $scope.show = show;
+
+        function _init () {
+            common.utility.checkLogin().success(function(u){
+                uid = u.uid;
+                token = u.token;
+
+                common.utility.loadingShow();
+                var paramsObj = {
+                    activity_id: id
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.postcardUserList,
+                    data: paramsObj
+                }).success(function(data) {
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d) {
+                        $scope.memberList = d.data;
+                    });
+                });
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        };
+
+
+        $scope.deal = function(i, t){
             var paramsObj = {
-                activity_id: id
+                postcard_id: i,
+                activity_id: id,
+                type: t,
+                uid: uid,
+                token: token
             };
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             $http({
-                method: 'post',
-                url: common.API.postcardUserList,
+                method: 'POST',
+                url: common.API.dealPostcardUser,
                 data: paramsObj
-            }).success(function(data) {
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d) {
-                    $scope.memberList = d.data;
-                });
+            }).success(function(data){
+                common.utility.alert('提示', data.msg);
+                _init();
             });
-        }();
+        };
 
-
-        $scope.deal = function(id, t){
-            console.log(id);
-            console.log(t);
-        }
+        _init();
     }
 ])
+
 
 .controller('myCorporationCtrl', [
     '$http',

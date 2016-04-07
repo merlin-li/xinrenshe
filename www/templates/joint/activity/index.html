@@ -24,7 +24,7 @@
             <div class="item">
                 活动已报名写片{{activityModel.postcardUserList.length}}人
             </div>
-            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/joinmember">
+            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/joinmember/{{activityModel.isPresident}}">
                 <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.postcardUserList">
                 <i class="icon ion-ios-arrow-right"></i>
             </a>
@@ -40,7 +40,7 @@
                 已索片<span class="red">{{activityModel.cadge_count}}</span>人 /
                 抽取<span class="red">{{activityModel.send_count}}</span>人
             </div>
-            <a class="item item-icon-right" ng-hide="activityModel.joinUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/member">
+            <a class="item item-icon-right" ng-hide="activityModel.joinUserList.length === 0" ng-click="goMember()">
                 <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.joinUserList">
                 <i class="icon ion-ios-arrow-right"></i>
             </a>
