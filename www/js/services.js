@@ -230,15 +230,44 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     correctOrientation:true
                 };
 
-                cordovaCamera.getPicture(options).then(function(imageData) {
-                    successFn('data:image/jpeg;base64,' + imageData);
-                }, function(err) {
-                    if (errFn) {
-                        errFn(err);
+                var pictureSheet = $ionicActionSheet.show({
+                    buttons: [{
+                        text: '拍照'
+                    }, {
+                        text: '从相册中选取'
+                    }],
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        if (index === 0) {
+                            cordovaCamera.getPicture(options).then(function(imageData) {
+                                successFn('data:image/jpeg;base64,' + imageData);
+                            }, function(err) {
+                                if (errFn) {
+                                    errFn(err);
+                                }
+                            });
+                        }
+                        if (index === 1) {
+                            options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+                            cordovaCamera.getPicture(options).then(function(imageData) {
+                                successFn('data:image/jpeg;base64,' + imageData);
+                            }, function(err) {
+                                if (errFn) {
+                                    errFn(err);
+                                }
+                            });
+                        }
                     }
                 });
 
-
+                // cordovaCamera.getPicture(options).then(function(imageData) {
+                //     successFn('data:image/jpeg;base64,' + imageData);
+                // }, function(err) {
+                //     if (errFn) {
+                //         errFn(err);
+                //     }
+                // });
             },
             _takePictureSheet = function(fn1, fn2) {
                 var pictureSheet = $ionicActionSheet.show({

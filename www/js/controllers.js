@@ -1706,7 +1706,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
     'ionicDatePicker',
     '$location',
     '$cordovaCamera',
-    function($http, $scope, common, $stateParams, ionicDatePicker, $location, $cordovaCamera) {
+    '$ionicActionSheet',
+    function($http, $scope, common, $stateParams, ionicDatePicker, $location, $cordovaCamera, $ionicActionSheet) {
         ! function() {
             $scope.corpid = $stateParams.id; //社团id
             $scope.cadge_time_start = '';
@@ -1874,11 +1875,39 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 correctOrientation:true
             };
 
-            cordovaCamera.getPicture(options).then(function(imageData) {
-                var s = 'data:image/jpeg;base64,' + imageData;
-                $scope.propagandaPic = s;
-                _savePropagandaPic(s);
-            }, function(err) {});
+            // cordovaCamera.getPicture(options).then(function(imageData) {
+            //     var s = 'data:image/jpeg;base64,' + imageData;
+            //     $scope.propagandaPic = s;
+            //     _savePropagandaPic(s);
+            // }, function(err) {});
+
+
+            var pictureSheet = $ionicActionSheet.show({
+                buttons: [{
+                    text: '拍照'
+                }, {
+                    text: '从相册中选取'
+                }],
+                cancelText: '取消',
+                cancel: function() {},
+                buttonClicked: function(index) {
+                    if (index === 0) {
+                        cordovaCamera.getPicture(options).then(function(imageData) {
+                            var s = 'data:image/jpeg;base64,' + imageData;
+                            $scope.propagandaPic = s;
+                            _savePropagandaPic(s);
+                        }, function(err) {});
+                    }
+                    if (index === 1) {
+                        options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+                        cordovaCamera.getPicture(options).then(function(imageData) {
+                            var s = 'data:image/jpeg;base64,' + imageData;
+                            $scope.propagandaPic = s;
+                            _savePropagandaPic(s);
+                        }, function(err) {});
+                    }
+                }
+            });
         };
     }
 ])
@@ -2385,12 +2414,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         };
 
         $scope.takePicture = function(){
-            common.utility.takePictureSheet(function(){
-                common.utility.takePicture($cordovaCamera, function(s){
-                    $scope.corModel.avatar = s;
-                });
-            }, function(){
-
+            common.utility.takePicture($cordovaCamera, function(s){
+                $scope.corModel.avatar = s;
             });
         };
 
@@ -2443,23 +2468,3 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
         });
     }
 ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;
