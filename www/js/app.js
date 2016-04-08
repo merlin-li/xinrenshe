@@ -19,6 +19,7 @@ angular.module('xinrenshe', [
         // $ionicConfigProvider.views.transition('none');
         $ionicConfigProvider.views.maxCache(0);
         $ionicConfigProvider.platform.android.tabs.position('bottom');
+        $ionicConfigProvider.navBar.alignTitle('center');
 
         $stateProvider.state('app_home', {
                 url: '/home',

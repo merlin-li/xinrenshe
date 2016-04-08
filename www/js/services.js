@@ -281,9 +281,11 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     buttonClicked: function(index) {
                         if (index === 0) {
                             fn1();
+                            pictureSheet();
                         }
                         if (index === 1) {
                             fn2();
+                            pictureSheet();
                         }
                     }
                 });

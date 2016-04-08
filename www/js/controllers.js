@@ -1,5 +1,5 @@
 'use strict';
-angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropper'])
+angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     .config([
         '$sceDelegateProvider',
         '$httpProvider',
@@ -1243,8 +1243,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 common.utility.postData(url, params, true, true, success);
             }
         };
-
-
     }
 ])
 
@@ -1875,13 +1873,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                 correctOrientation:true
             };
 
-            // cordovaCamera.getPicture(options).then(function(imageData) {
-            //     var s = 'data:image/jpeg;base64,' + imageData;
-            //     $scope.propagandaPic = s;
-            //     _savePropagandaPic(s);
-            // }, function(err) {});
-
-
             var pictureSheet = $ionicActionSheet.show({
                 buttons: [{
                     text: '拍照'
@@ -1896,6 +1887,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                             var s = 'data:image/jpeg;base64,' + imageData;
                             $scope.propagandaPic = s;
                             _savePropagandaPic(s);
+                            pictureSheet();
                         }, function(err) {});
                     }
                     if (index === 1) {
@@ -1904,6 +1896,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
                             var s = 'data:image/jpeg;base64,' + imageData;
                             $scope.propagandaPic = s;
                             _savePropagandaPic(s);
+                            pictureSheet();
                         }, function(err) {});
                     }
                 }
@@ -2415,7 +2408,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ImageCropp
 
         $scope.takePicture = function(){
             common.utility.takePicture($cordovaCamera, function(s){
-                $scope.corModel.avatar = s;
+                $scope.corAvatar = s;
             });
         };
 
