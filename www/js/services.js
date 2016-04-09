@@ -294,7 +294,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
 
         return {
             API: {
-                home: apiBaseUrl + 'homePage/sendInfo',
+                home: apiBaseUrl + 'homePage/homeInfo',
                 login: apiBaseUrl + 'login/loginAuth',
                 signup: apiBaseUrl + 'register/registerAuth',
                 regCode: apiBaseUrl + 'register/getVerifyCode',
@@ -335,10 +335,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 corpSendOrderList: apiBaseUrl + 'jointlyManage/corpSendOrderList',
                 cadgeUserList: apiBaseUrl + 'jointlyManage/cadgeUserList',
                 cadgeUserDeal: apiBaseUrl + 'jointlyManage/cadgeUserDeal',
-                cadgeList: apiBaseUrl + 'createOrders/cadgeList'
-            },
-            SOURCE: {
-                'home': '/home'
+                cadgeList: apiBaseUrl + 'createOrders/cadgeList',
+                introduction: apiBaseUrl + 'setUserInfo/introduction',
+                getBanner: apiBaseUrl + 'homePage/getBannerInfo'
             },
             MESSAGE: {
                 network_error: 'Network error, please try again later.',

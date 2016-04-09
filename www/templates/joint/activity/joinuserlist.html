@@ -4,8 +4,10 @@
             <a class="item item-avatar" ng-repeat="associator in memberList.postcardUserList">
                 <img ng-src="{{memberList.host + associator.avatar}}">
 
-                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 1)">同意</button>
-                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 2)">拒绝</button>
+                <button ng-hide="associator.status !== 0 || !show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 1)">同意</button>
+                <button ng-hide="associator.status !== 0 || !show" class="agree-refuse-btn button button-small" ng-click="deal(associator.id, 2)">拒绝</button>
+
+                <label class="tip" ng-hide="associator.status === 0 && show">{{associator.statusText}}</label>
 
                 <h2>
                     <span ng-bind="associator.username"></span>

@@ -4,6 +4,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         '$sceDelegateProvider',
         '$httpProvider',
         function($sceDelegateProvider, $httpProvider) {
+            $sceDelegateProvider.resourceUrlWhitelist([
+                'self',
+                'http://activity.xinrenclub.com/**',
+                'http://www.xinrenclub.com/**'
+            ]);
             $httpProvider.defaults.useXDomain = true;
             delete $httpProvider.defaults.headers.common['X-Requested-With'];
         }
@@ -14,29 +19,48 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    'md5',
-    function($scope, $http, common, $location, md5) {
+    '$ionicSlideBoxDelegate',
+    function($scope, $http, common, $location, $ionicSlideBoxDelegate) {
         ! function() {
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
             common.utility.cookieStore.remove('areainfo3');
+            common.utility.cookieStore.remove('bannerurl');
             //初始化事件
             $http({
                 method: 'post',
-                url: common.API.home,
-                data: {
-                    accessSign: md5.createHash(common.utility.createSign({}))
-                }
+                url: common.API.home
             }).success(function(data) {
                 if (data.status === 200) {
                     $scope.dataObj = data.data;
                     $scope.dataObj.host = data.data.host;
+                    $ionicSlideBoxDelegate.update();
                 }
             });
         }();
+
+        $scope.go = function(b) {
+            common.utility.cookieStore.put('bannerurl', b);
+            $location.path('/banner');
+        };
     }
 ])
 
+.controller('BannerCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        ! function() {
+            if (common.utility.cookieStore.get('bannerurl')) {
+                var bannerObj = common.utility.cookieStore.get('bannerurl');
+                $scope.bannerModel = bannerObj;
+            }
+        }();
+    }
+])
 .controller('LoginCtrl', [
     '$scope',
     '$http',
@@ -768,7 +792,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: sendParamsObj
             }).success(function(data) {
                 common.utility.alert('提示', data.msg);
-                $scope.readCardList();
+                if (data.status === 200) {
+                    $scope.readCardList();
+                }
             });
         };
 
@@ -830,18 +856,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
             common.utility.loadingShow();
+            alert(JSON.stringify(picParamsObj));
             $http({
                 method: 'post',
                 url: common.API.uploadPic,
                 data: picParamsObj
             }).success(function(data) {
+                alert(JSON.stringify(data));
                 common.utility.loadingHide();
             }).error(function() {});
 
             //替换当前的上传图片缩略图
             $scope.cardModel.orderList.map(function(t){
-                // alert(t.id);
-                // alert($scope.selectCardIndex);
                 if (t.id == $scope.selectCardIndex) {
                     t.picture = imgurl;
                 }
@@ -879,6 +905,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).success(function(data){
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
+                    d.data.cadgeList.map(function(t){
+                        if (t.status === 0) {
+                            t.statusText = '等待处理';
+                        }
+                        if (t.status === 1) {
+                            t.statusText = '符合';
+                        }
+                        if (t.status === 2) {
+                            t.statusText = '不符合';
+                        }
+                    });
                     $scope.memberList = d.data;
                 });
             });
@@ -951,7 +988,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: sendParamsObj
             }).success(function(data) {
                 common.utility.alert('提示', data.msg);
-                $scope.readCardList();
+                if (data.status === 200) {
+                    $scope.readCardList();
+                }
             });
         };
 
@@ -2083,7 +2122,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     '$stateParams',
     'md5',
-    function($http, $scope, common, $stateParams, md5) {
+    '$location',
+    function($http, $scope, common, $stateParams, md5, $location) {
         var id = $stateParams.id,
             paramsObj = {
                 activity_id: id
@@ -2188,6 +2228,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 }).success(function(data) {
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d) {
+                        d.data.postcardUserList.map(function(t){
+                            if (t.status === 0) {
+                                t.statusText = '等待处理';
+                            }
+                            if (t.status === 1) {
+                                t.statusText = '同意';
+                            }
+                            if (t.status === 2) {
+                                t.statusText = '拒绝';
+                            }
+                        });
                         $scope.memberList = d.data;
                     });
                 });
@@ -2385,6 +2436,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             token: ''
         };
         $scope.corAvatar = 'img/icon_touxiang.png';
+        $scope.done = false;
 
         //确认提交
         $scope.save = function(){
@@ -2402,7 +2454,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 }).success(function(data){
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', data.msg).then(function(){
-                            $location.path('/joint');
+                            $scope.done = true;
                         });
                     });
                 });
@@ -2430,11 +2482,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 if (common.utility.cookieStore.get('areainfo2')) {
                     $scope.corModel.addr_city = common.utility.cookieStore.get('areainfo2').name;
                 }
+            }).fail(function(){
+                common.utility.resetToken();
             });
         }();
     }
 ])
-
 
 .controller('MyApplyCtrl', [
     '$http',
@@ -2442,8 +2495,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     'md5',
     function($http, $scope, common, md5){
-        
-
         common.utility.checkLogin().success(function(u){
             var obj = {
                 uid: u.uid,
@@ -2463,4 +2514,38 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             common.utility.resetToken();
         });
     }
+])
+
+.controller('MeCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        var paramsObj = {};
+        common.utility.checkLogin().success(function(u){
+            paramsObj.uid = u.uid;
+            paramsObj.token = u.token;
+            u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
+            $scope.userModel = u;
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        $scope.save = function(){
+            paramsObj.introduction = this.userModel.introduction;
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.introduction,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                });
+            });
+        };
+    }
 ]);
+
+;

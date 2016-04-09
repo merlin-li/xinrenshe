@@ -14,6 +14,7 @@ angular.module('xinrenshe', [
     function($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) {
         $ionicConfigProvider.backButton.previousTitleText(false);
         $ionicConfigProvider.backButton.text('');
+        $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
         // $ionicConfigProvider.views.forwardCache(true);
         $ionicConfigProvider.scrolling.jsScrolling(true);
         // $ionicConfigProvider.views.transition('none');
@@ -27,6 +28,15 @@ angular.module('xinrenshe', [
                     'content': {
                         templateUrl: 'templates/home.html',
                         controller: 'HomeCtrl'
+                    }
+                }
+            })
+            .state('app_banner', {
+                url: '/banner',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/banner/index.html',
+                        controller: 'BannerCtrl'
                     }
                 }
             })
@@ -300,6 +310,16 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/user/apply.html',
                     controller: 'MyApplyCtrl'
+                }
+            }
+        })
+
+        .state('app_me', {
+            url: '/user/me',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/me.html',
+                    controller: 'MeCtrl'
                 }
             }
         })

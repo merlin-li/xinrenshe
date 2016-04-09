@@ -11,9 +11,9 @@
             <a class="item item-avatar" ng-repeat="member in memberList.cadgeList">
                 <img ng-src="{{memberList.host + member.avatar}}">
 
-                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 2)">不符合</button>
-                <button ng-hide="!show" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 1)">符合</button>
-
+                <button ng-hide="member.status !== 0" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 2)">不符合</button>
+                <button ng-hide="member.status !== 0" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 1)">符合</button>
+                <label class="tip" ng-hide="member.status === 0">{{member.statusText}}</label>
                 <h2>
                     <span ng-bind="member.username"></span>
                     <span ng-switch on="member.sex">
@@ -22,7 +22,7 @@
                     </span>
                 </h2>
                 <p ng-bind="member.province + ' ' + member.city"></p>
-                <p ng-bind="member.answer"></p>
+                <p ng-bind="member.answer" style="color:#656464;margin-top:15px;"></p>
             </a>
         </div>
 

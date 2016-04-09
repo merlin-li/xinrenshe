@@ -1,9 +1,11 @@
 <ion-view view-title="信人社" hide-back-button="true">
     <ion-content style="background:#fdadb8;">
         <div class="home-container">
-            <div class="home-card">
-                <a href="#"><img src="img/home_1.png"></a>
-            </div>
+            <ion-slide-box>
+                <ion-slide ng-repeat="banner in dataObj.bannerList">
+                    <a ng-click="go(banner)" class="item-image"><img class="index-banner" ng-src="{{dataObj.host + banner.picture}}"></a>
+                </ion-slide>
+            </ion-slide-box>
 
             <div class="home-send">
                 <div>
