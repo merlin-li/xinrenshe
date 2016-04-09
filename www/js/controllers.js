@@ -696,7 +696,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             var picParamsObj = {
                 order_id: $scope.selectCardIndex,
                 uid: userCookie.uid,
-                token: userCookie.token
+                token: userCookie.token,
+                type: 3
             };
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
@@ -787,7 +788,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
-alert(JSON.stringify(sendParamsObj));
+            alert(JSON.stringify(sendParamsObj));
             $http({
                 method: 'post',
                 url: common.API.send,
@@ -854,7 +855,8 @@ alert(JSON.stringify(sendParamsObj));
             var picParamsObj = {
                 order_id: $scope.selectCardIndex,
                 uid: userCookie.uid,
-                token: userCookie.token
+                token: userCookie.token,
+                type: 4
             };
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
