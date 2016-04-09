@@ -711,8 +711,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
             //替换当前的上传图片缩略图
             $scope.cardModel.orderList.map(function(t){
-                // alert(t.id);
-                // alert($scope.selectCardIndex);
                 if (t.id == $scope.selectCardIndex) {
                     t.picture = imgurl;
                 }
@@ -856,13 +854,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
             common.utility.loadingShow();
-            alert(JSON.stringify(picParamsObj));
             $http({
                 method: 'post',
                 url: common.API.uploadPic,
                 data: picParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
                 common.utility.loadingHide();
             }).error(function() {});
 
@@ -982,13 +978,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
-            alert(JSON.stringify(sendParamsObj));
             $http({
                 method: 'post',
                 url: common.API.send,
                 data: sendParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
                 common.utility.alert('提示', data.msg);
                 if (data.status === 200) {
                     $scope.readCardList();
@@ -2052,6 +2046,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
                 if (isAssociator) {
+                    //社员进行报名写片的操作
                     postUrl = common.API.joinPostcard;
                     $http({
                         method: 'post',
@@ -2060,7 +2055,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     }).success(function(data) {
                         common.utility.loadingHide();
                         common.utility.handlePostResult(data, function(d) {
-                            common.utility.alert('提示', d.msg);
+                            common.utility.alert('提示', d.msg).then(function(){
+                                $scope.buttonObj.buttonText = '已报名写片';
+                            });
                         });
                     });
                 } else {
@@ -2509,6 +2506,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: obj
             }).success(function(data){
                 common.utility.handlePostResult(data, function(d){
+                    d.data.cadgeList.map(function(t){
+                        if (t.status === 0) {
+                            t.statusText = '等待处理';
+                        }
+                        if (t.status === 1) {
+                            t.statusText = '同意';
+                        }
+                        if (t.status === 2) {
+                            t.statusText = '拒绝';
+                        }
+                    });
                     $scope.cadgeModel = d.data;
                 });
             });

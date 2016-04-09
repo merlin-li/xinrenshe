@@ -240,6 +240,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     cancel: function() {},
                     buttonClicked: function(index) {
                         if (index === 0) {
+                            pictureSheet();
                             cordovaCamera.getPicture(options).then(function(imageData) {
                                 successFn('data:image/jpeg;base64,' + imageData);
                             }, function(err) {
@@ -249,6 +250,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                             });
                         }
                         if (index === 1) {
+                            pictureSheet();
                             options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
                             cordovaCamera.getPicture(options).then(function(imageData) {
                                 successFn('data:image/jpeg;base64,' + imageData);
@@ -257,35 +259,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
                                     errFn(err);
                                 }
                             });
-                        }
-                    }
-                });
-
-                // cordovaCamera.getPicture(options).then(function(imageData) {
-                //     successFn('data:image/jpeg;base64,' + imageData);
-                // }, function(err) {
-                //     if (errFn) {
-                //         errFn(err);
-                //     }
-                // });
-            },
-            _takePictureSheet = function(fn1, fn2) {
-                var pictureSheet = $ionicActionSheet.show({
-                    buttons: [{
-                        text: '拍照'
-                    }, {
-                        text: '从相册中选取'
-                    }],
-                    cancelText: '取消',
-                    cancel: function() {},
-                    buttonClicked: function(index) {
-                        if (index === 0) {
-                            fn1();
-                            pictureSheet();
-                        }
-                        if (index === 1) {
-                            fn2();
-                            pictureSheet();
                         }
                     }
                 });
@@ -367,8 +340,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'postData': _postData,
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
-                'takePicture': _takePicture,
-                'takePictureSheet': _takePictureSheet
+                'takePicture': _takePicture
             },
             tempData: {
                 userAddressInfo: '',
