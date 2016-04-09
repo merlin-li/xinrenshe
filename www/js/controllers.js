@@ -40,8 +40,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         }();
 
         $scope.go = function(b) {
-            common.utility.cookieStore.put('bannerurl', b);
-            $location.path('/banner');
+            if (b.url !== '') {
+                common.utility.cookieStore.put('bannerurl', b);
+                $location.path('/banner');
+            }
         };
     }
 ])
