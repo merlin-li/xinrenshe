@@ -702,13 +702,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
             common.utility.loadingShow();
-            alert(JSON.stringify(picParamsObj));
+            // alert(JSON.stringify(picParamsObj));
             $http({
                 method: 'post',
                 url: common.API.uploadPic,
                 data: picParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
+                // alert(JSON.stringify(data));
                 common.utility.loadingHide();
             }).error(function() {});
 
@@ -788,13 +788,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
-            alert(JSON.stringify(sendParamsObj));
+            // alert(JSON.stringify(sendParamsObj));
             $http({
                 method: 'post',
                 url: common.API.send,
                 data: sendParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
+                // alert(JSON.stringify(data));
                 common.utility.alert('提示', data.msg);
                 if (data.status === 200) {
                     $scope.readCardList();
@@ -861,13 +861,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
             common.utility.loadingShow();
-            alert(JSON.stringify(picParamsObj));
+            // alert(JSON.stringify(picParamsObj));
             $http({
                 method: 'post',
                 url: common.API.uploadPic,
                 data: picParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
+                // alert(JSON.stringify(data));
                 common.utility.loadingHide();
             }).error(function() {});
 
@@ -987,13 +987,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 type: 4
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
-            alert(JSON.stringify(sendParamsObj));
+            // alert(JSON.stringify(sendParamsObj));
             $http({
                 method: 'post',
                 url: common.API.send,
                 data: sendParamsObj
             }).success(function(data) {
-                alert(JSON.stringify(data));
+                // alert(JSON.stringify(data));
                 common.utility.alert('提示', data.msg);
                 if (data.status === 200) {
                     $scope.readCardList();
