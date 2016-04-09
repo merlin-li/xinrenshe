@@ -17,6 +17,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     function($scope, $http, common, $location, md5) {
         ! function() {
+            common.utility.cookieStore.remove('areainfo1');
+            common.utility.cookieStore.remove('areainfo2');
+            common.utility.cookieStore.remove('areainfo3');
             //初始化事件
             $http({
                 method: 'post',
@@ -595,7 +598,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$location',
     function($scope, common, $location) {
         $scope.sendModel = {
-            agree: false
+            agree: true
         };
 
         $scope.request = function() {            
@@ -1198,7 +1201,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).fail(function() {
                 $location.path('/user/login');
             });
-            if (common.utility.cookieStore.get('areainfo1')) {
+            if (common.utility.cookieStore.get('areainfo1') && common.utility.cookieStore.get('areainfo2') && common.utility.cookieStore.get('areainfo3')) {
                 var areaObj1 = common.utility.cookieStore.get('areainfo1'),
                     areaObj2 = common.utility.cookieStore.get('areainfo2'),
                     areaObj3 = common.utility.cookieStore.get('areainfo3');
@@ -1883,7 +1886,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 cancel: function() {},
                 buttonClicked: function(index) {
                     if (index === 0) {
-                        cordovaCamera.getPicture(options).then(function(imageData) {
+                        $cordovaCamera.getPicture(options).then(function(imageData) {
                             var s = 'data:image/jpeg;base64,' + imageData;
                             $scope.propagandaPic = s;
                             _savePropagandaPic(s);
@@ -1892,7 +1895,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     }
                     if (index === 1) {
                         options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-                        cordovaCamera.getPicture(options).then(function(imageData) {
+                        $cordovaCamera.getPicture(options).then(function(imageData) {
                             var s = 'data:image/jpeg;base64,' + imageData;
                             $scope.propagandaPic = s;
                             _savePropagandaPic(s);

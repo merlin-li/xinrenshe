@@ -4,9 +4,7 @@
         <a href="#/corporation/create" class="button">创建联名社</a>
     </ion-nav-buttons>
 
-    
-    <ion-content style="background: #f2f2f2;top:0" class="joint">
-        <div class="joint-tabs tabs-striped tabs-top">
+    <div class="joint-tabs tabs-striped tabs-top">
             <div class="tabs">
                 <a class="tab-item" ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
                     联名活动
@@ -16,6 +14,8 @@
                 </a>
             </div>
         </div>
+    <ion-content style="background: #f2f2f2;" class="joint">
+        
         <div class="joint-list" ng-include="templateUrl"></div>
     </ion-content>
 
