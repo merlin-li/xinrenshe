@@ -982,11 +982,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
+            alert(JSON.stringify(sendParamsObj)):
             $http({
                 method: 'post',
                 url: common.API.send,
                 data: sendParamsObj
             }).success(function(data) {
+                alert(JSON.stringify(data)):
                 common.utility.alert('提示', data.msg);
                 if (data.status === 200) {
                     $scope.readCardList();
