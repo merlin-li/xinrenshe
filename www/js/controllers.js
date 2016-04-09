@@ -780,7 +780,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             var sendParamsObj = {
                 order_ids: [i.id],
                 token: userCookie.token,
-                uid: userCookie.uid
+                uid: userCookie.uid,
+                type: 3
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
@@ -974,7 +975,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             var sendParamsObj = {
                 order_ids: [i.id],
                 token: userCookie.token,
-                uid: userCookie.uid
+                uid: userCookie.uid,
+                type: 4
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
