@@ -135,7 +135,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.sendcode = function() {
             var _m = $scope.signupModel;
 
-            if ($scope.signupModel.getCode.class === 'goods-btn') {
+            if (_m.getCode.class === 'goods-btn') {
                 //表示可以发送验证码
                 var pnum = _m.phone,
                     checkResult = common.utility.checkPhone(pnum),
@@ -144,51 +144,40 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 if (checkResult) {
-                    //send code request
+                    //发送验证码的请求
                     $http({
                         method: 'POST',
-                        url: common.API.loginCode,
+                        url: common.API.regCode,
                         data: paramsObj
                     }).success(function(data) {
                         if (data.status === 200) {
-                            $scope.signupModel.msg = {
-                                'class': 'positive',
-                                'value': common.MESSAGE.reg_code_success_tip
-                            };
+                            //发送成功
+                            common.utility.alert('提示', '验证码已发送！');
                             var iv = 60,
                                 beginTime = $interval(function() {
                                     iv--;
                                     if (iv >= 0) {
-                                        $scope.signupModel.getCode.class = 'button-stable';
-                                        $scope.signupModel.getCode.value = iv + '\u79d2\u540e\u91cd\u65b0\u53d1\u9001';
+                                        $scope.signupModel.getCode.class = 'button-tishi';
+                                        $scope.signupModel.getCode.value = iv + '秒后重新发送';
                                     } else {
                                         $interval.cancel(beginTime);
                                         $scope.signupModel.getCode = {
-                                            'value': '\u83b7\u53d6\u9a8c\u8bc1\u7801',
+                                            'value': '获取验证码',
                                             'class': 'goods-btn'
                                         };
                                     }
                                 }, 1000);
                         } else {
-                            $scope.signupModel.msg = {
-                                'class': 'assertive',
-                                'value': data.msg
-                            };
+                            common.utility.alert('提示', data.msg);
                         }
                     }).error(function() {
-                        /* Act on the event */
-                        $scope.signupModel.msg = {
-                            'class': 'assertive',
-                            'value': common.MESSAGE.network_error
-                        };
+                        common.utility.alert('提示', '短信发送失败！');
                     });
                 } else {
-                    //输入的手机号不正确
-                    $scope.signupModel.msg = {
-                        'class': 'assertive',
-                        'value': common.MESSAGE.invalid_phone
-                    };
+                    common.utility.alert('提示', '无效的手机号码！');
                 }
+            } else {
+                common.utility.alert('提示', '不可用');
             }
         };
 
@@ -332,7 +321,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.sendcode = function() {
             var _m = $scope.signupModel;
 
-            if ($scope.signupModel.getCode.class === 'goods-btn') {
+            if (_m.getCode.class === 'goods-btn') {
                 //表示可以发送验证码
                 var pnum = _m.phone,
                     checkResult = common.utility.checkPhone(pnum),
@@ -341,51 +330,40 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 if (checkResult) {
-                    //send code request
+                    //发送验证码的请求
                     $http({
                         method: 'POST',
                         url: common.API.regCode,
                         data: paramsObj
                     }).success(function(data) {
                         if (data.status === 200) {
-                            $scope.signupModel.msg = {
-                                'class': 'positive',
-                                'value': common.MESSAGE.reg_code_success_tip
-                            };
+                            //发送成功
+                            common.utility.alert('提示', '验证码已发送！');
                             var iv = 60,
                                 beginTime = $interval(function() {
                                     iv--;
                                     if (iv >= 0) {
-                                        $scope.signupModel.getCode.class = 'button-stable';
-                                        $scope.signupModel.getCode.value = iv + '\u79d2\u540e\u91cd\u65b0\u53d1\u9001';
+                                        $scope.signupModel.getCode.class = 'button-tishi';
+                                        $scope.signupModel.getCode.value = iv + '秒后重新发送';
                                     } else {
                                         $interval.cancel(beginTime);
                                         $scope.signupModel.getCode = {
-                                            'value': '\u83b7\u53d6\u9a8c\u8bc1\u7801',
+                                            'value': '获取验证码',
                                             'class': 'goods-btn'
                                         };
                                     }
                                 }, 1000);
                         } else {
-                            $scope.signupModel.msg = {
-                                'class': 'assertive',
-                                'value': data.msg
-                            };
+                            common.utility.alert('提示', data.msg);
                         }
                     }).error(function() {
-                        /* Act on the event */
-                        $scope.signupModel.msg = {
-                            'class': 'assertive',
-                            'value': common.MESSAGE.network_error
-                        };
+                        common.utility.alert('提示', '短信发送失败！');
                     });
                 } else {
-                    //输入的手机号不正确
-                    $scope.signupModel.msg = {
-                        'class': 'assertive',
-                        'value': common.MESSAGE.invalid_phone
-                    };
+                    common.utility.alert('提示', '无效的手机号码！');
                 }
+            } else {
+                common.utility.alert('提示', '不可用');
             }
         };
     }

@@ -118,7 +118,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .button-code{
     background: #fff;
-    border: solid 1px #dadada;
+    border: solid 1px #fc8d96;
     border-radius: 15px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -126,6 +126,11 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     line-height: 30px;
     color: #fc8d96;
 }
+.button-tishi{
+    border: solid 1px #dadada;
+    color: #dadada;
+}
+
 .full{
     width: 100%;
     max-width: 100%;

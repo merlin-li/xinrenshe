@@ -312,11 +312,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 introduction: apiBaseUrl + 'setUserInfo/introduction',
                 getBanner: apiBaseUrl + 'homePage/getBannerInfo'
             },
-            MESSAGE: {
-                network_error: 'Network error, please try again later.',
-                invalid_phone: '无效的手机号码',
-                reg_code_success_tip: '验证码发送成功'
-            },
             utility: {
                 'checkPhone': function(p) {
                     return /^1[3|4|5|7|8][0-9]\d{8}$/.test(p);
