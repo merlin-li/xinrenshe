@@ -1273,35 +1273,35 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-.controller('ImgCropCtrl', [
-    '$scope',
-    '$http',
-    'Common',
-    '$location',
-    '$stateParams',
-    function($scope, $http, common, $location, $stateParams) {
-        if (!common.tempData.imgData) {
-            $location.path('/image/test');
-        } else {
-            $scope.imgSrc = common.tempData.imgData;
+// .controller('ImgCropCtrl', [
+//     '$scope',
+//     '$http',
+//     'Common',
+//     '$location',
+//     '$stateParams',
+//     function($scope, $http, common, $location, $stateParams) {
+//         if (!common.tempData.imgData) {
+//             $location.path('/image/test');
+//         } else {
+//             $scope.imgSrc = common.tempData.imgData;
 
-            $scope.save = function() {
-                common.tempData.imgData = this.result;
-                $scope.imageCropStep = 1;
-                delete $scope.imgSrc;
-                delete $scope.result;
-                delete $scope.resultBlob;
-                if (common.tempData.imgDataCallback) {
-                    common.tempData.imgDataCallback(this.result, function(){
-                       $location.path('/' + $stateParams.from.split('_').join('/')); 
-                    });
-                } else {
-                    $location.path('/' + $stateParams.from.split('_').join('/'));
-                }
-            };
-        }
-    }
-])
+//             $scope.save = function() {
+//                 common.tempData.imgData = this.result;
+//                 $scope.imageCropStep = 1;
+//                 delete $scope.imgSrc;
+//                 delete $scope.result;
+//                 delete $scope.resultBlob;
+//                 if (common.tempData.imgDataCallback) {
+//                     common.tempData.imgDataCallback(this.result, function(){
+//                        $location.path('/' + $stateParams.from.split('_').join('/')); 
+//                     });
+//                 } else {
+//                     $location.path('/' + $stateParams.from.split('_').join('/'));
+//                 }
+//             };
+//         }
+//     }
+// ])
 
 .controller('JointHomeCtrl', [
     '$scope',

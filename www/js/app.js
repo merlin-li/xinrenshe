@@ -40,6 +40,22 @@ angular.module('xinrenshe', [
                     }
                 }
             })
+            .state('app_message', {
+                url: '/message',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/message/index.html'
+                    }
+                }
+            })
+            .state('app_messagedetail', {
+                url: '/message/:id',
+                views: {
+                    'content': {
+                        templateUrl: 'templates/message/message.html'
+                    }
+                }
+            })
             .state('app_feedback', {
                 url: '/feedback',
                 views: {
@@ -48,15 +64,16 @@ angular.module('xinrenshe', [
                     }
                 }
             })
-            .state('img_crop', {
-                url: '/image/crop/:from',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/image/crop.html',
-                        controller: 'ImgCropCtrl'
-                    }
-                }
-            })
+            
+            // .state('img_crop', {
+            //     url: '/image/crop/:from',
+            //     views: {
+            //         'content': {
+            //             templateUrl: 'templates/image/crop.html',
+            //             controller: 'ImgCropCtrl'
+            //         }
+            //     }
+            // })
 
             .state('app_login', {
                 url: '/user/login',

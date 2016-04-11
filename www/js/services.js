@@ -21,14 +21,14 @@ angular.module('xinrenshe.services', []).factory('Common', [
         //     api_base_url = 'http://stage.api.guozhongbao.com';
         // }
         var u = window.navigator.userAgent,
-            loadingTemplate = '';
-        if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
             loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
-        } else {
-            loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
+        // if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
+        //     loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
+        // } else {
+        //     loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
             
-            // loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
-        }
+        //     // loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
+        // }
         Date.prototype.format = function(fmt) {
             var o = {
                 'M+': this.getMonth() + 1,

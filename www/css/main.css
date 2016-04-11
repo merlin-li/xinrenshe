@@ -15,15 +15,14 @@ body{
 .button.button-positive.activated, .button.button-positive.activate{
     background: #ff8c9b;
 }
-[nav-bar-transition=ios] [nav-bar=entering] .bar, [nav-bar-transition=ios] [nav-bar=active] .bar{
-    /*background: #ff8c9b;*/
-}
 .bar.bar-stable .title{
-    /*color: #fff;*/
-    /*background: #ff8c9b;*/
+    color: #fff;
 }
 .bar-stable .button.button-clear{
-    /*color: #fff;*/
+    color: #fff;
+}
+.bar-stable .button{
+    color: #fff;
 }
 .item{
     border-color: #f1f1f1;
@@ -531,7 +530,11 @@ i.gender0{
     float: right;
     color: #ccc;
 }
-
+.joint-list .answer{
+    color: #656464;
+    white-space: normal;
+    font-size: 13px;
+}
 .joint-list .ion-ios-clock-outline,.ion-navigate,.ion-ios-location-outline{
   color:#d84c60;
 }
@@ -620,6 +623,47 @@ ul.send-tip{
     width: 86%;
     margin: 50px auto;
 }
-
+.list-message .item{
+    background: #f6f6f6;
+}
+.list-message .message{
+    background: #fff;
+    padding: 10px;
+    border: solid 1px #f1f1f1;
+}
+.list-message p{
+    white-space: normal;
+    border-bottom: solid 1px #f6f6f6;
+    padding-bottom: 7px;
+}
+.list-message div img{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+}
+.list-message .container img:first-child{
+    left: 0;
+    top: 10px;
+}
+.list-message .avatar{
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.list-message .container img:last-child{
+    right: 0;
+    top: 10px;
+}
+.list-message .container{
+    position: relative;
+    height: 50px;
+    color: #bfbfbf;
+}
+.list-message .container div{
+    position: absolute;
+    left: 60px;
+    top: 10px;
+    font-size: 12px;
+}
 
 
