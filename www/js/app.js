@@ -4,8 +4,8 @@ angular.module('xinrenshe', [
     'xinrenshe.controllers',
     'xinrenshe.services',
     'ionic-datepicker',
-    'ionic-timepicker'
-    // 'xinrenshe.error'
+    'ionic-timepicker',
+    'xinrenshe.error'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
@@ -370,7 +370,7 @@ angular.module('xinrenshe', [
         };
         ionicDatePickerProvider.configDatePicker(datePickerObj);
     }
-]).run(function($ionicPlatform) {
+]).run(['$ionicPlatform', '$location', '$ionicHistory', function($ionicPlatform, $location, $ionicHistory) {
     $ionicPlatform.ready(function() {
         if(window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -379,15 +379,30 @@ angular.module('xinrenshe', [
         if(window.StatusBar) {
             StatusBar.styleDefault();
         }
-  });
-})
-;
+    });
+
+    $ionicPlatform.registerBackButtonAction(function(e){
+        e.preventDefault();
+        var currentPage = $location().path();    
+        if (currentPage == '/home' || currentPage == '/message' || currentPage == '/joint' || currentPage == '/user') {
+            //退出应用程序
+             ionic.Platform.exitApp();
+        } else {
+            if (window.cordova.plugins.Keyboard.isVisible) {
+                //隐藏键盘
+                window.cordova.plugins.Keyboard.close();
+            } else {
+                $ionicHistory.goBack();
+            }
+        }
+    });
+}]);
 
 
-// angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
-//     return function(exception, cause) {
-//         exception.message += ' (caused by "' + cause + '")';
-//         console.log(exception.message);
-//         alert(exception.message);
-//     };
-// });
+angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
+    return function(exception, cause) {
+        exception.message += ' (caused by "' + cause + '")';
+        console.log(exception.message);
+        alert(exception.message);
+    };
+});
