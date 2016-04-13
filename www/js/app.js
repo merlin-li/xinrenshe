@@ -44,7 +44,8 @@ angular.module('xinrenshe', [
                 url: '/message',
                 views: {
                     'content': {
-                        templateUrl: 'templates/message/index.html'
+                        templateUrl: 'templates/message/index.html',
+                        controller: 'MessageCtrl'
                     }
                 }
             })
@@ -52,7 +53,8 @@ angular.module('xinrenshe', [
                 url: '/message/:id',
                 views: {
                     'content': {
-                        templateUrl: 'templates/message/message.html'
+                        templateUrl: 'templates/message/message.html',
+                        controller: 'MessageDetCtrl'
                     }
                 }
             })

@@ -1,33 +1,21 @@
 <ion-view title="信箱" hide-back-button="true">
     <ion-content has-header="true" style="background:#f6f6f6;">
     
-    <div class="list">
-        <a class="item item-avatar" href="#/message/1">
-            <img src="img/icon_jixin.png">
-            <h2>联名小助手</h2>
-            <p>消息提醒</p>
-            <span class="badge badge-assertive">0</span>
-        </a>
-
-        <a class="item item-avatar" href="#/message/1">
-            <img src="img/icon_jixin.png">
-            <h2>联名小助手</h2>
-            <p>消息提醒</p>
-            <span class="badge badge-assertive">0</span>
-        </a><a class="item item-avatar" href="#/message/3">
-            <img src="img/icon_jixin.png">
-            <h2>联名小助手</h2>
-            <p>消息提醒</p>
-            <span class="badge badge-assertive">0</span>
+    <div class="list list-msg">
+        <a class="item item-avatar" href="#/message/{{msg.category}}" ng-repeat="msg in msgList.msgCategoryList">
+            <img ng-src="{{msgList.host + msg.avatar}}">
+            <h2>{{msg.name}}</h2>
+            <p ng-if="msg.new_msg">{{msg.new_msg}}</p>
+            <span ng-if="msg.new_msg_time" class="time">{{msg.new_msg_time}}</span>
+            <span ng-if="!msg.is_read" class="point"></span>
         </a>
     </div>
-
     </ion-content>
-
-    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
-        <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-        <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
-        <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
-        <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-    </ion-tabs>
 </ion-view>
+
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+    <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
+    <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
+    <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
+    <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
+</ion-tabs>

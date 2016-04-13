@@ -2,6 +2,9 @@
 body{
     /*font-size: 62.5%;*/
 }
+.loading-container .loading{
+    background-color: rgba(0,0,0,0.3);
+}
 .tabs-striped .tab-item.activated, .tabs-striped .tab-item.active, .tabs-striped .tab-item.tab-item-active{
     border-color: #fff;
 }
@@ -16,13 +19,13 @@ body{
     background: #ff8c9b;
 }
 .bar.bar-stable .title{
-    color: #fff;
+    /*color: #fff;*/
 }
 .bar-stable .button.button-clear{
-    color: #fff;
+    /*color: #fff;*/
 }
 .bar-stable .button{
-    color: #fff;
+    /*color: #fff;*/
 }
 .item{
     border-color: #f1f1f1;
@@ -665,5 +668,43 @@ ul.send-tip{
     top: 10px;
     font-size: 12px;
 }
+.list-msg .point{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    display: block;
+    background: red;
+    right: 20px;
+    top: 48%;
+}
+.list-msg .time{
+    font-size: 12px;
+    right: 20px;
+    top: 15px;
+    position: absolute;
+}
+.list-msg p{
+    width: 80%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

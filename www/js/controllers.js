@@ -20,7 +20,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     '$location',
     '$ionicSlideBoxDelegate',
-    function($scope, $http, common, $location, $ionicSlideBoxDelegate) {
+    '$state',
+    function($scope, $http, common, $location, $ionicSlideBoxDelegate, $state) {
+        // console.log();
+        // debugger;
+        $scope.shouldHide = function () {
+            switch ($state.current.name) {
+                case 'app_home':
+                    return true;
+                case 'statename2':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
         ! function() {
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
@@ -63,6 +77,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         }();
     }
 ])
+
 .controller('LoginCtrl', [
     '$scope',
     '$http',
@@ -147,7 +162,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     //发送验证码的请求
                     $http({
                         method: 'POST',
-                        url: common.API.regCode,
+                        url: common.API.loginCode,
                         data: paramsObj
                     }).success(function(data) {
                         if (data.status === 200) {
@@ -820,17 +835,25 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$cordovaCamera',
     '$stateParams',
-    function($scope, $http, common, $location, md5, $cordovaCamera, $stateParams) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $cordovaCamera, $stateParams, $timeout) {
         $scope.showTip = true;
+        $scope.loadMore = true;
+        $scope.currentPage = 1;
+        $scope.lastPage = 1;
+        $scope.statusObj = {txt: '已旅行', hide: true};
+        $scope.modelStyle = {'display': 'none'};
+        $scope.selectIndex = 1;
+
         var paramsObj = {
                 type: 1,
                 uid: '',
                 token: ''
             },
             activityId = $stateParams.id,
-            userCookie = common.utility.getUserCookie();
+            userCookie = common.utility.getUserCookie(), _loadPicture;
 
-        var _loadPicture = function(imgurl) {
+        _loadPicture = function(imgurl) {
             // 上传寄片照片的操作
             var picParamsObj = {
                 order_id: $scope.selectCardIndex,
@@ -841,7 +864,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             picParamsObj.accessSign = md5.createHash(common.utility.createSign(picParamsObj));
             picParamsObj.picture = imgurl;
             common.utility.loadingShow();
-            // alert(JSON.stringify(picParamsObj));
+
             $http({
                 method: 'post',
                 url: common.API.uploadPic,
@@ -860,15 +883,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             $scope.$apply();
         };
 
-        $scope.statusObj = {
-            txt: '已旅行',
-            hide: true
+        $scope.fetchData = function(){
+            // debugger;
+            console.log(this.currentPage);
+            console.log(this.lastPage);
+            $scope.currentPage++;
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.loadMore = false;
+                $scope.currentPage = $scope.lastPage;
+            }
+            this.readHandleList();
         };
-        $scope.modelStyle = {
-            'display': 'none'
-        };
-        $scope.selectIndex = 1;
 
+        //获取等待处理的数据
         $scope.readHandleList = function() {
             $scope.selectIndex = 0;
             $scope.btnClass0 = 'button-positivehover';
@@ -876,34 +903,43 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             $scope.btnClass2 = 'button';
             $scope.btnClass3 = 'button';
 
+            //$scope.$broadcast('scroll.infiniteScrollComplete');
+
             var pObj = {
                 uid: userCookie.uid,
                 token: userCookie.token,
-                activity_id: activityId
+                activity_id: activityId,
+                page: $scope.currentPage
             };
             pObj.accessSign = md5.createHash(common.utility.createSign(pObj));
             common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.cadgeUserList,
-                data: pObj
-            }).success(function(data){
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d){
-                    d.data.cadgeList.map(function(t){
-                        if (t.status === 0) {
-                            t.statusText = '等待处理';
-                        }
-                        if (t.status === 1) {
-                            t.statusText = '符合';
-                        }
-                        if (t.status === 2) {
-                            t.statusText = '不符合';
-                        }
+
+            $timeout(function(){
+                $http({
+                    method: 'post',
+                    url: common.API.cadgeUserList,
+                    data: pObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.cadgeList.map(function(t){
+                            if (t.status === 0) {
+                                t.statusText = '等待处理';
+                            }
+                            if (t.status === 1) {
+                                t.statusText = '符合';
+                            }
+                            if (t.status === 2) {
+                                t.statusText = '不符合';
+                            }
+                        });
+                        $scope.memberList = d.data;
+                        //设置页码数据
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                    $scope.memberList = d.data;
                 });
-            });
+            }, 400);
         };
 
         $scope.readCardList = function(t) {
@@ -1272,36 +1308,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         };
     }
 ])
-
-// .controller('ImgCropCtrl', [
-//     '$scope',
-//     '$http',
-//     'Common',
-//     '$location',
-//     '$stateParams',
-//     function($scope, $http, common, $location, $stateParams) {
-//         if (!common.tempData.imgData) {
-//             $location.path('/image/test');
-//         } else {
-//             $scope.imgSrc = common.tempData.imgData;
-
-//             $scope.save = function() {
-//                 common.tempData.imgData = this.result;
-//                 $scope.imageCropStep = 1;
-//                 delete $scope.imgSrc;
-//                 delete $scope.result;
-//                 delete $scope.resultBlob;
-//                 if (common.tempData.imgDataCallback) {
-//                     common.tempData.imgDataCallback(this.result, function(){
-//                        $location.path('/' + $stateParams.from.split('_').join('/')); 
-//                     });
-//                 } else {
-//                     $location.path('/' + $stateParams.from.split('_').join('/'));
-//                 }
-//             };
-//         }
-//     }
-// ])
 
 .controller('JointHomeCtrl', [
     '$scope',
@@ -2259,7 +2265,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-
 .controller('myCorporationCtrl', [
     '$http',
     '$scope',
@@ -2545,6 +2550,87 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             });
         };
     }
+])
+
+.controller('MessageCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.msgCategoryList,
+                    data: paramsObj
+                }).success(function(data){
+                    // console.log(data);
+                    common.utility.handlePostResult(data, function(d){
+                        if (d.data.msgCategoryList && d.data.msgCategoryList.length > 0) {
+                            d.data.msgCategoryList.map(function(m){
+                                if (m.new_msg_time){
+                                    m.new_msg_time = new Date(m.new_msg_time * 1000).format('yyyy-MM-dd');
+                                }
+                            });
+                        }
+                        $scope.msgList = d.data;
+                    });
+                });
+            }).fail(function(){
+                common.resetToken();
+            });
+        }();
+    }
+])
+
+.controller('MessageDetCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$stateParams',
+    function($http, $scope, common, md5, $stateParams){
+        !function(){
+            $scope.sourceType = $stateParams.id;
+            
+            common.utility.checkLogin().success(function(u){
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token,
+                    category: $stateParams.id,
+                    per: 100
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.msgList,
+                    data: paramsObj
+                }).success(function(data){
+                    console.log(data);
+                    common.utility.handlePostResult(data, function(d){
+                        if (d.data.msgList && d.data.msgList.length > 0) {
+                            d.data.msgList.map(function(m){
+                                if (m.create_at){
+                                    m.create_at = new Date(m.create_at * 1000).format('yyyy-MM-dd hh:mm:ss');
+                                }
+                            });
+                        }
+
+                        $scope.msgModel = d.data;
+                    });
+                });
+            }).fail(function(){
+                common.resetToken();
+            });
+        }();
+    }
 ]);
 
 ;
+

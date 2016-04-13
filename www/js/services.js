@@ -14,6 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
+        // offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.0/' : 'http://api.xinrenclub.com/v1.0/';
 
         //判断是不是stage环境
@@ -21,7 +22,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
         //     api_base_url = 'http://stage.api.guozhongbao.com';
         // }
         var u = window.navigator.userAgent,
-            loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
+            loadingTemplate = '<ion-spinner icon="spiral" style="fill:#fff"></ion-spinner>';
         // if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
         //     loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
         // } else {
@@ -101,7 +102,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
             },
             _loadingShow = function() {
                 $ionicLoading.show({
-                    template: loadingTemplate
+                    template: loadingTemplate,
+                    noBackdrop: true
                 });
             },
             _loadingHide = function() {
@@ -262,6 +264,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                         }
                     }
                 });
+            },
+            _uploadPicture = function(imgurl) {
+                
             };
 
 
@@ -310,7 +315,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 cadgeUserDeal: apiBaseUrl + 'jointlyManage/cadgeUserDeal',
                 cadgeList: apiBaseUrl + 'createOrders/cadgeList',
                 introduction: apiBaseUrl + 'setUserInfo/introduction',
-                getBanner: apiBaseUrl + 'homePage/getBannerInfo'
+                getBanner: apiBaseUrl + 'homePage/getBannerInfo',
+                msgCategoryList: apiBaseUrl + 'Message/msgCategoryList',
+                msgList: apiBaseUrl + 'Message/msgList'
             },
             utility: {
                 'checkPhone': function(p) {

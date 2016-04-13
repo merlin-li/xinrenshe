@@ -1,28 +1,82 @@
-<ion-view title="信箱" hide-back-button="true">
+<ion-view title="{{msgModel.categoryInfo.name}}">
     <ion-content has-header="true" style="background:#f6f6f6;">
     
         <div class="list list-message">
-            <a class="item item-avatar">
-                <img src="img/icon_jixin.png">
-                <h2>寄信助手</h2>
-                <p>2016-4-11 20:57</p>
+
+            <!--联名小助手-->
+            <a ng-if="sourceType == 'jointly'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
+                <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
+                <h2>{{msgModel.categoryInfo.name}}</h2>
+                <p>{{msg.create_at}}</p>
 
                 <div class="message">
-                    <p>拖片不是好孩子，你的片已经5天没有寄出了。</p>
+                    <p>{{msg.message}}</p>
                     <div class="container">
-                        <img class="avatar" src="img/tx_01.png">
+                        <img ng-src="{{msgModel.host + msg.msgdata.propaganda_pic}}">
                         <div>
-                            <span>空白</span><br>
-                            <span>河北 唐山</span>
+                            <span>{{msg.msgdata.corporation_name}}</span><br>
+                            <span>{{msg.msgdata.activity_name}}</span>
                         </div>
-                        <img src="img/tx_01.png">
+                    </div>
+                </div>
+            </a>
+
+            <!--收信小助手-->
+            <a ng-if="sourceType == 'receive'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
+                <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
+                <h2>{{msgModel.categoryInfo.name}}</h2>
+                <p>{{msg.create_at}}</p>
+
+                <div class="message">
+                    <p>{{msg.message}}</p>
+                    <div class="container">
+                        <img class="avatar" ng-src="{{msgModel.host + msg.msgdata.avatar}}">
+                        <div>
+                            <span>{{msg.msgdata.username}}</span><br>
+                            <span>{{msg.msgdata.province}} {{msg.msgdata.city}}</span>
+                        </div>
+                        <img ng-src="{{msgModel.host + msg.msgdata.picture}}">
+                    </div>
+                </div>
+            </a>
+
+            <!--验证消息-->
+            <a ng-if="sourceType == 'verify'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
+                <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
+                <h2>{{msgModel.categoryInfo.name}}</h2>
+                <p>{{msg.create_at}}</p>
+
+                <div class="message">
+                    <p>{{msg.message}}</p>
+                    <div class="container">
+                        <img ng-src="{{msgModel.host + msg.msgdata.corporation_avatar}}">
+                        <div>
+                            <span>{{msg.msgdata.corporation_name}}</span><br>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!--社长助手-->
+            <a ng-if="sourceType == 'president'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
+                <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
+                <h2>{{msgModel.categoryInfo.name}}</h2>
+                <p>{{msg.create_at}}</p>
+
+                <div class="message">
+                    <p>{{msg.message}}</p>
+                    <div class="container">
+                        <img class="avatar" ng-src="{{msgModel.host + msg.msgdata.avatar}}">
+                        <div>
+                            <span>{{msg.msgdata.username}}</span><br>
+                            <span>{{msg.msgdata.province}} {{msg.msgdata.city}}</span>
+                        </div>
                     </div>
                 </div>
             </a>
 
 
-
-            <a class="item item-avatar">
+ <!--            <a class="item item-avatar">
                 <img src="img/icon_jixin.png">
                 <h2>寄信助手</h2>
                 <p>2016-4-11 20:57</p>
@@ -37,7 +91,9 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </a> -->
+
+
         </div>
 
     </ion-content>
