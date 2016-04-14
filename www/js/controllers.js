@@ -677,16 +677,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$location',
     'md5',
     '$cordovaCamera',
-    function($scope, $http, common, $location, md5, $cordovaCamera) {
+    '$timeout',
+    function($scope, $http, common, $location, md5, $cordovaCamera, $timeout) {
         $scope.showTip = true;
         var paramsObj = {
                 type: 1,
                 uid: '',
                 token: ''
             },
-            userCookie = common.utility.getUserCookie();
-
-        var _loadPicture = function(imgurl) {
+            userCookie = common.utility.getUserCookie(), _loadPicture, _changeStyle;
+            _loadPicture = function(imgurl) {
             // 上传寄片照片的操作
             var picParamsObj = {
                 order_id: $scope.selectCardIndex,
@@ -714,19 +714,40 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 }
             });
             $scope.$apply();
-        };
+            };
 
-        $scope.statusObj = {
-            txt: '已旅行',
-            hide: true
-        };
-        $scope.modelStyle = {
-            'display': 'none'
-        };
+        $scope.statusObj = {txt: '已旅行', hide: true};
+        $scope.modelStyle = {'display': 'none'};
         $scope.selectIndex = 1;
 
+
+
+$scope.noMoreData = false;
+$scope.currentPage = 1;
+$scope.lastPage = 10;
+$scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMore();
+});
+
+$scope.loadMore = function(){
+    $timeout(function() {
+        // $scope.readCardList();
+        console.log($scope.currentPage);
+        $scope.currentPage++;
+        if ($scope.currentPage >= $scope.lastPage) {
+            $scope.noMoreData = true;
+        }
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+    }, 400);
+};
+
+
+
+
+
         $scope.readCardList = function(t) {
-            $scope.selectIndex = t || 1;
+            $scope.selectIndex = t || $scope.selectIndex;
+
             if (this.selectIndex === 1) {
                 $scope.btnClass1 = 'button-positivehover';
                 $scope.btnClass2 = 'button';
@@ -748,6 +769,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 this.statusObj.txt = '共旅行';
             }
             paramsObj.type = $scope.selectIndex;
+            paramsObj.page = $scope.currentPage;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
             common.utility.loadingShow();
@@ -757,14 +779,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: paramsObj
             }).success(function(data) {
                 //处理card的示例图
-                common.utility.handlePostResult(data, function(d){
-                    d.data.orderList.map(function(order) {
-                        if (order.picture) {
-                            order.picture = d.data.host + order.picture;
-                        } else {
-                            order.picture = 'img/xjbj_1.png';
-                        }
-                    });
+                common.utility.handlePostResult(data, function(d) {
+                    if (d.data.orderList.length > 0) {
+                        d.data.orderList.map(function(order) {
+                            if (order.picture) {
+                                order.picture = d.data.host + order.picture;
+                            } else {
+                                order.picture = 'img/xjbj_1.png';
+                            }
+                        });
+                    }
+                    // $scope.lastPage = d.data.totalPage;
                     $scope.cardModel = d.data;
                     $scope.showTip = (d.data.orderList.length > 0);
                 });
@@ -2583,7 +2608,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     });
                 });
             }).fail(function(){
-                common.resetToken();
+                common.utility.resetToken();
             });
         }();
     }
@@ -2598,13 +2623,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     function($http, $scope, common, md5, $stateParams){
         !function(){
             $scope.sourceType = $stateParams.id;
-            
+            $scope.pageTitle = '';
+
             common.utility.checkLogin().success(function(u){
                 var paramsObj = {
                     uid: u.uid,
                     token: u.token,
                     category: $stateParams.id,
-                    per: 100
+                    per: 1000
                 };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 $http({
@@ -2612,7 +2638,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.msgList,
                     data: paramsObj
                 }).success(function(data){
-                    console.log(data);
                     common.utility.handlePostResult(data, function(d){
                         if (d.data.msgList && d.data.msgList.length > 0) {
                             d.data.msgList.map(function(m){
@@ -2623,14 +2648,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         }
 
                         $scope.msgModel = d.data;
+                        $scope.pageTitle = d.data.categoryInfo.name;
                     });
                 });
             }).fail(function(){
-                common.resetToken();
+                common.utility.resetToken();
             });
         }();
     }
 ]);
 
-;
 

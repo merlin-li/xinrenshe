@@ -6,7 +6,7 @@
             </a>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content has-header="true" style="background:#f2f2f2">
+    <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
         <div class="button-bar">
             <a class="button {{btnClass1}}" ng-click="readCardList(1)">等待寄出</a>
             <a class="button {{btnClass2}}" ng-click="readCardList(4)">旅行中</a>
@@ -37,6 +37,13 @@
                 <img class="cardimg" ng-src="{{card.picture}}" ng-click="takePic(card)">
             </div>
         </section>
+
+
+        <ion-infinite-scroll
+            ng-if="!noMoreData"
+            icon="ion-loading-c"
+            on-infinite="loadMore()" distance="10%">
+        </ion-infinite-scroll>
 
         <!--拍照-->
         <!-- <input id="takecardpicture" type="file" accept="image/*" capture="camera" style="display: none"> -->
