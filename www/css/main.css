@@ -292,7 +292,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .card-item .footer .username, .card-item .footer .code{
     position: absolute;
-    bottom: 10px;
+    bottom: 0;
 }
 .card-item .footer .code{
     right: 20px;
@@ -337,7 +337,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     padding-top: 20px;
 }
 .center span{
-    line-height: 70px;
+    /*line-height: 70px;*/
 }
 .footer .avatar{
     width: 80px;

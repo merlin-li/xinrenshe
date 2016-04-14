@@ -1,5 +1,5 @@
 <ion-view title="等待处理">
-    <ion-content has-header="true" style="background:#f2f2f2">
+    <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
         <div class="button-bar">
             <a class="button {{btnClass0}}" ng-click="readHandleList()">等待处理</a>
             <a class="button {{btnClass1}}" ng-click="readCardList(1)">等待寄出</a>
@@ -8,8 +8,8 @@
         </div>
 
         <div class="list joint-list" style="top:10px" ng-hide="selectIndex !== 0">
-            <a class="item item-avatar" ng-repeat="member in memberList.cadgeList">
-                <img ng-src="{{memberList.host + member.avatar}}">
+            <a class="item item-avatar" ng-repeat="member in memberList">
+                <img ng-src="{{member.avatar}}">
 
                 <button ng-hide="member.status !== 0" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 2)">不符合</button>
                 <button ng-hide="member.status !== 0" class="agree-refuse-btn button button-small" ng-click="deal(member.id, 1)">符合</button>
@@ -26,7 +26,7 @@
             </a>
         </div>
 
-        <section class="card-item" ng-hide="selectIndex === 0" ng-repeat="card in cardModel.orderList">
+        <section class="card-item" ng-hide="selectIndex === 0" ng-repeat="card in orderList">
             <div class="header">
                 <div>
                     <span>{{card.order_number}}</span>
@@ -57,9 +57,9 @@
         <img src="img/xltb_1.png" class="full" ng-hide="showTip">
 
         <ion-infinite-scroll
-            ng-if="loadMore"
+            ng-if="!noMoreData"
             icon="ion-loading-c"
-            on-infinite="fetchData()" distance="10%">
+            on-infinite="loadMore()" distance="10%">
         </ion-infinite-scroll>
         
     </ion-content>

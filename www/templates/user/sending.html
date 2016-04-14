@@ -13,7 +13,7 @@
             <a class="button {{btnClass3}}" ng-click="readCardList(5)">旅行结束</a>
         </div>
 
-        <section class="card-item" ng-repeat="card in cardModel.orderList">
+        <section class="card-item" ng-repeat="card in orderList">
             <div class="header">
                 <div>
                     <span>{{card.order_number}}</span>
@@ -42,7 +42,7 @@
         <ion-infinite-scroll
             ng-if="!noMoreData"
             icon="ion-loading-c"
-            on-infinite="loadMore()" distance="10%">
+            on-infinite="readCardList()" distance="10%">
         </ion-infinite-scroll>
 
         <!--拍照-->
