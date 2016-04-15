@@ -361,7 +361,8 @@ angular.module('xinrenshe', [
 
     $ionicPlatform.registerBackButtonAction(function(e){
         e.preventDefault();
-        var currentPage = $location().path();    
+        var currentPage = $location().path();  
+        alert(currentPage);
         if (currentPage == '/home' || currentPage == '/message' || currentPage == '/joint' || currentPage == '/user') {
             //退出应用程序
              ionic.Platform.exitApp();
