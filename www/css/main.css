@@ -261,17 +261,31 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .receive-header span{
     display: inline-block;
     width: 27%;
-    margin-left: 20px;
+    margin-left: 10px;
+}
+.receive-header .badgex{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: solid 1px #aeaeae;
+    color: #aeaeae;
+    text-align: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    line-height: 30px;
+    font-size: 12px;
+    margin-left: 10px;
 }
 .card-item{
-    border-top: solid 1px #cdcdcd;
-    border-bottom: solid 1px #cdcdcd;
+    border-top: solid 1px #e2e2e2;
+    border-bottom: solid 1px #e2e2e2;
     background: #fff;
     margin: 8px 0;
-    color: #303030;
+    color: #949494;
 }
 .card-item .header{
-    border-bottom: solid 1px #cdcdcd;
+    border-bottom: solid 1px #f4f4f4;
     padding: 10px 0;
     position: relative;
 }
@@ -326,22 +340,22 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     display: block;
     font-size: 14px;
 }
-.footer .left, .footer .center, .footer .right{
-    float: left;
-    width: 32%;
-    height: 120px;
-}
 .footer .left{
-    /*padding-left: 10px;*/
+    width: 25%;
+    float: left;
     text-align: center;
-    padding-top: 20px;
 }
-.center span{
-    /*line-height: 70px;*/
+.footer .right{
+    width: 25%;
+    float: left;
+}
+.footer .center{
+    width: 45%;
+    float: left;
 }
 .footer .avatar{
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -689,7 +703,13 @@ ul.send-tip{
 .list-msg p{
     width: 80%;
 }
-
+.tip-message{
+    text-align: center;
+}
+.tip-message img{
+    width: 50%;
+    margin: 0 auto;
+}
 
 
 

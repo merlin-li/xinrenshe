@@ -1,15 +1,19 @@
 <ion-view title="信箱" hide-back-button="true">
     <ion-content has-header="true" style="background:#f6f6f6;">
-    
-    <div class="list list-msg">
-        <a class="item item-avatar" href="#/message/{{msg.category}}" ng-repeat="msg in msgList.msgCategoryList">
-            <img ng-src="{{msgList.host + msg.avatar}}">
-            <h2>{{msg.name}}</h2>
-            <p ng-if="msg.new_msg">{{msg.new_msg}}</p>
-            <span ng-if="msg.new_msg_time" class="time">{{msg.new_msg_time}}</span>
-            <span ng-if="!msg.is_read" class="point"></span>
-        </a>
-    </div>
+        <div class="list list-msg">
+            <a class="item item-avatar" href="#/message/{{msg.category}}" ng-repeat="msg in msgList.msgCategoryList">
+                <img ng-src="{{msgList.host + msg.avatar}}">
+                <h2>{{msg.name}}</h2>
+                <p ng-if="msg.new_msg">{{msg.new_msg}}</p>
+                <span ng-if="msg.new_msg_time" class="time">{{msg.new_msg_time}}</span>
+                <span ng-if="!msg.is_read" class="point"></span>
+            </a>
+        </div>
+
+        <div class="tip-message" ng-if="msgList.msgCategoryList.length <= 0">
+            <br><br>
+            <img src="img/icon_tp.png">
+        </div>
     </ion-content>
 </ion-view>
 

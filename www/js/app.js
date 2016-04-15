@@ -4,20 +4,17 @@ angular.module('xinrenshe', [
     'xinrenshe.controllers',
     'xinrenshe.services',
     'ionic-datepicker',
-    'ionic-timepicker',
-    'xinrenshe.error'
+    'ionic-timepicker'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
     '$ionicConfigProvider',
     'ionicDatePickerProvider',
     function($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) {
-        $ionicConfigProvider.backButton.previousTitleText(false);
-        $ionicConfigProvider.backButton.text('');
+        // $ionicConfigProvider.backButton.previousTitleText(false);
+        // $ionicConfigProvider.backButton.text('');
         $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
-        // $ionicConfigProvider.views.forwardCache(true);
         $ionicConfigProvider.scrolling.jsScrolling(true);
-        // $ionicConfigProvider.views.transition('none');
         $ionicConfigProvider.views.maxCache(0);
         $ionicConfigProvider.platform.android.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
@@ -390,10 +387,10 @@ angular.module('xinrenshe', [
 }]);
 
 
-angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
-    return function(exception, cause) {
-        exception.message += ' (caused by "' + cause + '")';
-        console.log(exception.message);
-        alert(exception.message);
-    };
-});
+// angular.module('xinrenshe.error', []).factory('$exceptionHandler', function() {
+//     return function(exception, cause) {
+//         exception.message += ' (caused by "' + cause + '")';
+//         console.log(exception.message);
+//         alert(exception.message);
+//     };
+// });

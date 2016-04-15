@@ -1,6 +1,5 @@
 <ion-view title="信箱">
     <ion-content has-header="true" style="background:#f6f6f6;">
-    
         <div class="list list-message">
 
             <!--联名小助手-->
@@ -96,27 +95,11 @@
                     </div>
                 </div>
             </a>
-
-
- <!--            <a class="item item-avatar">
-                <img src="img/icon_jixin.png">
-                <h2>寄信助手</h2>
-                <p>2016-4-11 20:57</p>
-
-                <div class="message">
-                    <p>有人来索片啦。</p>
-                    <div class="container">
-                        <img src="img/tx_01.png">
-                        <div>
-                            <span>信人社第一届明信片网络联络会议</span><br>
-                            <span>官方联名团</span>
-                        </div>
-                    </div>
-                </div>
-            </a> -->
-
-
         </div>
 
+        <div class="tip-message" ng-if="msgModel.msgList.length <= 0">
+            <br><br>
+            <img src="img/icon_tp.png">
+        </div>
     </ion-content>
 </ion-view>

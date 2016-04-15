@@ -21,10 +21,11 @@
                 {{activityModel.addr_city}} &nbsp;
                 {{activityModel.activity_addr}} 
             </div>
-            <div class="item item-icon-left">
+            <a class="item item-icon-left item-icon-right" href="#/joint/corporation/{{activityModel.corporation_id}}">
                 <i class="icon ion-ios-photos-outline"></i>
                 主办单位：{{activityModel.corporation_name}}
-            </div>
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
         </div>
 
         <div class="list activity-list">
@@ -61,7 +62,8 @@
         </div>
         
         <div class="padding" ng-hide="activityModel.isPresident">
-            <button class="button button-block {{buttonObj.joined ? '' : 'button-positive'}}" ng-click="joinActivity()">{{buttonObj.buttonText}}</button>
+            <!-- <button class="button button-block {{buttonObj.joined ? '' : 'button-positive'}}" ng-click="joinActivity()">{{buttonObj.buttonText}}</button> -->
+            <button ng-if="!buttonObj.hidden" class="button button-block {{buttonObj.block ? '' : 'button-positive'}}" ng-click="joinActivity()">{{buttonObj.buttonText}}</button>
         </div>
     </ion-content>
 </ion-view>

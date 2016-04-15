@@ -722,14 +722,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.noMoreData = false;
         $scope.currentPage = 1;
         $scope.lastPage = 10;
-        $scope.$on('$stateChangeSuccess', function() {
-            $scope.readCardList();
-        });
 
         $scope.readCardList = function(t) {
             if (t && t!== $scope.selectIndex) {
                 $scope.orderList = [];
                 $scope.currentPage = 1;
+                $scope.lastPage = 10;
             }
             $scope.selectIndex = t || $scope.selectIndex;
 
@@ -757,37 +755,39 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             paramsObj.page = $scope.currentPage;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
-            common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.orderList,
-                data: paramsObj
-            }).success(function(data) {
-                //处理card的示例图
-                common.utility.handlePostResult(data, function(d) {
-                    if (d.data.orderList.length > 0) {
-                        d.data.orderList.map(function(order) {
-                            if (order.picture) {
-                                order.picture = d.data.host + order.picture;
-                            } else {
-                                order.picture = 'img/xjbj_1.png';
-                            }
-                        });
-                    }
-                    $scope.lastPage = d.data.totalPage;
-                    $scope.orderList = $scope.orderList.concat(d.data.orderList);
-                    $scope.showTip = ($scope.orderList.length > 0);
-                    if($scope.currentPage >= $scope.lastPage) {
-                        $scope.noMoreData = true;
-                    }
-                    $scope.currentPage++;
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.orderList,
+                    data: paramsObj
+                }).success(function(data) {
+                    //处理card的示例图
+                    common.utility.handlePostResult(data, function(d) {
+                        if (d.data.orderList.length > 0) {
+                            d.data.orderList.map(function(order) {
+                                if (order.picture) {
+                                    order.picture = d.data.host + order.picture;
+                                } else {
+                                    order.picture = 'img/xjbj_1.png';
+                                }
+                            });
+                        }
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.orderList = $scope.orderList.concat(d.data.orderList);
+                        $scope.showTip = ($scope.orderList.length > 0);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                    common.utility.loadingHide();
+                }).error(function() {
+                    alert('api error.');
+                    common.utility.loadingHide();
                 });
-                common.utility.loadingHide();
-            }).error(function() {
-                alert('api error.');
-                common.utility.loadingHide();
-            });
+            }
         };
 
         $scope.send = function(i) {
@@ -799,7 +799,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             };
             sendParamsObj.accessSign = md5.createHash(common.utility.createSign(sendParamsObj));
 
-            // alert(JSON.stringify(sendParamsObj));
             $http({
                 method: 'post',
                 url: common.API.send,
@@ -860,9 +859,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.selectIndex = 0;
         $scope.orderList = [];
         $scope.memberList = [];
-        $scope.$on('$stateChangeSuccess', function() {
-            $scope.loadMore();
-        });
+        // $scope.$on('$stateChangeSuccess', function() {
+        //     $scope.loadMore();
+        // });
 
         var paramsObj = {
                 type: 1,
@@ -915,6 +914,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             if ($scope.selectIndex !== 0) {
                 $scope.memberList = [];
                 $scope.currentPage = 1;
+                $scope.lastPage = 10;
             }
             $scope.selectIndex = 0;
             $scope.btnClass0 = 'button-positivehover';
@@ -929,44 +929,46 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 page: $scope.currentPage
             };
             pObj.accessSign = md5.createHash(common.utility.createSign(pObj));
-            common.utility.loadingShow();
-
-            $http({
-                method: 'post',
-                url: common.API.cadgeUserList,
-                data: pObj
-            }).success(function(data){
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d){
-                    d.data.cadgeList.map(function(t){
-                        t.avatar = d.data.host + t.avatar;
-                        if (t.status === 0) {
-                            t.statusText = '等待处理';
-                        }
-                        if (t.status === 1) {
-                            t.statusText = '符合';
-                        }
-                        if (t.status === 2) {
-                            t.statusText = '不符合';
-                        }
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.cadgeUserList,
+                    data: pObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.cadgeList.map(function(t){
+                            t.avatar = d.data.host + t.avatar;
+                            if (t.status === 0) {
+                                t.statusText = '等待处理';
+                            }
+                            if (t.status === 1) {
+                                t.statusText = '符合';
+                            }
+                            if (t.status === 2) {
+                                t.statusText = '不符合';
+                            }
+                        });
+                        $scope.memberList = $scope.memberList.concat(d.data.cadgeList);
+                        $scope.showTip = ($scope.memberList.length > 0);
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.noMoreData = ($scope.lastPage <= 1);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                    $scope.memberList = $scope.memberList.concat(d.data.cadgeList);
-                    $scope.showTip = ($scope.memberList.length > 0);
-                    //设置页码数据
-                    $scope.lastPage = d.data.totalPage;
-                    if($scope.currentPage >= $scope.lastPage) {
-                        $scope.noMoreData = true;
-                    }
-                    $scope.currentPage++;
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
                 });
-            });
+            }
         };
 
         $scope.readCardList = function(t) {
             if (t && t!== $scope.selectIndex) {
                 $scope.orderList = [];
                 $scope.currentPage = 1;
+                $scope.lastPage = 10;
+                // $scope.noMoreData = false;
             }
             $scope.selectIndex = t || $scope.selectIndex;
             if (this.selectIndex === 1) {
@@ -997,34 +999,36 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             paramsObj.page = $scope.currentPage;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
-            common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.corpSendOrderList,
-                data: paramsObj
-            }).success(function(data) {
-                //处理card的示例图
-                common.utility.handlePostResult(data, function(d){
-                    d.data.orderList.map(function(order) {
-                        if (order.picture) {
-                            order.picture = d.data.host + order.picture;
-                        } else {
-                            order.picture = 'img/xjbj_1.png';
-                        }
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.corpSendOrderList,
+                    data: paramsObj
+                }).success(function(data) {
+                    //处理card的示例图
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.orderList.map(function(order) {
+                            if (order.picture) {
+                                order.picture = d.data.host + order.picture;
+                            } else {
+                                order.picture = 'img/xjbj_1.png';
+                            }
+                        });
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.orderList = $scope.orderList.concat(d.data.orderList);
+                        $scope.showTip = ($scope.orderList.length > 0);
+                        $scope.currentPage++;
+                        $scope.noMoreData = ($scope.lastPage <= 1);
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                    $scope.lastPage = d.data.totalPage;
-                    $scope.orderList = $scope.orderList.concat(d.data.orderList);
-                    $scope.showTip = ($scope.orderList.length > 0);
-                    if($scope.currentPage >= $scope.lastPage) {
-                        $scope.noMoreData = true;
-                    }
-                    $scope.currentPage++;
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                    common.utility.loadingHide();
+                }).error(function() {
+                    common.utility.loadingHide();
                 });
-                common.utility.loadingHide();
-            }).error(function() {
-                common.utility.loadingHide();
-            });
+            }
         };
 
         $scope.send = function(i) {
@@ -1177,9 +1181,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.noMoreData = false;
         $scope.currentPage = 1;
         $scope.lastPage = 10;
-        $scope.$on('$stateChangeSuccess', function() {
-            $scope.readCardList();
-        });
         $scope.statusObj = {
             txt: '已旅行',
             hide: false,
@@ -1196,6 +1197,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             if (t && t!== $scope.selectIndex) {
                 $scope.orderList = [];
                 $scope.currentPage = 1;
+                $scope.lastPage = 10;
             }
             $scope.selectIndex = t || $scope.selectIndex;
             if (this.selectIndex === 3) {
@@ -1225,35 +1227,43 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             paramsObj.page = this.currentPage;
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
-            common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.orderList,
-                data: paramsObj
-            }).success(function(data) {
-                common.utility.handlePostResult(data, function(d){
-                    d.data.orderList.map(function(order) {
-                        if (order.picture) {
-                            order.picture = d.data.host + order.picture;
-                        } else {
-                            order.picture = 'img/xjbj_2.png';
-                        }
-                        order.sender_avatar = d.data.host + order.sender_avatar;
-                    });
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.orderList,
+                    data: paramsObj
+                }).success(function(data) {
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.orderList.map(function(order) {
+                            if (order.picture) {
+                                order.picture = d.data.host + order.picture;
+                            } else {
+                                order.picture = 'img/xjbj_2.png';
+                            }
+                            if (order.sender_avatar) {
+                                order.sender_avatar = d.data.host + order.sender_avatar;
+                            }
+                            if (order.corporation_avatar) {
+                                order.corporation_avatar = d.data.host + order.corporation_avatar;
+                            }
+                        });
 
-                    $scope.lastPage = d.data.totalPage;
-                    $scope.orderList = $scope.orderList.concat(d.data.orderList);
-                    $scope.showTip = ($scope.orderList.length > 0);
-                    if($scope.currentPage >= $scope.lastPage) {
-                        $scope.noMoreData = true;
-                    }
-                    $scope.currentPage++;
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.orderList = $scope.orderList.concat(d.data.orderList);
+                        $scope.showTip = ($scope.orderList.length > 0);
+                        $scope.noMoreData = (d.data.totalPage <= 1);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                    common.utility.loadingHide();
+                }).error(function() {
+                    alert('api error.');
+                    common.utility.loadingHide();
                 });
-                common.utility.loadingHide();
-            }).error(function() {
-                common.utility.loadingHide();
-            });
+            }
         };
 
         $scope.done = function(c) {
@@ -1293,7 +1303,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             common.utility.checkLogin().success(function(u){
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
-                // $scope.readCardList();
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -2075,52 +2084,57 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 activity_id: id
             };
         $scope.buttonObj = {
-            joined: false,
             buttonText: '',
-            status: 0
+            block: false,
+            status: 0 //0 写片， 1 索片
         };
 
         $scope.joinActivity = function() {
-            //如果是社员，进行 报名写片 的操作，如果是普通会员，进行 报名活动的操作
-            var isAssociator = $scope.buttonObj.status === 1, //是否是社员
-                isJoined = $scope.buttonObj.joined; //是否已经索片
+            if (!$scope.buttonObj.block) {
+                common.utility.checkLogin().success(function(u){
+                    var postUrl = $scope.buttonObj.status === 1 ? common.API.joinActivity : common.API.joinPostcard, 
+                        pObj = {}, 
+                        executed = false;
 
-            common.utility.checkLogin().success(function(u){
-                var postUrl = common.API.joinActivity;
+                    pObj.uid = u.uid;
+                    pObj.token = u.token;
+                    pObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
-                paramsObj.uid = u.uid;
-                paramsObj.token = u.token;
-                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    executed = ($scope.buttonObj.status === 0);
+                    if ($scope.buttonObj.status === 1) {
+                        //报名索片, 如果有问题进行跳转，没有直接提交
+                        if ($scope.activityModel.question) {
+                            $location.path('/joint/activity/' + id + '/question');
+                        } else {
+                            executed = true;
+                        }
+                    }
 
-                if (isAssociator) {
-                    //社员进行报名写片的操作
-                    postUrl = common.API.joinPostcard;
-                    $http({
-                        method: 'post',
-                        url: postUrl,
-                        data: paramsObj
-                    }).success(function(data) {
-                        common.utility.loadingHide();
-                        common.utility.handlePostResult(data, function(d) {
-                            common.utility.alert('提示', d.msg).then(function(){
-                                $scope.buttonObj.buttonText = '已报名写片';
+                    if (executed) {
+                        common.utility.loadingShow();
+                        $http({
+                            method: 'post',
+                            url: postUrl,
+                            data: paramsObj
+                        }).success(function(data) {
+                            common.utility.loadingHide();
+                            common.utility.handlePostResult(data, function(d) {
+                                common.utility.alert('提示', d.msg).then(function(){
+                                    $scope.buttonObj.buttonText = $scope.buttonObj.status === 0 ? '已报名写片' : '已报名索片';
+                                    $scope.buttonObj.block = true;
+                                });
                             });
                         });
-                    });
-                } else {
-                    //非社员情况
-                    if (!isJoined) {
-                        // postUrl = common.API.joinActivity;
-                        $location.path('/joint/activity/' + id + '/question');
                     }
-                }
-            }).fail(function(){
-                common.utility.resetToken();
-            });
+
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
         };
 
         $scope.goMember = function() {
-            if  ($scope.activityModel.isPresident || $scope.activityModel.isAssociator) {
+            if  ($scope.activityModel.isPresident || $scope.activityModel.isPostUser) {
                 $location.path('/joint/activity/' + $scope.activityModel.id + '/membercard');
             } else {
                 $location.path('/joint/activity/' + $scope.activityModel.id + '/member');
@@ -2144,19 +2158,51 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         d.data.cadge_time_start = new Date(d.data.cadge_time_start * 1000).format('yyyy-MM-dd');
                         d.data.cadge_time_end = new Date(d.data.cadge_time_end * 1000).format('yyyy-MM-dd');
                         $scope.activityModel = d.data;
-                        $scope.buttonObj.joined = d.data.joined;
-                        $scope.buttonObj.buttonText = d.data.joined ? '已索片' : '报名索片';
 
-                        //普通用户显示 “报名索片”
-                        //社员，社长显示 “报名写片”
-                        if (d.data.isPresident || d.data.isAssociator) {
-                            $scope.buttonObj.buttonText = '报名写片';
-                            $scope.buttonObj.status = 1;
+                        /*
+                        isPresident  是否是社长  *
+                        isAssociator 是否是社员
+                        isPostUser   是否是写片助手
+                        isPostcard   是否已报名写片
+                        joined       是否已报名索片
+                        */
+
+                        var self = d.data;
+                        if (self.isPresident) {
+                            //隐藏
+                            $scope.buttonObj.hide = true;
+                        } else {
+                            $scope.buttonObj.hide = false;
+                            if (self.isAssociator) {
+                                //如果是社员，判断是否是写片者
+                                if (self.isPostUser) {
+                                    //如果是写片者，隐藏按钮
+                                    $scope.buttonObj.hide = true;
+                                } else {
+                                    //不是写片者，判断，是否已经报名写片
+                                    if (self.isPostcard) {
+                                        $scope.buttonObj.buttonText = '已报名写片';
+                                        $scope.buttonObj.block = true;
+                                    } else {
+                                        $scope.buttonObj.buttonText = '报名写片';
+                                        $scope.buttonObj.block = false;
+                                        $scope.buttonObj.status = 0;
+                                    }
+                                }
+                            } else {
+                                //不是社员，判断是否已报名索片
+                                if (self.joined) {
+                                    $scope.buttonObj.buttonText = '已报名索片';
+                                    $scope.buttonObj.block = true;
+                                } else {
+                                    $scope.buttonObj.buttonText = '报名索片';
+                                    $scope.buttonObj.block = false;
+                                    $scope.buttonObj.status = 1;
+                                }
+                            }
                         }
                     });
                 });
-            }).fail(function() {
-                common.utility.resetToken();
             });
         }();
     }
@@ -2228,7 +2274,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         ! function() {
             common.utility.loadingShow();
             var paramsObj = {
-                activity_id: id
+                activity_id: id,
+                per: 10000
             };
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             $http({
@@ -2264,7 +2311,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
                 common.utility.loadingShow();
                 var paramsObj = {
-                    activity_id: id
+                    activity_id: id,
+                    per: 10000
                 };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 $http({
@@ -2684,5 +2732,3 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         }();
     }
 ]);
-
-
