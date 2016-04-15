@@ -418,8 +418,8 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     font-size: 12px;
 }
 .corp-header img.pic{
-    width: 65px;
-    height: 65px;
+    width: 20%;
+    max-height: 65px;
     border: solid 1px #fff;
     border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -430,9 +430,9 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .corp-header .right{
     position: absolute;
-    left: 100px;
     top: 9px;
-    width: 240px;
+    left: 30%;
+    width: 70%;
 }
 .corp-header .right span{
     line-height: 36px;
@@ -442,7 +442,8 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .corp-header .right .button{
     position: absolute;
     bottom: 10px;
-    right: 0;
+    right: 10px;
+    font-size: 12px;
 }
 .asso-avatar{
     width: 50px;

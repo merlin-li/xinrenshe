@@ -20,21 +20,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     '$location',
     '$ionicSlideBoxDelegate',
-    '$state',
-    function($scope, $http, common, $location, $ionicSlideBoxDelegate, $state) {
-        // console.log();
-        // debugger;
-        $scope.shouldHide = function () {
-            switch ($state.current.name) {
-                case 'app_home':
-                    return true;
-                case 'statename2':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-        
+    function($scope, $http, common, $location, $ionicSlideBoxDelegate) {
         ! function() {
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
@@ -129,9 +115,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$http',
     'Common',
     '$location',
-    '$stateParams',
     'md5',
-    function($scope, $http, common, $location, $stateParams, md5) {
+    '$interval',
+    function($scope, $http, common, $location, md5, $interval) {
         $scope.signupModel = {
             phone: '',
             code: '',
@@ -192,7 +178,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     common.utility.alert('提示', '无效的手机号码！');
                 }
             } else {
-                common.utility.alert('提示', '不可用');
+                // common.utility.alert('提示', '不可用');
             }
         };
 
@@ -223,10 +209,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                             $location.path('/user/login');
                         });
                     } else {
-                        $scope.signupModel.msg = {
-                            'class': 'assertive',
-                            'value': data.msg
-                        };
+                        common.utility.alert('提示', data.msg);
                     }
                 });
             }
@@ -323,10 +306,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                             $location.path('/setting/userinfo');
                         });
                     } else {
-                        $scope.signupModel.msg = {
-                            'class': 'assertive',
-                            'value': data.msg
-                        };
+                        common.utility.alert('提示', data.msg);
                     }
                 });
             }
@@ -378,7 +358,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     common.utility.alert('提示', '无效的手机号码！');
                 }
             } else {
-                common.utility.alert('提示', '不可用');
+                // common.utility.alert('提示', '不可用');
             }
         };
     }
@@ -859,9 +839,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.selectIndex = 0;
         $scope.orderList = [];
         $scope.memberList = [];
-        // $scope.$on('$stateChangeSuccess', function() {
-        //     $scope.loadMore();
-        // });
 
         var paramsObj = {
                 type: 1,
@@ -1090,6 +1067,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).success(function(data){
                 common.utility.handlePostResult(data, function(d){
                     common.utility.alert('提示', d.msg);
+                    $scope.currentPage = 1;
+                    $scope.memberList = [];
+                    $scope.lastPage = 10;
                     $scope.readHandleList();
                 });
                 common.utility.loadingHide();
@@ -2579,44 +2559,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.resetToken();
             });
         }();
-    }
-])
-
-.controller('MyApplyCtrl', [
-    '$http',
-    '$scope',
-    'Common',
-    'md5',
-    function($http, $scope, common, md5){
-        common.utility.checkLogin().success(function(u){
-            var obj = {
-                uid: u.uid,
-                token: u.token
-            };
-            obj.accessSign = md5.createHash(common.utility.createSign(obj));
-            $http({
-                method: 'post',
-                url: common.API.cadgeList,
-                data: obj
-            }).success(function(data){
-                common.utility.handlePostResult(data, function(d){
-                    d.data.cadgeList.map(function(t){
-                        if (t.status === 0) {
-                            t.statusText = '等待处理';
-                        }
-                        if (t.status === 1) {
-                            t.statusText = '同意';
-                        }
-                        if (t.status === 2) {
-                            t.statusText = '拒绝';
-                        }
-                    });
-                    $scope.cadgeModel = d.data;
-                });
-            });
-        }).fail(function(){
-            common.utility.resetToken();
-        });
     }
 ])
 

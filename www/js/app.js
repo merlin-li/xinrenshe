@@ -309,16 +309,6 @@ angular.module('xinrenshe', [
             }
         })
 
-        .state('app_apply', {
-            url: '/my/apply',
-            views: {
-                'content': {
-                    templateUrl: 'templates/user/apply.html',
-                    controller: 'MyApplyCtrl'
-                }
-            }
-        })
-
         .state('app_me', {
             url: '/user/me',
             views: {
