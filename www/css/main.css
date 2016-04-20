@@ -60,6 +60,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .home-container{
     max-width: 640px;
     margin: 0 auto;
+    background: #fdadb8;
 }
 .home-container img{
     max-width: 100%;
@@ -82,11 +83,26 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }*/
 .home-send{
     background: url(../img/home_2.png) no-repeat;
-    /*background: #fdadb8;*/
     background-size: 100%;
-    min-height: 370px;
-    margin-top: 30px;
+    min-height: 300px;
     overflow: hidden;
+}
+.lmqd{
+    background: #fff;
+    position: inherit;
+}
+.lmqd div{
+    width: 98%;
+    margin: 0 auto;
+    position: relative;
+}
+.lmqd a{
+    width: 49%;
+    display: inline-block;
+}
+.lmqd a:last-child{
+    position: absolute;
+    right: 0;
 }
 .home-send div{
     width: 230px;
@@ -101,7 +117,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .home-send section img{
     margin-right: 4px;
 }
-.home-send a{
+.home-send a.btn{
     display: block;
     background: #f04357;
     width: 200px;
@@ -712,7 +728,95 @@ ul.send-tip{
     margin: 0 auto;
 }
 
-
+.writer-info{
+    position: absolute;
+    top: 30px;
+    left: 10px;
+}
+.writer-info label{
+    display: block;
+    color: #fff;
+}
+.writer-info label:first-child{
+    font-size: 16px;
+}
+.writer-item{
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+.writer-item img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.writer-item section{
+    position: relative;
+}
+.writer-item section:first-child{
+    border-bottom: solid 1px #f7f7f7;
+}
+.writer-item section:last-child{
+    padding: 14px 0 0;
+}
+.writer-item section:last-child span{
+    display: inline-block;
+    margin-right: 20px;
+}
+.writer-item div{
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    left: 80px;
+    top: 10px;
+}
+.writer-item div span{
+    display: block;
+}
+.writer-item button{
+    background: #e58b97;
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+.writer-tip{
+    background: #fff;
+    margin-bottom: 10px;
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+}
+.writer-tip button{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #e58b97;
+    color: #fff;
+    font-size: 12px;
+    height: 20px;
+    border-radius: 5px;
+    border: none;
+}
+.writer-tip b{
+    color: #e38b99;
+}
+.writer-question{
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.writer-question h4{
+    color: #777777;
+    /*border-bottom: solid 1px #f3f3f3;*/
+}
+.writer-question p{
+    color: #bebebe;
+}
 
 
 

@@ -221,9 +221,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$scope',
     '$http',
     'Common',
-    '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    function($scope, $http, common, md5) {
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 var paramsObj = {
@@ -257,8 +256,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-
-
 .controller('WriterCtrl', [
     '$scope',
     '$http',
@@ -266,7 +263,100 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$location',
     'md5',
     function($scope, $http, common, $location, md5) {
-        
+
+        function _init() {
+            common.utility.checkLogin().success(function(u){
+                common.utility.loadingShow();
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token
+                };
+                $scope.uObj = u;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.postCardMasterHome,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.postObj = d.data;
+                    });
+                });
+
+                var paramsObj1 = {
+                    uid: u.uid,
+                    token: u.token,
+                    per: 1000
+                };
+                paramsObj1.accessSign = md5.createHash(common.utility.createSign(paramsObj1));
+                $http({
+                    method: 'post',
+                    url: common.API.postCardMastertaskList,
+                    data: paramsObj1
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        if(d.data.taskList.length > 0) {
+                            d.data.taskList.map(function(t){
+                                if(t.create_at) {
+                                    t.create_at = new Date(t.create_at * 1000).format('yyyy-MM-dd hh:mm');
+                                }
+                            });
+                        }
+                        $scope.taskObj = d.data;
+                    });
+                });
+            }).fail(function(){
+                common.utility.resetToken();
+            });            
+        }
+        _init();
+
+        $scope.write = function(t) {
+            var pObj = {
+                task_id: t.id,
+                uid: $scope.uObj.uid, 
+                token: $scope.uObj.token
+            };
+            pObj.accessSign = md5.createHash(common.utility.createSign(pObj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.takeOverTask,
+                data: pObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.alert(data.msg);
+                if (data.status === 200) {
+                    _init();
+                }
+            });
+        };
+    }
+])
+
+.controller('WriterTipsCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        common.utility.loadingShow();
+        var paramsObj = {type: 2};
+        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+        $http({
+            method: 'post',
+            url: common.API.manual,
+            data: paramsObj
+        }).success(function(data){
+            common.utility.loadingHide();
+            $scope.questionList = data.data.associatorList;
+        }).error(function(){
+            common.utility.loadingHide();
+            alert('api error.');
+        });
     }
 ])
 

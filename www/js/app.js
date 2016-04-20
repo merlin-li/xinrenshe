@@ -20,205 +20,204 @@ angular.module('xinrenshe', [
         $ionicConfigProvider.navBar.alignTitle('center');
 
         $stateProvider.state('app_home', {
-                url: '/home',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/home.html',
-                        controller: 'HomeCtrl'
-                    }
+            url: '/home',
+            views: {
+                'content': {
+                    templateUrl: 'templates/home.html',
+                    controller: 'HomeCtrl'
                 }
-            })
-            .state('app_banner', {
-                url: '/banner',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/banner/index.html',
-                        controller: 'BannerCtrl'
-                    }
+            }
+        })
+        .state('app_banner', {
+            url: '/banner',
+            views: {
+                'content': {
+                    templateUrl: 'templates/banner/index.html',
+                    controller: 'BannerCtrl'
                 }
-            })
-            .state('app_message', {
-                url: '/message',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/message/index.html',
-                        controller: 'MessageCtrl'
-                    }
+            }
+        })
+        .state('app_message', {
+            url: '/message',
+            views: {
+                'content': {
+                    templateUrl: 'templates/message/index.html',
+                    controller: 'MessageCtrl'
                 }
-            })
-            .state('app_messagedetail', {
-                url: '/message/:id',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/message/message.html',
-                        controller: 'MessageDetCtrl'
-                    }
+            }
+        })
+        .state('app_messagedetail', {
+            url: '/message/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/message/message.html',
+                    controller: 'MessageDetCtrl'
                 }
-            })
-            .state('app_feedback', {
-                url: '/feedback',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/feedback/index.html'
-                    }
+            }
+        })
+        .state('app_feedback', {
+            url: '/feedback',
+            views: {
+                'content': {
+                    templateUrl: 'templates/feedback/index.html'
                 }
-            })
-            .state('app_login', {
-                url: '/user/login',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/login.html',
-                        controller: 'LoginCtrl'
-                    }
+            }
+        })
+        .state('app_login', {
+            url: '/user/login',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/login.html',
+                    controller: 'LoginCtrl'
                 }
-            }).state('app_signup', {
-                url: '/user/signup',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/signup.html',
-                        controller: 'SignupCtrl'
-                    }
+            }
+        }).state('app_signup', {
+            url: '/user/signup',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/signup.html',
+                    controller: 'SignupCtrl'
                 }
-            })
-            .state('app_forgetpwd', {
-                url: '/user/forgetpwd',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/forgetpwd.html',
-                        controller: 'ForgetpwdCtrl'
-                    }
+            }
+        })
+        .state('app_forgetpwd', {
+            url: '/user/forgetpwd',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/forgetpwd.html',
+                    controller: 'ForgetpwdCtrl'
                 }
-            })
-            .state('app_user', {
-                url: '/user',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/index.html',
-                        controller: 'UserCtrl'
-                    }
+            }
+        })
+        .state('app_user', {
+            url: '/user',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/index.html',
+                    controller: 'UserCtrl'
                 }
-            }).state('app_setting_userinfo', {
-                url: '/setting/userinfo',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/setting/userinfo.html',
-                        controller: 'SetUserInfoCtrl'
-                    }
+            }
+        }).state('app_setting_userinfo', {
+            url: '/setting/userinfo',
+            views: {
+                'content': {
+                    templateUrl: 'templates/setting/userinfo.html',
+                    controller: 'SetUserInfoCtrl'
                 }
-            }).state('app_setting_address', {
-                url: '/setting/address',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/setting/address.html',
-                        controller: 'SetAddressCtrl'
-                    }
+            }
+        }).state('app_setting_address', {
+            url: '/setting/address',
+            views: {
+                'content': {
+                    templateUrl: 'templates/setting/address.html',
+                    controller: 'SetAddressCtrl'
                 }
-            }).state('app_city_setting', {
-                url: '/city/setting/type/:type',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/city/setting.html',
-                        controller: 'CitySettingCtrl'
-                    }
+            }
+        }).state('app_city_setting', {
+            url: '/city/setting/type/:type',
+            views: {
+                'content': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
                 }
-            }).state('app_city_setting_id', {
-                url: '/city/setting/:areaId',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/city/setting.html',
-                        controller: 'CitySettingCtrl'
-                    }
+            }
+        }).state('app_city_setting_id', {
+            url: '/city/setting/:areaId',
+            views: {
+                'content': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
                 }
-            }).state('app_sendtip', {
-                url: '/card/sendtip',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/card/sendtip.html',
-                        controller: 'SendtipCtrl'
-                    }
+            }
+        }).state('app_sendtip', {
+            url: '/card/sendtip',
+            views: {
+                'content': {
+                    templateUrl: 'templates/card/sendtip.html',
+                    controller: 'SendtipCtrl'
                 }
-            }).state('app_send', {
-                url: '/card/send',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/card/send.html',
-                        controller: 'SendCtrl'
-                    }
+            }
+        }).state('app_send', {
+            url: '/card/send',
+            views: {
+                'content': {
+                    templateUrl: 'templates/card/send.html',
+                    controller: 'SendCtrl'
                 }
-            }).state('app_mysending', {
-                url: '/my/sending',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/sending.html',
-                        controller: 'MySendingCtrl'
-                    }
+            }
+        }).state('app_mysending', {
+            url: '/my/sending',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/sending.html',
+                    controller: 'MySendingCtrl'
                 }
-
-            }).state('app_my_userinfo', {
-                url: '/my/userinfo',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/userinfo.html',
-                        controller: 'MyUserInfoCtrl'
-                    }
+            }
+        }).state('app_my_userinfo', {
+            url: '/my/userinfo',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/userinfo.html',
+                    controller: 'MyUserInfoCtrl'
                 }
-            }).state('app_myreceiving', {
-                url: '/my/receiving',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/receiving.html',
-                        controller: 'MyReceivingCtrl'
-                    }
+            }
+        }).state('app_myreceiving', {
+            url: '/my/receiving',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/receiving.html',
+                    controller: 'MyReceivingCtrl'
                 }
-            }).state('app_my_address', {
-                url: '/my/address',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/user/useraddress.html',
-                        controller: 'MyAddressCtrl'
-                    }
+            }
+        }).state('app_my_address', {
+            url: '/my/address',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/useraddress.html',
+                    controller: 'MyAddressCtrl'
                 }
-            }).state('app_joint', {
-                url: '/joint',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/index.html',
-                        controller: 'JointHomeCtrl'
-                    }
+            }
+        }).state('app_joint', {
+            url: '/joint',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/index.html',
+                    controller: 'JointHomeCtrl'
                 }
-            }).state('corporation', {
-                url: '/joint/corporation/:id',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/corporation.html',
-                        controller: 'CorporationCtrl'
-                    }
+            }
+        }).state('corporation', {
+            url: '/joint/corporation/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/corporation.html',
+                    controller: 'CorporationCtrl'
                 }
-            }).state('joint_manage_associator', {
-                url: '/joint/manage/associator/:id',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/manage/associator.html',
-                        controller: 'JointManageAssociatorCtrl'
-                    }
+            }
+        }).state('joint_manage_associator', {
+            url: '/joint/manage/associator/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/associator.html',
+                    controller: 'JointManageAssociatorCtrl'
                 }
-            }).state('joint_manage_release_activity', {
-                url: '/joint/manage/releaseActivity/:id',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/manage/releaseActivity.html',
-                        controller: 'JointManagereleaseActivityCtrl'
-                    }
+            }
+        }).state('joint_manage_release_activity', {
+            url: '/joint/manage/releaseActivity/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/releaseActivity.html',
+                    controller: 'JointManagereleaseActivityCtrl'
                 }
-            }).state('joint_manage_cadgeList', {
-                url: '/joint/manage/cadgeList/:corporationId/:activityId',
-                views: {
-                    'content': {
-                        templateUrl: 'templates/joint/manage/cadgeList.html',
-                        controller: 'JointManageCadgeListCtrl'
-                    }
+            }
+        }).state('joint_manage_cadgeList', {
+            url: '/joint/manage/cadgeList/:corporationId/:activityId',
+            views: {
+                'content': {
+                    templateUrl: 'templates/joint/manage/cadgeList.html',
+                    controller: 'JointManageCadgeListCtrl'
                 }
-            })
+            }
+        })
 
         .state('activity', {
             url: '/joint/activity/:id',
@@ -325,6 +324,16 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/user/writer/index.html',
                     controller: 'WriterCtrl'
+                }
+            }
+        })
+
+        .state('app_writer_tips', {
+            url: '/writer/tips',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/writer/tips.html',
+                    controller: 'WriterTipsCtrl'
                 }
             }
         })

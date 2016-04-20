@@ -1,5 +1,5 @@
 <ion-view view-title="信人社" hide-back-button="true">
-    <ion-content style="background:#fdadb8;">
+    <ion-content>
         <div class="home-container">
             <div style="padding-bottom:15px;background:#fff">
             <ion-slide-box>
@@ -9,14 +9,27 @@
             </ion-slide-box>
             </div>
 
+            <section class="lmqd">
+                <div>
+                <a href="#/joint">
+                    <img src="img/icon_lm.png">
+                </a>
+                <a href="#">
+                    <img src="img/icon_qd.png">
+                </a>
+                </div>
+            </section>
+
             <div class="home-send">
+                
+
                 <div>
                     <label>已有{{dataObj.sendCount}}人寄出
                     <section>
                         <img class="home-avatar" ng-repeat="img in dataObj.userList" ng-src="{{dataObj.host + img.avatar}}">
                     </section>
                     </label>
-                    <a href="#/card/sendtip">寄一张</a>
+                    <a class="btn" href="#/card/sendtip">寄一张</a>
                 </div>
             </div>
         </div>
@@ -25,7 +38,7 @@
 
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
     <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-    <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
+    <!-- <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab> -->
     <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
     <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
 </ion-tabs>

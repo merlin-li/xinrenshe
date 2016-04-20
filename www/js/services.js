@@ -15,7 +15,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
         // offline = true;
-        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.1/' : 'http://api.xinrenclub.com/v1.1/';
+        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.1/' : 'http://api.xinrenclub.com/v1.0/';
 
         //判断是不是stage环境
         // if (location.indexOf('?stage') >= 0) {
@@ -317,7 +317,14 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 introduction: apiBaseUrl + 'setUserInfo/introduction',
                 getBanner: apiBaseUrl + 'homePage/getBannerInfo',
                 msgCategoryList: apiBaseUrl + 'Message/msgCategoryList',
-                msgList: apiBaseUrl + 'Message/msgList'
+                msgList: apiBaseUrl + 'Message/msgList',
+
+
+                signList: apiBaseUrl + 'Sign/signList',
+                postCardMasterHome: apiBaseUrl + 'postCardMaster/home',
+                postCardMastertaskList: apiBaseUrl + 'postCardMaster/taskList',
+                takeOverTask: apiBaseUrl + 'postCardMaster/takeOverTask',
+                manual: apiBaseUrl + 'common/manual'
             },
             utility: {
                 'checkPhone': function(p) {
