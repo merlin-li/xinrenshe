@@ -319,6 +319,16 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('app_writer', {
+            url: '/writer',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/writer/index.html',
+                    controller: 'WriterCtrl'
+                }
+            }
+        })
+
         // .state('app_regist_agreement', {
         //     url: '/agreement/register',
         //     views: { 'content': { templateUrl: 'templates/agreement/register.html' } }

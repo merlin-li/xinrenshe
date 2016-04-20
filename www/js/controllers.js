@@ -237,6 +237,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.getUserInfo,
                     data: paramsObj
                 }).success(function(data) {
+                    console.log(data);
                     common.utility.handlePostResult(data, function(d){
                         $scope.userObj = d.data.userInfo;
                         $scope.userObj.avatar = d.data.host + d.data.userInfo.avatar;
@@ -253,6 +254,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.logout = function(){
             common.utility.resetToken();
         };
+    }
+])
+
+
+
+.controller('WriterCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    function($scope, $http, common, $location, md5) {
+        
     }
 ])
 
