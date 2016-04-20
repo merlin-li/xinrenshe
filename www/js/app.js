@@ -329,11 +329,21 @@ angular.module('xinrenshe', [
         })
 
         .state('app_writer_tips', {
-            url: '/writer/tips',
+            url: '/tips/:id',
             views: {
                 'content': {
                     templateUrl: 'templates/user/writer/tips.html',
-                    controller: 'WriterTipsCtrl'
+                    controller: 'TipsCtrl'
+                }
+            }
+        })
+
+        .state('app_sign', {
+            url: '/sign',
+            views: {
+                'content': {
+                    templateUrl: 'templates/sign/index.html',
+                    controller: 'SignCtrl'
                 }
             }
         })

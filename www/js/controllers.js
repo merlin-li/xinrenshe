@@ -336,15 +336,15 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-.controller('WriterTipsCtrl', [
+.controller('TipsCtrl', [
     '$scope',
     '$http',
     'Common',
-    '$location',
     'md5',
-    function($scope, $http, common, $location, md5) {
+    '$stateParams',
+    function($scope, $http, common, md5, $stateParams) {
         common.utility.loadingShow();
-        var paramsObj = {type: 2};
+        var paramsObj = {type: $stateParams.id};
         paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
         $http({
             method: 'post',
@@ -2777,4 +2777,98 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             });
         }();
     }
-]);
+])
+
+.controller('SignCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+
+        $scope.uObj = {};
+
+        function _init() {
+            common.utility.checkLogin().success(function(u){
+                $scope.uObj = u;
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.signHome,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.date = new Date(d.data.date * 1000).format('yyyy年MM月dd日');
+                        $scope.signObj = d.data;
+
+                        console.log(d.data);
+                    });
+                });
+
+                var paramsObj1 = {
+                    uid: u.uid,
+                    token: u.token,
+                    per: 1000
+                };
+                paramsObj1.accessSign = md5.createHash(common.utility.createSign(paramsObj1));
+                $http({
+                    method: 'post',
+                    url: common.API.signList,
+                    data: paramsObj1
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+
+                        d.data.signList.map(function(s){
+                            s.avatar = d.data.host + s.avatar;
+                            s.create_at = new Date(s.create_at * 1000).format('hh:mm');
+                        });
+
+                        d.data.userSignInfo.avatar = d.data.host + d.data.userSignInfo.avatar ;
+                        d.data.userSignInfo.create_at = new Date(d.data.userSignInfo.create_at * 1000).format('hh:mm');
+
+                        $scope.signListObj = d.data.signList;
+                        $scope.usersignObj = d.data.userSignInfo;
+
+                        console.log(d.data);
+                    });
+                });
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        }
+
+        _init();
+
+        $scope.sign = function(){
+            var paramsObj = {
+                    uid: $scope.uObj.uid,
+                    token: $scope.uObj.token
+                };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.doSign,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.alert('提示', data.msg).then(function(){
+                    _init();
+                });
+            });
+        };
+    }
+])
+
+
+
+
+
+;

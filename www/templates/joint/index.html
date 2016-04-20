@@ -5,24 +5,24 @@
     </ion-nav-buttons>
 
     <div class="joint-tabs tabs-striped tabs-top">
-            <div class="tabs">
-                <a class="tab-item" ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
-                    联名活动
-                </a>
-                <a class="tab-item" ng-class="loadType=='corporation'? 'active':''" ng-click="changeLoadType('corporation')">
-                    联名社
-                </a>
-            </div>
+        <div class="tabs">
+            <a class="tab-item" ng-class="loadType=='activity'? 'active':''" ng-click="changeLoadType('activity')">
+                联名活动
+            </a>
+            <a class="tab-item" ng-class="loadType=='corporation'? 'active':''" ng-click="changeLoadType('corporation')">
+                联名社
+            </a>
         </div>
+    </div>
     <ion-content style="background: #f2f2f2;" class="joint">
         
         <div class="joint-list" ng-include="templateUrl"></div>
     </ion-content>
 
-    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+<!--     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
         <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-        <!-- <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab> -->
+        <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
         <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
         <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-    </ion-tabs>
+    </ion-tabs> -->
 </ion-view>

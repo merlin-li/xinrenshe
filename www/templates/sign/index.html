@@ -1,0 +1,42 @@
+<ion-view title="签到福利">
+    <ion-nav-buttons side="right">
+        <a href="#/tips/1" class="button">说明</a>
+    </ion-nav-buttons>
+    <ion-content has-header="true" style="background:#f2f2f2">
+        <div class="sign-header">
+            <span>{{signObj.date}}</span>
+            <span>今日福利：{{signObj.total}}个  剩余{{signObj.remain}}个</span>
+            <img ng-click="sign()" src="img/icon_qiandao.png" ng-if="!signObj.hasSign">
+            <img src="img/icon_yqiandao.png" ng-if="signObj.hasSign">
+        </div>
+
+
+        <div class="list member-list sign-list">
+            <div class="item member-item sign-item">
+                <span class="index">{{usersignObj.sign_order}}</span>
+                <img ng-src="{{usersignObj.avatar}}" class="asso-avatar">
+                <div>
+                    <span>{{usersignObj.username}}</span>
+                    <label>{{usersignObj.province}} {{usersignObj.city}}</label>
+                </div>
+                <span class="time">{{usersignObj.create_at}}</span>
+                <img ng-if="usersignObj.status === 1" class="gift" src="img/icon_liwu.png">
+            </div>
+        </div>
+
+
+        <div class="list member-list sign-list">
+            <div class="item member-item sign-item" ng-repeat="s in signListObj">
+                <span class="index">{{s.sign_order}}</span>
+                <img ng-src="{{s.avatar}}" class="asso-avatar">
+                <div>
+                    <span>{{s.username}}</span>
+                    <label>{{s.province}} {{s.city}}</label>
+                </div>
+                <span class="time">{{s.create_at}}</span>
+                <img ng-if="s.status === 1" class="gift" src="img/icon_liwu.png">
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>

@@ -11,6 +11,7 @@
                 <div class="header receive-header">
                     <i class="badgex" ng-if="card.order_type === 3">PC</i>
                     <i class="badgex" ng-if="card.order_type === 4">联名</i>
+                    <i class="badgex" ng-if="card.order_type === 5">福利</i>
                     <span>{{card.order_number}}</span>
                     <span ng-hide="!statusObj.hide">等待寄出</span>
                     <span ng-hide="statusObj.hide">{{statusObj.txt}} {{card.travel_days}}天</span>
