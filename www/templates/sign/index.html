@@ -11,7 +11,7 @@
         </div>
 
 
-        <div class="list member-list sign-list">
+        <div class="list member-list sign-list" ng-if="usersignObj">
             <div class="item member-item sign-item">
                 <span class="index">{{usersignObj.sign_order}}</span>
                 <img ng-src="{{usersignObj.avatar}}" class="asso-avatar">
@@ -23,7 +23,6 @@
                 <img ng-if="usersignObj.status === 1" class="gift" src="img/icon_liwu.png">
             </div>
         </div>
-
 
         <div class="list member-list sign-list">
             <div class="item member-item sign-item" ng-repeat="s in signListObj">

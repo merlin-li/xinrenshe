@@ -1,6 +1,6 @@
 <ion-view title="PC">
     <ion-content has-header="true" class="padding">
-        <div>
+        <div ng-if="!sendModel.showResult">
             <h4>请仔细阅读以下提示：</h4>
             <ul class="send-tip">
                 <li>1. 我们将为您分配一个收信地址，请及时寄出；</li>
@@ -13,11 +13,42 @@
                 <input type="checkbox" ng-model="sendModel.agree">
                 我阅读了提示，并且我一定会寄出一张明信片。
             </label>
+            <br><br><br>
+            <button class="button button-positive button-block" ng-click="request()">请求一个小伙伴的地址</button>
         </div>
 
-        <br>
-        <br>
-        <br>
-        <button class="button button-positive button-block" ng-click="request()">请求一个小伙伴的地址</button>
+        <div ng-if="sendModel.showResult">
+            <img src="img/wd_1.jpg" class="full">
+            <div class="avatar-container">
+                <img ng-src={{userObj.avatar}}>
+                <span>
+                    {{userObj.username}}
+                    <i class="gender gender{{userObj.sex}}"></i>
+                </span>
+                <label>{{userObj.province + userObj.city + userObj.area}}</label>
+                <label>加入时间 {{userObj.create_at}}</label>
+            </div>
+        </div>
+
+        <div class="send-userinfo padding" ng-if="sendModel.showResult">
+            <p>
+                <label>明信片编码：</label>
+                <span>{{userObj.order_number}} </span>
+            </p>
+            <p>
+                <label>寄出地址：</label>
+                <span>{{userObj.province + ' ' + userObj.city + userObj.area + userObj.consignee_addr}}</span>
+            </p>
+            <p>
+                <label>收信人姓名：</label>
+                <span>{{userObj.consignee_username}} </span>
+            </p>
+            <p>
+                <label>邮编：</label>
+                <span>{{userObj.zip_code}} </span>
+            </p>
+
+            <a href="#/my/sending" class="button button-positive button-block">去“等待寄出”查看</a>
+        </div>
     </ion-content>
 </ion-view>

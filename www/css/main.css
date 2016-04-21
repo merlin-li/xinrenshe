@@ -468,7 +468,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .corp-header img.pic{
     width: 20%;
-    max-height: 65px;
+    /*max-height: 65px;*/
     border: solid 1px #fff;
     border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -765,6 +765,7 @@ ul.send-tip{
     position: absolute;
     top: 30px;
     left: 10px;
+    width: 100%;
 }
 .writer-info label{
     display: block;

@@ -137,14 +137,6 @@ angular.module('xinrenshe', [
                     controller: 'SendtipCtrl'
                 }
             }
-        }).state('app_send', {
-            url: '/card/send',
-            views: {
-                'content': {
-                    templateUrl: 'templates/card/send.html',
-                    controller: 'SendCtrl'
-                }
-            }
         }).state('app_mysending', {
             url: '/my/sending',
             views: {

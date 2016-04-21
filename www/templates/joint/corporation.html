@@ -7,7 +7,7 @@
                 <span>{{corpModel.name}}</span>
                 <br>
                 <span>地点：{{corpModel.addr_city}}</span>
-                <span>社员：{{assoModel.associatorList.length}}</span>
+                <span>社员：{{corpModel.associator_count}}</span>
                 <a class="button button-small {{pageModel.buttonStatus === 1 ? '' : 'button-positive'}}" ng-hide="pageModel.hideBtn" ng-click="btnClick()">{{pageModel.buttonText}}</a>
             </div>
         </section>
@@ -33,11 +33,9 @@
                             <span class="ion-ios-clock-outline" data-pack="ios" data-tags="time, date, hours, minutes, seconds, watch"></span>
                             {{activity.activity_time}}
                         </span>&nbsp;
-
                         <span>
                             <span class="ion-ios-location-outline" data-pack="ios" data-tags="navigation, map, gps, pin"></span>{{activity.addr_city}}
                         </span> &nbsp;
-
                         <span><b>{{activity.cadge_count}}</b>索片</span>
                     </p>
                 </div>
@@ -65,10 +63,4 @@
         </div>
 
     </ion-content>
-    
-<!--     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
-        <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-        <ion-tab title="联名" icon-off="ion-ios-list" icon-on="ion-ios-list" href="#/joint"></ion-tab>
-        <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-    </ion-tabs> -->
 </ion-view>
