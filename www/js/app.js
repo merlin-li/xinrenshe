@@ -59,7 +59,8 @@ angular.module('xinrenshe', [
             url: '/feedback',
             views: {
                 'content': {
-                    templateUrl: 'templates/feedback/index.html'
+                    templateUrl: 'templates/feedback/index.html',
+                    controller: 'FeedbackCtrl'
                 }
             }
         })
@@ -301,11 +302,11 @@ angular.module('xinrenshe', [
         })
 
         .state('app_me', {
-            url: '/user/me',
+            url: '/user/view/:id',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/me.html',
-                    controller: 'MeCtrl'
+                    templateUrl: 'templates/user/view.html',
+                    controller: 'UserViewCtrl'
                 }
             }
         })
@@ -339,6 +340,34 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('app_setting', {
+            url: '/setting',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/setting/index.html',
+                    controller: 'UserCtrl'
+                }
+            }
+        })
+        .state('app_about', {
+            url: '/setting/about',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/setting/about.html',
+                    controller: 'AboutCtrl'
+                }
+            }
+        })
+
+        // .state('user_view', {
+        //     url: '/user/view/:id',
+        //     views: {
+        //         'content': {
+        //             templateUrl: 'templates/user/view/index.html',
+        //             controller: 'UserViewCtrl'
+        //         }
+        //     }
+        // })
 
         // .state('app_regist_agreement', {
         //     url: '/agreement/register',

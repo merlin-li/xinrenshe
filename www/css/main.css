@@ -357,6 +357,10 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     position: absolute;
     bottom: 0;
 }
+.card-item .footer .username a{
+    color: #ff8c9b;
+    text-decoration: none;
+}
 .card-item .footer .code{
     right: 20px;
 }
@@ -851,7 +855,13 @@ ul.send-tip{
 .writer-question p{
     color: #bebebe;
 }
-
+.about-icon{
+    width: 100px;
+    margin: 0 auto;
+}
+.about-list{
+    text-align: center;
+}
 
 
 

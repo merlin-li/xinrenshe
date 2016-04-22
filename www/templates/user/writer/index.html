@@ -21,7 +21,7 @@
         <div class="list">
             <div class="item writer-item" ng-repeat="t in taskObj.taskList">
                 <section>
-                    <img ng-src="{{taskObj.host + t.avatar}}">
+                    <a href="#/user/view/{{t.recipient_uid}}"><img ng-src="{{taskObj.host + t.avatar}}"></a>
                     <div>
                         <span>{{t.username}}</span>
                         <span>{{t.province}} {{t.city}}</span>

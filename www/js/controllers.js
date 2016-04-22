@@ -294,6 +294,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.postCardMastertaskList,
                     data: paramsObj1
                 }).success(function(data){
+                    console.log(data);
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         if(d.data.taskList.length > 0) {
@@ -2675,35 +2676,62 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-.controller('MeCtrl', [
+.controller('UserViewCtrl', [
     '$http',
     '$scope',
     'Common',
     'md5',
-    function($http, $scope, common, md5){
-        var paramsObj = {};
-        common.utility.checkLogin().success(function(u){
-            paramsObj.uid = u.uid;
-            paramsObj.token = u.token;
-            u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
-            $scope.userModel = u;
-        }).fail(function(){
-            common.utility.resetToken();
-        });
+    '$stateParams',
+    '$location',
+    function($http, $scope, common, md5, $stateParams, $location){
+        $scope.hideEle = true;
+        var userId = $stateParams.id,
+            userParamsObj = {
+                suid: userId
+            };
+        userParamsObj.accessSign = md5.createHash(common.utility.createSign(userParamsObj));
 
-        $scope.save = function(){
-            paramsObj.introduction = this.userModel.introduction;
-            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+        if (userId) {
             $http({
                 method: 'post',
-                url: common.API.introduction,
-                data: paramsObj
-            }).success(function(data){
-                common.utility.handlePostResult(data, function(d){
-                    common.utility.alert('提示', d.msg);
-                });
+                url: common.API.searchUserInfo,
+                data: userParamsObj
+            }).success(function(d){
+                d.data.userInfo.create_at = new Date(d.data.userInfo.create_at * 1000).format('yyyy-MM-dd');
+                d.data.userInfo.avatar = d.data.host + d.data.userInfo.avatar;
+                $scope.userModel = d.data.userInfo;
+                $scope.hideEle = true;
             });
-        };
+        } else {
+            $scope.hideEle = false;
+            var paramsObj = {};
+            common.utility.checkLogin().success(function(u){
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
+                u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
+                $scope.userModel = u;
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+
+            $scope.save = function(){
+                paramsObj.introduction = this.userModel.introduction;
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.introduction,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        common.utility.alert('提示', d.msg);
+                    });
+                });
+            };
+
+            $scope.go = function(){
+                $location.path('/my/userinfo');
+            };
+        }
     }
 ])
 
@@ -2875,7 +2903,50 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 ])
 
 
+.controller('FeedbackCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        $scope.feedModel = {};
+        $scope.submit = function(){
+            console.log($scope.feedModel);
+            if ($scope.feedModel.content){
+                common.utility.checkLogin().success(function(u){
+                    var paramsObj = {
+                        uid: u.uid,
+                        token: u.token,
+                        content: $scope.feedModel.content
+                    };
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.feedback,
+                        data: paramsObj
+                    }).success(function(d){
+                        common.utility.loadingHide();
+                        common.utility.alert(d.msg);
+                    });
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
+        };
+    }
+])
+
+
+.controller('AboutCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+    }
+
+]);
 
 
 
-;

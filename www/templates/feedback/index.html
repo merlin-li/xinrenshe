@@ -1,12 +1,8 @@
 <ion-view view-title="意见反馈">
     <ion-content>
-        <div class="feedback">
-            <p>您的每一个意见，都是我们前进的动力，我们将一起建设美好的明信片社群。</p>
-            <br>
-            <br>
-            <p>信人社后援会QQ群：522289865</p>
-            <br>
-            <p>信人社首席客服微信：isunners</p>
+            <textarea style="width:100%;height:100px;padding:10px;" ng-model="feedModel.content"></textarea>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="submit()">提交</button>
         </div>
     </ion-content>
 </ion-view>

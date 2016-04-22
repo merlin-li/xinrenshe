@@ -324,7 +324,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 postCardMasterHome: apiBaseUrl + 'postCardMaster/home',
                 postCardMastertaskList: apiBaseUrl + 'postCardMaster/taskList',
                 takeOverTask: apiBaseUrl + 'postCardMaster/takeOverTask',
-                manual: apiBaseUrl + 'common/manual'
+                manual: apiBaseUrl + 'common/manual',
+                searchUserInfo: apiBaseUrl + 'search/userInfo',
+                feedback: apiBaseUrl + 'common/feedback'
             },
             utility: {
                 'checkPhone': function(p) {
