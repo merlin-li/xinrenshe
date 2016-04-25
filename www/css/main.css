@@ -312,7 +312,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     width: 27%;
     margin-left: 10px;
 }
-.receive-header .badgex{
+.badgex{
     display: inline-block;
     width: 30px;
     height: 30px;

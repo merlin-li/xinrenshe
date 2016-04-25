@@ -21,7 +21,8 @@
             </a>
             <a class="item data-mine">
                 <h4>Wish</h4>
-                <textarea style="width:100%" ng-model="userModel.introduction"></textarea>
+                <textarea ng-if="!hideEle" style="width:100%" ng-model="userModel.introduction"></textarea>
+                <span ng-if="hideEle">{{userModel.introduction}}</span>
             </a>
 
             <a href="#/my/address" class="item data-mine item-icon-right" ng-if="!hideEle">
@@ -47,8 +48,8 @@
                     <span>{{userModel.sendCount}}</span>
                 </div>
                 <div>
-                    <span>收到</span>
-                    <span>{{userModel.receivedCount}}</span>
+                    <span>到达</span>
+                    <span>{{userModel.arrivalCount}}</span>
                 </div>
             </a>
         </div>

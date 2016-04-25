@@ -16,6 +16,9 @@
         <section class="card-item" ng-repeat="card in orderList">
             <div class="header">
                 <div>
+                    <i class="badgex" ng-if="card.order_type === 3">PC</i>
+                    <i class="badgex" ng-if="card.order_type === 4">联名</i>
+                    <i class="badgex" ng-if="card.order_type === 5">福利</i>
                     <span>{{card.order_number}}</span>
                     <label ng-hide="{{!statusObj.hide}}" ng-click="show()" ng-hide="done">请将该编码写于明信片上！<a href="#">示例</a></label>
                 </div>

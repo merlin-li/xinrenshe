@@ -15,7 +15,7 @@ angular.module('xinrenshe', [
         // $ionicConfigProvider.backButton.text('');
         $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
         $ionicConfigProvider.scrolling.jsScrolling(true);
-        $ionicConfigProvider.views.maxCache(0);
+        // $ionicConfigProvider.views.maxCache(0);
         $ionicConfigProvider.platform.android.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
 

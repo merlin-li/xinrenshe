@@ -294,7 +294,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.postCardMastertaskList,
                     data: paramsObj1
                 }).success(function(data){
-                    console.log(data);
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         if(d.data.taskList.length > 0) {
@@ -332,6 +331,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     _init();
                 }
             });
+        };
+
+        $scope.refresh = function() {
+            _init();
         };
     }
 ])
@@ -2911,7 +2914,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     function($http, $scope, common, md5){
         $scope.feedModel = {};
         $scope.submit = function(){
-            console.log($scope.feedModel);
             if ($scope.feedModel.content){
                 common.utility.checkLogin().success(function(u){
                     var paramsObj = {
