@@ -862,8 +862,29 @@ ul.send-tip{
 .about-list{
     text-align: center;
 }
-
-
+.photos-cont{
+    background: #fff;
+}
+.photos-cont .photos-box{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.photos-cont img{
+    width: 30%;
+    height: 60px;
+    margin-top: 10px;
+}
+.photo-list img{
+    max-width: 160px;
+}
+.photo-list button{
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+}
 
 
 

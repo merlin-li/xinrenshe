@@ -1,0 +1,14 @@
+<ion-view title="上传照片">
+    <ion-content has-header="true" style="background:#f6f6f6;">
+        <div class="padding photos-cont">
+            <div class="photos-box">
+                <img ng-src="{{p}}" ng-repeat="p in photos">
+
+                <img src="img/icon_tianjia.png" ng-click="add()">
+            </div>
+
+            <button class="button button-positive button-block" ng-click="upload()">上传</button>
+        </div>
+    </ion-content>
+
+</ion-view>

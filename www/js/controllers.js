@@ -2948,7 +2948,118 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     function($http, $scope, common, md5){
     }
 
-]);
+])
+
+
+.controller('SwitchPhotosCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        common.utility.checkLogin().success(function(u){
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.myPhotoList,
+                data: paramsObj
+            }).success(function(d){
+                console.log(d);
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+
+        $scope.send = function(){};
+    }
+
+])
+
+//上传相册的照片
+.controller('SwitchUploadCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$cordovaCamera',
+    '$ionicActionSheet',
+    function($http, $scope, common, md5, $cordovaCamera, $ionicActionSheet){
+        $scope.photos = [];
+        $scope.userInfo = {};
+
+        var options = {
+            quality: 90,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 300,
+            targetHeight: 200,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false,
+            correctOrientation:true
+        }, _savePicture = function(s){
+            $scope.photos.push(s);
+        };
+        common.utility.checkLogin().success(function(u){
+            $scope.userInfo = u;
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        $scope.add = function() {
+            var pictureSheet = $ionicActionSheet.show({
+                buttons: [{
+                    text: '拍照'
+                }, {
+                    text: '从相册中选取'
+                }],
+                cancelText: '取消',
+                cancel: function() {},
+                buttonClicked: function(index) {
+                    if (index === 0) {
+                        pictureSheet();
+                        cordovaCamera.getPicture(options).then(function(imageData) {
+                            _savePicture('data:image/jpeg;base64,' + imageData);
+                        }, function(err) {});
+                    }
+                    if (index === 1) {
+                        pictureSheet();
+                        options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+                        cordovaCamera.getPicture(options).then(function(imageData) {
+                            _savePicture('data:image/jpeg;base64,' + imageData);
+                        }, function(err) {
+                        });
+                    }
+                }
+            });
+        }; 
+
+        $scope.upload = function() {
+            var paramsObj = {
+                uid: $scope.userInfo.uid,
+                token: $scope.userInfo.token,
+                pictures: $scope.photos
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.exchangeUploadPic,
+                data: paramsObj
+            }).success(function(data){
+                alert(data);
+            });
+        };
+    }
+
+])
+
+;
 
 
 

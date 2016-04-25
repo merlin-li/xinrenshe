@@ -1,0 +1,27 @@
+<ion-view title="互寄相册">
+<!--     <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons>
+            <a href="#/user" class="button back-button buttons button-clear header-item">
+                <i class="icon ion-ios-arrow-back"></i> 
+            </a>
+        </ion-nav-buttons>
+    </ion-nav-bar> -->
+    
+    <ion-nav-buttons side="right">
+        <a href="#/switch/upload" class="button">上传照片</a>
+    </ion-nav-buttons>
+    <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
+        <div class="button-bar">
+            <a class="button button-positivehover" ng-click="">相册</a>
+            <a class="button" ng-click="">互寄列表</a>
+            <a class="button" ng-click="">我的申请</a>
+        </div>
+
+        <div class="list photo-list">
+            <div class="item" ng-repeat="p in photoList">
+                <img src="img/icon_shangchuan.png">
+                <button class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

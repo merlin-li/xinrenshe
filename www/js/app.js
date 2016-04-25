@@ -358,6 +358,27 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('switch_photos', {
+            url: '/switch/photos',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/photos.html',
+                    controller: 'SwitchPhotosCtrl'
+                }
+            }
+        })
+        .state('switch_upload', {
+            url: '/switch/upload',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/upload.html',
+                    controller: 'SwitchUploadCtrl'
+                }
+            }
+        })
+
+
+
 
         // .state('user_view', {
         //     url: '/user/view/:id',
