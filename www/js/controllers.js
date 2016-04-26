@@ -2947,6 +2947,138 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     function($http, $scope, common, md5){
     }
+])
+
+.controller('SwitchListCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$stateParams',
+    function($http, $scope, common, md5, $stateParams){
+        console.log($stateParams.id);
+        common.utility.loadingShow();
+
+        var paramsObj = {
+            theme_id: $stateParams.id
+        };
+        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+        $http({
+            method: 'post',
+            url: common.API.exchangeList,
+            data: paramsObj
+        }).success(function(data){
+            common.utility.loadingHide();
+            console.log(data);
+            $scope.themeList = data.data;
+        });
+    }
+])
+
+
+.controller('SwitchCardCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$stateParams',
+    function($http, $scope, common, md5, $stateParams){
+        console.log($stateParams.id);
+
+        common.utility.checkLogin().success(function(u){
+            common.utility.loadingShow();
+
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token,
+                publish_id: $stateParams.id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.exchangeDetail,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                console.log(data);
+                $scope.publishModel = data.data;
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+
+        
+    }
+])
+
+
+.controller('SwitchCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    function($http, $scope, common, md5){
+        common.utility.loadingShow();
+        var colors = ['#d26e78', '#b0af6f', '#7387a0', '#89a8ad', '#b97f8e'];
+        $scope.themeColors = colors;
+
+        $http({
+            method: 'post',
+            url: common.API.exchangeHome
+        }).success(function(data){
+            common.utility.loadingHide();
+            console.log(data);
+
+            common.utility.handlePostResult(data, function(d){
+                d.data.themeList.map(function(t){
+                    t.color = {'background-color': colors[t.id % 5]};
+                });
+                $scope.themeList = d.data.themeList;
+                $scope.host = d.data.host;
+            });
+        });
+
+
+
+
+
+        var vm = this;
+        $scope.carouselOptions = {
+            carouselId    : 'carousel-6',
+            align         : 'left',
+            selectFirst   : false,
+            centerOnSelect: false,
+            // template      : '<div class="carousel-item demo-3" ng-click="vm.onSelect({item:vm.ngModel})"><div class="img-wrapper"><img ng-src="{{vm.ngModel.src}}" /></div></div>',
+            // pullRefresh   : {
+            //     active  : true,
+            //     callBack: pullRefresh
+            // }
+        };
+        $scope.carouselData = [
+            {
+                id: 0,
+                src: 'img/icon_tp2.png'
+            }, 
+            {
+                id: 1,
+                src: 'img/icon_tupian.png'
+            },{
+                id: 2,
+                src: 'img/icon_tupian.png'
+            },{
+                id: 3,
+                src: 'img/icon_tupian.png'
+            },{
+                id: 4,
+                src: 'img/icon_tupian.png'
+            }
+        ];
+
+        function pullRefresh() {
+            console.log('refresh');
+        }
+    }
 
 ])
 

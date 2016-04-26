@@ -329,7 +329,10 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 feedback: apiBaseUrl + 'common/feedback',
                 exchangeUploadPic: apiBaseUrl + 'exchanged/uploadPic',
                 myPhotoList: apiBaseUrl + 'exchanged/myPhotoList',
-                myPublishList: apiBaseUrl + 'exchanged/myPublishList'
+                myPublishList: apiBaseUrl + 'exchanged/myPublishList',
+                exchangeHome: apiBaseUrl + 'exchanged/home',
+                exchangeList: apiBaseUrl + 'exchanged/publishList',
+                exchangeDetail: apiBaseUrl + 'exchanged/publishDetail'
             },
             utility: {
                 'checkPhone': function(p) {

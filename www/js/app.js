@@ -4,7 +4,8 @@ angular.module('xinrenshe', [
     'xinrenshe.controllers',
     'xinrenshe.services',
     'ionic-datepicker',
-    'ionic-timepicker'
+    'ionic-timepicker',
+    'aCarousel'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
@@ -373,6 +374,33 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/switch/upload.html',
                     controller: 'SwitchUploadCtrl'
+                }
+            }
+        })
+        .state('switch_index', {
+            url: '/switch',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/index.html',
+                    controller: 'SwitchCtrl'
+                }
+            }
+        })
+        .state('switch_list', {
+            url: '/switch/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/list.html',
+                    controller: 'SwitchListCtrl'
+                }
+            }
+        })
+        .state('switch_card', {
+            url: '/switch/card/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/card.html',
+                    controller: 'SwitchCardCtrl'
                 }
             }
         })

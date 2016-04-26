@@ -1,0 +1,21 @@
+<ion-view title="互寄" hide-back-button="true" cache-view="false">
+    <ion-content style="background:#f6f6f6">
+        
+        <div class="switch-card-item">
+            <img ng-src="{{publishModel.host + publishModel.picture}}" class="full">
+
+            <div>
+                <span class="name">{{publishModel.username}}</span>
+                <span class="address">{{publishModel.province + publishModel.city}}</span>
+            </div>
+
+            <p>要求：{{publishModel.requirement}}</p>
+
+            <div>
+                <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{publishModel.apply_count}}人</span>
+                <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{publishModel.deadline}}小时</span>
+            </div>  
+        </div>
+
+    </ion-content>
+</ion-view>

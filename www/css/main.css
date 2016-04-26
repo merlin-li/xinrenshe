@@ -886,7 +886,64 @@ ul.send-tip{
     bottom: 18px;
 }
 
+.switch-list{
+    height: 70px;
+    margin: 20px 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;;
+}
+.switch-list .container{
+    position: absolute;
+    top: 0;
+    left: 90px;
+    overflow: hidden;
+}
+.switch-list a, .switch-list img{
+    /*display: inline-block;*/
+    height: 70px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.switch-list .title{
+    width: 70px;
+    color: #fff;
+    text-align: center;
+    line-height: 70px;
+    display: block;
+    text-decoration: none;
+}
 
+.switch-card-item{
+    width: 100%;
+    background: #fff;
+    margin: 0 auto;
+    color: #d2d2d2;
+    margin-bottom: 15px;
+    display: block;
+    text-decoration: none;
+}
+.switch-card-item div, .switch-card-item p{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.switch-card-item div{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.switch-card-item .name{
+    font-weight: bolder;
+    color: #868686;
+}
+.switch-card-item .full{
+    width: 96%;
+    margin: 0 auto;
+    display: block;
+}
+.switch-card-item .address, .switch-card-item p{
+    font-size: 12px;
+}
 
 
 
