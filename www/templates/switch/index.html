@@ -1,10 +1,10 @@
-<ion-view title="互寄" hide-back-button="true" cache-view="false">
+<ion-view view-title="互寄" hide-back-button="true" cache-view="false">
     <ion-content>
         
         <div class="switch-list" ng-repeat="theme in themeList">
-            <a class="title" ng-style="{{theme.color}}" href="#/switch/{{theme.id}}">{{theme.name}}</a>
+            <a class="title" ng-style="{{theme.color}}" href="#/switch/list/{{theme.id}}">{{theme.name}}</a>
             <div class="container">
-                <img ng-src="{{host + img.picture}}" ng-repeat="img in theme.publishList">
+                <a href="#/switch/card/{{img.id}}" ng-repeat="img in theme.publishList"><img ng-src="{{host + img.picture}}"></a>
             </div>
         </div>
 

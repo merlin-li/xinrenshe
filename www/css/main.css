@@ -944,8 +944,100 @@ ul.send-tip{
 .switch-card-item .address, .switch-card-item p{
     font-size: 12px;
 }
+.switch-card-item .avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.switch-card-item section{
+    position: relative;
+    padding: 10px;
+    border-bottom: solid 1px #f3f3f3;
+}
+.switch-card-item .end{
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 12px;
+    text-align: right;
+}
+.switch-card-item .start{
+    position: absolute;
+    top: 5px;
+    left: 60px;
+}
+.switch-card-item .button{
+    width: 80px;
+}
+.switch-card-item .buttons{
+    border-top: solid 1px #f3f3f3;
+    text-align: right;
+}
+.switch-card-item .switch{
+    text-align: right;
+    position: relative;
+}
+.switch-card-item .switch span{
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 15px;
+}
+.switch-card-item .switch span.address{
+    left: 50px;
+}
 
-
+.postdetail{
+    background: #fff;
+}
+.postdetail .full{
+    width: 97%;
+    display: block;
+    margin: 0 auto;
+}
+.postdetail h5{
+    padding-left: 10px;
+    color: #afafaf;
+}
+.ul-theme{
+    padding-left: 10px;
+}
+.ul-theme li{
+    display: inline-block;
+    border: solid 1px #e1e1e1;
+    color: #e1e1e1;
+    border-radius: 3px;
+    padding: 2px 7px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.ul-theme .selected{
+    color: #fff;
+    background: #e7e7e7;
+}
+.posttext{
+    width: 100%;
+    margin-top: 20px;
+    height: 70px;
+    padding: 10px;
+}
+.post-bottom{
+    width: 100%;
+}
+.postquestion{
+    background: #fff;
+    margin-top: 20px;
+    color: #afafaf;
+    padding: 10px 0 10px 10px;
+}
+.postquestion h4{
+    color: #afafaf;
+}
+.postquestion p{
+    font-size: 12px;
+}
 
 
 

@@ -1,21 +1,37 @@
-<ion-view title="互寄" hide-back-button="true" cache-view="false">
+<ion-view title="详情" cache-view="false">
     <ion-content style="background:#f6f6f6">
-        
         <div class="switch-card-item">
+            <section>
+                <img class="avatar" ng-src="{{publishModel.host + publishModel.avatar}}">
+                <div class="start">
+                    <span class="name">{{publishModel.username}}</span><br>
+                    <span class="address">{{publishModel.province + publishModel.city}}</span>
+                </div>
+
+                <div class="end">
+                    寄信/到达：{{publishModel.sendCount}}/{{publishModel.arrivalCount}}<br>
+                    到达率：{{publishModel.arrivalRate}}%
+                </div>
+            </section>
             <img ng-src="{{publishModel.host + publishModel.picture}}" class="full">
-
-            <div>
-                <span class="name">{{publishModel.username}}</span>
-                <span class="address">{{publishModel.province + publishModel.city}}</span>
-            </div>
-
             <p>要求：{{publishModel.requirement}}</p>
-
             <div>
                 <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{publishModel.apply_count}}人</span>
                 <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{publishModel.deadline}}小时</span>
             </div>  
+            <div class="buttons">
+                <button ng-if="!publishModel.isPublisher" class="button button-small {{publishModel.hasApply ? '' : 'button-positive'}}" ng-click="switchCard()">{{publishModel.hasApply ? '已换片' : '我想换'}}</button>
+            </div>
         </div>
 
+        <div class="switch-card-item" ng-repeat="p in publishModel.applyList" ng-if="publishModel.isPublisher">
+            <img ng-src="{{publishModel.host + p.picture}}" class="full">
+
+            <section class="switch">
+                <span class="name">{{p.username}}</span>
+                <span class="address">{{p.province + p.city}}</span>
+                <button class="button button-positive button-small">选这张</button>
+            </section> 
+        </div>
     </ion-content>
 </ion-view>

@@ -387,7 +387,7 @@ angular.module('xinrenshe', [
             }
         })
         .state('switch_list', {
-            url: '/switch/:id',
+            url: '/switch/list/:id',
             views: {
                 'content': {
                     templateUrl: 'templates/switch/list.html',
@@ -401,6 +401,15 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/switch/card.html',
                     controller: 'SwitchCardCtrl'
+                }
+            }
+        })
+        .state('switch_card_post', {
+            url: '/switch/post/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/switch/post.html',
+                    controller: 'SwitchPostCtrl'
                 }
             }
         })

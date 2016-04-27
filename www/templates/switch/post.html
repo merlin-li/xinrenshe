@@ -1,0 +1,27 @@
+<ion-view title="发起互寄" cache-view="false">
+    <ion-content style="background:#f6f6f6">
+        <div class="postdetail">
+            <img ng-src="{{imgUrl}}" class="full">
+
+            <h5>为自己选一个主题</h5>
+            <ul class="ul-theme">
+                <li ng-click="select(t)" class="{{t.className}}" ng-repeat="t in cardModel">{{t.name}}</li>
+            </ul>
+            <br>
+        </div>
+
+        <textarea class="posttext" placeholder="请输入您对换片的要求" ng-model="postModel.requirement"></textarea>
+
+        <div class="postquestion">
+            <div ng-repeat="q in questionModel">
+                <h4>{{q.question}}</h4>
+                <p>{{q.answer}}</p>
+            </div>
+        </div>
+
+        <div class="padding post-bottom">
+            <button class="button button-positive button-block" ng-click="submit()">发布</button>
+        </div>
+    </ion-content>
+    
+</ion-view>

@@ -2982,9 +2982,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     'md5',
     '$stateParams',
-    function($http, $scope, common, md5, $stateParams){
-        console.log($stateParams.id);
-
+    '$location',
+    function($http, $scope, common, md5, $stateParams, $location){
         common.utility.checkLogin().success(function(u){
             common.utility.loadingShow();
 
@@ -3007,6 +3006,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             common.utility.resetToken();
         });
 
+
+        $scope.switchCard = function(){
+            $location.path('/switch/photos/select');
+        };
 
         
     }
@@ -3088,7 +3091,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$scope',
     'Common',
     'md5',
-    function($http, $scope, common, md5){
+    '$location',
+    function($http, $scope, common, md5, $location){
         common.utility.checkLogin().success(function(u){
             var paramsObj = {
                 uid: u.uid,
@@ -3101,13 +3105,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: paramsObj
             }).success(function(d){
                 console.log(d);
+                $scope.photoModel = d.data;
             });
         }).fail(function(){
             common.utility.resetToken();
         });
 
 
-        $scope.send = function(){};
+        $scope.send = function(p){
+            var picUrl = $scope.photoModel.host + p.picture;
+            console.log(picUrl);
+            common.utility.cookieStore.put('picurl', picUrl);
+            $location.path('/switch/post/' + p.id);
+        };
     }
 
 ])
@@ -3130,11 +3140,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             sourceType: Camera.PictureSourceType.CAMERA,
             allowEdit: true,
             encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 300,
-            targetHeight: 200,
+            targetWidth: 100,
+            targetHeight: 50,
             popoverOptions: CameraPopoverOptions,
             saveToPhotoAlbum: false,
-            correctOrientation:true
+            correctOrientation: true
         }, _savePicture = function(s){
             $scope.photos.push(s);
         };
@@ -3147,23 +3157,23 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.add = function() {
             var pictureSheet = $ionicActionSheet.show({
                 buttons: [{
-                    text: '拍照'
+                    text: '拍照1'
                 }, {
-                    text: '从相册中选取'
+                    text: '从相册中选取1'
                 }],
                 cancelText: '取消',
                 cancel: function() {},
                 buttonClicked: function(index) {
                     if (index === 0) {
                         pictureSheet();
-                        cordovaCamera.getPicture(options).then(function(imageData) {
+                        $cordovaCamera.getPicture(options).then(function(imageData) {
                             _savePicture('data:image/jpeg;base64,' + imageData);
                         }, function(err) {});
                     }
                     if (index === 1) {
                         pictureSheet();
                         options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-                        cordovaCamera.getPicture(options).then(function(imageData) {
+                        $cordovaCamera.getPicture(options).then(function(imageData) {
                             _savePicture('data:image/jpeg;base64,' + imageData);
                         }, function(err) {
                         });
@@ -3190,6 +3200,90 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 
 ])
+
+
+.controller('SwitchPostCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$stateParams',
+    '$location',
+    function($http, $scope, common, md5, $stateParams, $location){
+        $scope.postModel = {
+            photo_id: $stateParams.id,
+            requirement: '',
+            theme_id: 0,
+            uid: 0,
+            token: ''
+        };
+        $scope.imgUrl = common.utility.cookieStore.get('picurl');
+
+        common.utility.checkLogin().success(function(u){
+            $scope.postModel.uid = u.uid;
+            $scope.postModel.token = u.token;
+            common.utility.loadingShow();
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                data: paramsObj,
+                url: common.API.preDoPublish
+            }).success(function(data){
+                common.utility.loadingHide();
+                $scope.cardModel = data.data.themeList;
+                $scope.questionModel = data.data.manualList;
+                console.log(data);
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        $scope.select = function(t){
+            $scope.postModel.theme_id = t.id;
+            $scope.cardModel.map(function(c){
+                c.className = '';
+                if (c.id === t.id) {
+                    c.className = 'selected';
+                }
+            });
+        };
+
+        $scope.submit = function(){
+            var choosed = false;
+            this.cardModel.map(function(c){
+                if (c.className === 'selected') {
+                    choosed = true;
+                }
+            });
+            if (!choosed) {
+                common.utility.alert('提示', '请选择一个主题！');
+            } else if (this.postModel.requirement === '') {
+                common.utility.alert('提示', '换片要求不能为空！');
+            } else {
+                this.postModel.accessSign = md5.createHash(common.utility.createSign(this.postModel));
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.doPublish,
+                    data: this.postModel
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        common.utility.alert('提示', data.msg).then(function(){
+                            $location.path('/switch');
+                        });
+                    });
+                })
+            }
+        };
+    }
+])
+
+
 
 ;
 

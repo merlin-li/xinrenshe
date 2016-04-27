@@ -14,7 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-
+        offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.2/' : 'http://api.xinrenclub.com/v1.1/';
 
         //判断是不是stage环境
@@ -332,7 +332,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 myPublishList: apiBaseUrl + 'exchanged/myPublishList',
                 exchangeHome: apiBaseUrl + 'exchanged/home',
                 exchangeList: apiBaseUrl + 'exchanged/publishList',
-                exchangeDetail: apiBaseUrl + 'exchanged/publishDetail'
+                exchangeDetail: apiBaseUrl + 'exchanged/publishDetail',
+                preDoPublish: apiBaseUrl + 'exchanged/preDoPublish',
+                doPublish: apiBaseUrl + 'exchanged/doPublish'
             },
             utility: {
                 'checkPhone': function(p) {

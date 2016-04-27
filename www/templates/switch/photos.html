@@ -18,8 +18,8 @@
         </div>
 
         <div class="list photo-list">
-            <div class="item" ng-repeat="p in photoList">
-                <img src="img/icon_shangchuan.png">
+            <div class="item" ng-repeat="p in photoModel.photoList">
+                <img ng-src="{{photoModel.host + p.picture}}">
                 <button class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
             </div>
         </div>
