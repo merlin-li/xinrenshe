@@ -906,7 +906,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
         $scope.takePic = function(c) {
             //保存当前选中的编号
-            if ($scope.selectIndex === 1){
+            if ($scope.selectIndex === 1 && c.order_type !== 2){
                 $scope.selectCardIndex = c.id;
                 common.utility.takePicture($cordovaCamera, _loadPicture);
             }
@@ -2956,7 +2956,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$stateParams',
     function($http, $scope, common, md5, $stateParams){
-        console.log($stateParams.id);
         common.utility.loadingShow();
 
         var paramsObj = {
@@ -2969,7 +2968,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             data: paramsObj
         }).success(function(data){
             common.utility.loadingHide();
-            console.log(data);
             $scope.themeList = data.data;
         });
     }
@@ -3009,7 +3007,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: paramsObj
             }).success(function(data){
                 common.utility.loadingHide();
-                console.log(data);
                 if (data.data.status === 0) {
                     data.data.statusText = '正在互换';
                 } else if (data.data.status === 1) {
@@ -3023,20 +3020,33 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
 
         $scope.switchCard = function(){
-            $location.path('/switch/photos/' + $scope.publishModel.id);
+            if (!$scope.publishModel.hasApply) {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: '温馨提示',
+                    template: '你觉得自己满足换片要求吗？',
+                    cancelText: '取消',
+                    okText: '确定'
+                });
+                confirmPopup.then(function(res) {
+                    if(res) {
+                        $location.path('/switch/photos/' + $scope.publishModel.id);
+                    }
+                });
+            } else {
+                common.utility.alert('提示', '不要贪心哦，一个人只能申请一次！');
+            }
         };
 
         $scope.select = function(p){
             var confirmPopup = $ionicPopup.confirm({
                 title: '温馨提示',
-                template: '你觉得自己满足换片要求吗?',
+                template: '小助手会提醒对方发片的，你也要及时寄片哦!',
                 cancelText: '取消',
                 okText: '确定'
             });
 
             confirmPopup.then(function(res) {
                 if(res) {
-                    // console.log('You are not sure');
                     common.utility.loadingShow();
                     var paramsObj = {
                         publish_id: $scope.publishModel.id,
@@ -3079,7 +3089,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             url: common.API.exchangeHome
         }).success(function(data){
             common.utility.loadingHide();
-            console.log(data);
 
             common.utility.handlePostResult(data, function(d){
                 d.data.themeList.map(function(t){
@@ -3093,41 +3102,37 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
 
 
+        
 
-        var vm = this;
-        $scope.carouselOptions = {
-            carouselId    : 'carousel-6',
+        $scope.carouselOptions1 = {
+            carouselId    : 'carousel-4',
             align         : 'left',
-            selectFirst   : false,
-            centerOnSelect: false,
-            // template      : '<div class="carousel-item demo-3" ng-click="vm.onSelect({item:vm.ngModel})"><div class="img-wrapper"><img ng-src="{{vm.ngModel.src}}" /></div></div>',
-            // pullRefresh   : {
-            //     active  : true,
-            //     callBack: pullRefresh
-            // }
+            selectFirst   : true,
+            centerOnSelect: true,
+            template      : 't.html'
         };
-        $scope.carouselData = [
-            {
-                id: 0,
-                src: 'img/icon_tp2.png'
-            }, 
-            {
-                id: 1,
-                src: 'img/icon_tupian.png'
-            },{
-                id: 2,
-                src: 'img/icon_tupian.png'
-            },{
-                id: 3,
-                src: 'img/icon_tupian.png'
-            },{
-                id: 4,
-                src: 'img/icon_tupian.png'
-            }
-        ];
+        $scope.carouselData1 = createArray(10);
+        console.log($scope.carouselData1);
 
-        function pullRefresh() {
-            console.log('refresh');
+        function createArray(total, randomImg) {
+            randomImg                = typeof randomImg === 'undefined' ? false : randomImg;
+            var i, model, imgId, arr = [];
+            for (i = 0; i < total; i++) {
+                model = {
+                    id     : i,
+                    display: 'item ' + i
+                };
+                if (i === 2 || i === 13) {
+                    model.display = 'longer ' + model.display;
+                }
+                if (randomImg) {
+                    imgId     = Math.floor(Math.random() * 10000);
+                    model.src = 'http://lorempixel.com/120/80/?' + imgId
+                }
+                arr.push(model);
+            }
+
+            return arr;
         }
     }
 
@@ -3240,7 +3245,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     common.utility.alert('提示', data.msg).then(function(){
-                        $location.path('/switch');
+                        $location.path('/switch/card/' + publishId);
                     });
                 });
             });
@@ -3256,7 +3261,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$cordovaCamera',
     '$ionicActionSheet',
-    function($http, $scope, common, md5, $cordovaCamera, $ionicActionSheet){
+    '$location',
+    function($http, $scope, common, md5, $cordovaCamera, $ionicActionSheet, $location){
         $scope.photos = [];
         $scope.userInfo = {};
 
@@ -3266,8 +3272,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             sourceType: Camera.PictureSourceType.CAMERA,
             allowEdit: true,
             encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 100,
-            targetHeight: 50,
+            targetWidth: 300,
+            targetHeight: 300,
             popoverOptions: CameraPopoverOptions,
             saveToPhotoAlbum: false,
             correctOrientation: true
@@ -3292,6 +3298,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 buttonClicked: function(index) {
                     if (index === 0) {
                         pictureSheet();
+                        options.sourceType = Camera.PictureSourceType.CAMERA;
                         $cordovaCamera.getPicture(options).then(function(imageData) {
                             _savePicture('data:image/jpeg;base64,' + imageData);
                         }, function(err) {});
@@ -3315,12 +3322,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 pictures: $scope.photos
             };
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.exchangeUploadPic,
                 data: paramsObj
             }).success(function(data){
-                alert(data);
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg).then(function(){
+                        $location.path('/switch/photos/');
+                    });
+                });
             });
         };
     }
@@ -3362,7 +3375,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.loadingHide();
                 $scope.cardModel = data.data.themeList;
                 $scope.questionModel = data.data.manualList;
-                console.log(data);
             });
         }).fail(function(){
             common.utility.resetToken();

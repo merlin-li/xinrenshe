@@ -95,6 +95,16 @@
                     </div>
                 </div>
             </a>
+
+            <a ng-if="sourceType == 'system'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
+                <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
+                <h2>{{msgModel.categoryInfo.name}}</h2>
+                <p>{{msg.create_at}}</p>
+
+                <div class="message">
+                    <p>{{msg.message}}</p>
+                </div>
+            </a>
         </div>
 
         <div class="tip-message" ng-if="msgModel.msgList.length <= 0">
