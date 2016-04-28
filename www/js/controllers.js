@@ -27,16 +27,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             common.utility.cookieStore.remove('areainfo3');
             common.utility.cookieStore.remove('bannerurl');
             //初始化事件
+            common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.home
             }).success(function(data) {
+                common.utility.loadingHide();
                 if (data.status === 200) {
                     $scope.dataObj = data.data;
                     $scope.dataObj.host = data.data.host;
                     $ionicSlideBoxDelegate.update();
                 }
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         }();
 
         $scope.go = function(b) {
@@ -99,7 +101,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 } else {
                     common.utility.alert(data.msg);
                 }
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
         ! function() {
@@ -211,7 +213,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
     }
@@ -243,7 +245,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         common.utility.cookieStore.remove('userinfo');
                         common.utility.cookieStore.put('userinfo', $scope.userObj);
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }).fail(function() {
                 common.utility.resetToken();
             });
@@ -281,7 +283,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     common.utility.handlePostResult(data, function(d){
                         $scope.postObj = d.data;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
 
                 var paramsObj1 = {
                     uid: u.uid,
@@ -305,7 +307,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         }
                         $scope.taskObj = d.data;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });            
@@ -330,7 +332,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 if (data.status === 200) {
                     _init();
                 }
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
         $scope.refresh = function() {
@@ -415,7 +417,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
 
@@ -519,7 +521,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
         $scope.takePicture = function() {
@@ -588,7 +590,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
 
@@ -741,7 +743,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                                 $location.path('/home');
                             });
                         }
-                    });
+                    }).error(function() {alert('api error.');common.utility.loadingHide();});
                 }).fail(function(){
                     common.utility.resetToken();
                 });
@@ -889,7 +891,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     $scope.currentPage = 1;
                     $scope.readCardList();
                 }
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
         $scope.show = function() {
@@ -2455,6 +2457,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).success(function(data){
                 common.utility.alert('提示', data.msg);
                 _init();
+            }).error(function() {
+                alert('api error.');
+                common.utility.loadingHide();
             });
         };
 
@@ -2557,7 +2562,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $location.path('/joint/corporation/' + id);
                     });
                 });
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
         $scope.takePic = function() {
@@ -2601,6 +2606,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $location.path('/joint/corporation/' + id);
                     });
                 });
+            }).error(function() {
+                alert('api error.');
+                common.utility.loadingHide();
             });
         };
     }
@@ -2647,7 +2655,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                             $scope.done = true;
                         });
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
 
@@ -2728,7 +2736,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', d.msg);
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             };
 
             $scope.go = function(){
@@ -2756,7 +2764,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.msgCategoryList,
                     data: paramsObj
                 }).success(function(data){
-                    // console.log(data);
                     common.utility.handlePostResult(data, function(d){
                         if (d.data.msgCategoryList && d.data.msgCategoryList.length > 0) {
                             d.data.msgCategoryList.map(function(m){
@@ -2767,7 +2774,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         }
                         $scope.msgList = d.data;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -2811,7 +2818,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $scope.msgModel = d.data;
                         $scope.pageTitle = d.data.categoryInfo.name;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -2847,7 +2854,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         d.data.date = new Date(d.data.date * 1000).format('yyyy年MM月dd日');
                         $scope.signObj = d.data;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
 
                 var paramsObj1 = {
                     uid: u.uid,
@@ -2876,7 +2883,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $scope.signListObj = d.data.signList;
                         $scope.usersignObj = d.data.userSignInfo;
                     });
-                });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -2900,6 +2907,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.alert('提示', data.msg).then(function(){
                     _init();
                 });
+            }).error(function() {
+                alert('api error.');
+                common.utility.loadingHide();
             });
         };
     }
@@ -2930,7 +2940,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     }).success(function(d){
                         common.utility.loadingHide();
                         common.utility.alert(d.msg);
-                    });
+                    }).error(function() {alert('api error.');common.utility.loadingHide();});
                 }).fail(function(){
                     common.utility.resetToken();
                 });
@@ -2969,7 +2979,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         }).success(function(data){
             common.utility.loadingHide();
             $scope.themeList = data.data;
-        });
+        }).error(function() {alert('api error.');common.utility.loadingHide();});
     }
 ])
 
@@ -3015,7 +3025,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     data.data.statusText = '互换失败';
                 }
                 $scope.publishModel = data.data;
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
 
 
@@ -3066,7 +3076,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                                 _init($scope.userInfo);
                             });
                         });
-                    });
+                    }).error(function() {alert('api error.');common.utility.loadingHide();});
                 }
             });
         };
@@ -3097,43 +3107,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 $scope.themeList = d.data.themeList;
                 $scope.host = d.data.host;
             });
-        });
-
-
-
-
-        
-
-        $scope.carouselOptions1 = {
-            carouselId    : 'carousel-4',
-            align         : 'left',
-            selectFirst   : true,
-            centerOnSelect: true,
-            template      : 't.html'
-        };
-        $scope.carouselData1 = createArray(10);
-        console.log($scope.carouselData1);
-
-        function createArray(total, randomImg) {
-            randomImg                = typeof randomImg === 'undefined' ? false : randomImg;
-            var i, model, imgId, arr = [];
-            for (i = 0; i < total; i++) {
-                model = {
-                    id     : i,
-                    display: 'item ' + i
-                };
-                if (i === 2 || i === 13) {
-                    model.display = 'longer ' + model.display;
-                }
-                if (randomImg) {
-                    imgId     = Math.floor(Math.random() * 10000);
-                    model.src = 'http://lorempixel.com/120/80/?' + imgId
-                }
-                arr.push(model);
-            }
-
-            return arr;
-        }
+        }).error(function() {alert('api error.');common.utility.loadingHide();});
     }
 
 ])
@@ -3248,7 +3222,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $location.path('/switch/card/' + publishId);
                     });
                 });
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
     }
 ])
@@ -3334,7 +3308,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         $location.path('/switch/photos/');
                     });
                 });
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
     }
 
@@ -3375,7 +3349,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.loadingHide();
                 $scope.cardModel = data.data.themeList;
                 $scope.questionModel = data.data.manualList;
-            });
+            }).error(function() {alert('api error.');common.utility.loadingHide();});
         }).fail(function(){
             common.utility.resetToken();
         });
@@ -3415,7 +3389,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                             $location.path('/switch');
                         });
                     });
-                })
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
     }
