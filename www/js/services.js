@@ -330,11 +330,14 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 exchangeUploadPic: apiBaseUrl + 'exchanged/uploadPic',
                 myPhotoList: apiBaseUrl + 'exchanged/myPhotoList',
                 myPublishList: apiBaseUrl + 'exchanged/myPublishList',
+                myApplyList: apiBaseUrl + 'exchanged/myApplyList',
                 exchangeHome: apiBaseUrl + 'exchanged/home',
                 exchangeList: apiBaseUrl + 'exchanged/publishList',
                 exchangeDetail: apiBaseUrl + 'exchanged/publishDetail',
                 preDoPublish: apiBaseUrl + 'exchanged/preDoPublish',
-                doPublish: apiBaseUrl + 'exchanged/doPublish'
+                doPublish: apiBaseUrl + 'exchanged/doPublish',
+                applyExchange: apiBaseUrl + 'exchanged/applyExchange',
+                selectExchange: apiBaseUrl + 'exchanged/selectExchange'
             },
             utility: {
                 'checkPhone': function(p) {

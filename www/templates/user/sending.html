@@ -16,6 +16,7 @@
         <section class="card-item" ng-repeat="card in orderList">
             <div class="header">
                 <div>
+                    <i class="badgex" ng-if="card.order_type === 2">互寄</i>
                     <i class="badgex" ng-if="card.order_type === 3">PC</i>
                     <i class="badgex" ng-if="card.order_type === 4">联名</i>
                     <i class="badgex" ng-if="card.order_type === 5">福利</i>

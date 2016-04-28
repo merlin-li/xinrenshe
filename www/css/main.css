@@ -360,6 +360,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .card-item .footer .username a{
     color: #ff8c9b;
     text-decoration: none;
+    font-size: 13px;
 }
 .card-item .footer .code{
     right: 20px;
@@ -880,6 +881,13 @@ ul.send-tip{
 .photo-list img{
     max-width: 160px;
 }
+.photo-list .tip-container{
+    font-size: 14px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    margin: 30px;
+}
 .photo-list button{
     position: absolute;
     right: 18px;
@@ -905,6 +913,9 @@ ul.send-tip{
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+}
+.switch-list a{
+    margin-right: 10px;
 }
 .switch-list .title{
     width: 70px;
@@ -975,6 +986,9 @@ ul.send-tip{
     border-top: solid 1px #f3f3f3;
     text-align: right;
 }
+.switch-card-item .middle{
+    color: #aeb06e;
+}
 .switch-card-item .switch{
     text-align: right;
     position: relative;
@@ -986,7 +1000,7 @@ ul.send-tip{
     top: 15px;
 }
 .switch-card-item .switch span.address{
-    left: 50px;
+    left: 80px;
 }
 
 .postdetail{
@@ -1038,7 +1052,10 @@ ul.send-tip{
 .postquestion p{
     font-size: 12px;
 }
-
+h4.tip{
+    font-weight: normal;
+    padding: 20px;
+}
 
 
 

@@ -360,7 +360,7 @@ angular.module('xinrenshe', [
             }
         })
         .state('switch_photos', {
-            url: '/switch/photos',
+            url: '/switch/photos/:type',
             views: {
                 'content': {
                     templateUrl: 'templates/switch/photos.html',

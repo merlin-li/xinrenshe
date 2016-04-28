@@ -7,21 +7,38 @@
         </ion-nav-buttons>
     </ion-nav-bar> -->
     
-    <ion-nav-buttons side="right">
+    <ion-nav-buttons side="right" ng-if="pagetype !== 'select'">
         <a href="#/switch/upload" class="button">上传照片</a>
     </ion-nav-buttons>
     <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
-        <div class="button-bar">
-            <a class="button button-positivehover" ng-click="">相册</a>
-            <a class="button" ng-click="">互寄列表</a>
-            <a class="button" ng-click="">我的申请</a>
+        <div class="button-bar" ng-if="pagetype !== 'select'">
+            <a class="button {{loadtype === 1 ? 'button-positivehover' : ''}}" ng-click="initList(1)">相册</a>
+            <a class="button {{loadtype === 2 ? 'button-positivehover' : ''}}" ng-click="initList(2)">互寄列表</a>
+            <a class="button {{loadtype === 3 ? 'button-positivehover' : ''}}" ng-click="initList(3)">我的申请</a>
         </div>
 
         <div class="list photo-list">
-            <div class="item" ng-repeat="p in photoModel.photoList">
-                <img ng-src="{{photoModel.host + p.picture}}">
-                <button class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+            <div class="item" ng-repeat="p in dataList">
+                <img ng-src="{{p.picture}}">
+                <button ng-if="pagetype!=='select' && loadtype === 1" class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+
+                <button class="button button-positive button-small" ng-if="pagetype === 'select'" ng-click="select(p)">选这张</button>
+
+                <div class="tip-container" ng-if="loadtype === 2 || loadtype === 3">
+                    <span>{{p.theme}}</span><br>
+                    <span><i class="ion ion-ios-clock-outline"></i> {{p.deadline}}小时</span>
+                </div>
             </div>
         </div>
+
+        <div ng-if="!showTip">
+            <h4 class="tip">暂时还没有数据哦～</h4>
+        </div>
+
+        <ion-infinite-scroll
+            ng-if="!noMoreData"
+            icon="ion-loading-c"
+            on-infinite="initList()" distance="10%">
+        </ion-infinite-scroll>
     </ion-content>
 </ion-view>

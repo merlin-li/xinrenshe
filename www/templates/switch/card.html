@@ -15,12 +15,13 @@
             </section>
             <img ng-src="{{publishModel.host + publishModel.picture}}" class="full">
             <p>要求：{{publishModel.requirement}}</p>
-            <div>
+            <div class="middle">
                 <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{publishModel.apply_count}}人</span>
                 <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{publishModel.deadline}}小时</span>
-            </div>  
+            </div>
             <div class="buttons">
                 <button ng-if="!publishModel.isPublisher" class="button button-small {{publishModel.hasApply ? '' : 'button-positive'}}" ng-click="switchCard()">{{publishModel.hasApply ? '已换片' : '我想换'}}</button>
+                <button ng-if="publishModel.isPublisher" class="button button-small">{{publishModel.statusText}}</button>
             </div>
         </div>
 
@@ -30,7 +31,10 @@
             <section class="switch">
                 <span class="name">{{p.username}}</span>
                 <span class="address">{{p.province + p.city}}</span>
-                <button class="button button-positive button-small">选这张</button>
+                <button ng-if="p.status === 0" class="button button-positive button-small" ng-click="select(p)">选这张</button>
+                <button ng-if="p.status === 1" class="button button-small">
+                    <i class="ion ion-checkmark-round"></i>已选中
+                </button>
             </section> 
         </div>
     </ion-content>

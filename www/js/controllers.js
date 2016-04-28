@@ -2983,8 +2983,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$stateParams',
     '$location',
-    function($http, $scope, common, md5, $stateParams, $location){
+    '$ionicPopup',
+    function($http, $scope, common, md5, $stateParams, $location, $ionicPopup){
+        $scope.userInfo = {};
+
         common.utility.checkLogin().success(function(u){
+            $scope.userInfo = u;
+            _init(u);
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        function _init(u){
             common.utility.loadingShow();
 
             var paramsObj = {
@@ -3000,18 +3010,56 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).success(function(data){
                 common.utility.loadingHide();
                 console.log(data);
+                if (data.data.status === 0) {
+                    data.data.statusText = '正在互换';
+                } else if (data.data.status === 1) {
+                    data.data.statusText = '互换成功';
+                } else if (data.data.status === 2) {
+                    data.data.statusText = '互换失败';
+                }
                 $scope.publishModel = data.data;
             });
-        }).fail(function(){
-            common.utility.resetToken();
-        });
+        };
 
 
         $scope.switchCard = function(){
-            $location.path('/switch/photos/select');
+            $location.path('/switch/photos/' + $scope.publishModel.id);
         };
 
-        
+        $scope.select = function(p){
+            var confirmPopup = $ionicPopup.confirm({
+                title: '温馨提示',
+                template: '你觉得自己满足换片要求吗?',
+                cancelText: '取消',
+                okText: '确定'
+            });
+
+            confirmPopup.then(function(res) {
+                if(res) {
+                    // console.log('You are not sure');
+                    common.utility.loadingShow();
+                    var paramsObj = {
+                        publish_id: $scope.publishModel.id,
+                        apply_id: p.id,
+                        uid: $scope.userInfo.uid,
+                        token: $scope.userInfo.token
+                    };
+                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                    $http({
+                        method: 'post',
+                        url: common.API.selectExchange,
+                        data: paramsObj
+                    }).success(function(data){
+                        common.utility.loadingHide();
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg).then(function(){
+                                _init($scope.userInfo);
+                            });
+                        });
+                    });
+                }
+            });
+        };
     }
 ])
 
@@ -3092,34 +3140,112 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     'md5',
     '$location',
-    function($http, $scope, common, md5, $location){
+    '$stateParams',
+    function($http, $scope, common, md5, $location, $stateParams){
+        var publishId = $stateParams.type;
+
+        //load type 1相册  2 互寄列表  3申请列表
+        $scope.loadtype = 1;
+        $scope.userInfo = {};
+        $scope.dataList = [];
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 10;
+        $scope.showTip = false;
+        $scope.pagetype = $stateParams.type ? 'select' : '';
+
         common.utility.checkLogin().success(function(u){
-            var paramsObj = {
-                uid: u.uid,
-                token: u.token
-            };
-            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-            $http({
-                method: 'post',
-                url: common.API.myPhotoList,
-                data: paramsObj
-            }).success(function(d){
-                console.log(d);
-                $scope.photoModel = d.data;
-            });
+            $scope.userInfo = u;
         }).fail(function(){
             common.utility.resetToken();
         });
 
-
         $scope.send = function(p){
-            var picUrl = $scope.photoModel.host + p.picture;
-            console.log(picUrl);
-            common.utility.cookieStore.put('picurl', picUrl);
+            common.utility.cookieStore.put('picurl', p.picture);
             $location.path('/switch/post/' + p.id);
         };
-    }
 
+        $scope.initList = function(t) {
+            if (t && t !== $scope.loadtype) {
+                $scope.dataList = [];
+                $scope.currentPage = 1;
+                $scope.lastPage = 10;
+            }
+            $scope.loadtype = t || $scope.loadtype;
+
+
+            var postUrl = common.API.myPhotoList,
+                key = 'photoList',
+                paramsObj = {
+                    uid: $scope.userInfo.uid,
+                    token: $scope.userInfo.token,
+                    page: $scope.currentPage
+                };
+
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            if ($scope.loadtype === 2) {
+                postUrl = common.API.myPublishList;
+                key = 'publishList';
+            }
+            if ($scope.loadtype === 3) {
+                postUrl = common.API.myApplyList;
+                key = 'applyList';
+            }
+
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: postUrl,
+                    data: paramsObj
+                }).success(function(data){
+                    // $scope.dataModel = data.data;
+                    common.utility.handlePostResult(data, function(d){
+                        if (d.data[key].length > 0) {
+                            d.data[key].map(function(t){
+                                t.picture = d.data.host + t.picture;
+                            });
+                        }
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.dataList = $scope.dataList.concat(d.data[key]);
+                        $scope.showTip = ($scope.dataList.length > 0);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                    common.utility.loadingHide();
+                }).error(function() {
+                    alert('api error.');
+                    common.utility.loadingHide();
+                });
+            }
+        };
+
+        $scope.select = function(p){
+            var paramsObj = {
+                uid: $scope.userInfo.uid,
+                token: $scope.userInfo.token,
+                photo_id: p.id,
+                publish_id: publishId
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.applyExchange,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', data.msg).then(function(){
+                        $location.path('/switch');
+                    });
+                });
+            });
+        };
+    }
 ])
 
 //上传相册的照片
@@ -3157,9 +3283,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.add = function() {
             var pictureSheet = $ionicActionSheet.show({
                 buttons: [{
-                    text: '拍照1'
+                    text: '拍照'
                 }, {
-                    text: '从相册中选取1'
+                    text: '从相册中选取'
                 }],
                 cancelText: '取消',
                 cancel: function() {},
