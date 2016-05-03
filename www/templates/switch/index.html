@@ -1,18 +1,33 @@
-<ion-view view-title="互寄" hide-back-button="true" cache-view="false">
-    <ion-content>
-        
-        <div class="switch-list" ng-repeat="theme in themeList">
-            <a class="title" ng-style="{{theme.color}}" href="#/switch/list/{{theme.id}}">{{theme.name}}</a>
-            <div class="container">
-                <a href="#/switch/card/{{img.id}}" ng-repeat="img in theme.publishList"><img ng-src="{{host + img.picture}}"></a>
-            </div>
+<ion-view title="互寄" hide-back-button="true">
+    <ion-content style="background:#f6f6f6">
+        <div class="button-bar list-type">
+            <button class="button {{themeId === 0 ? 'button-positivehover' : ''}} " ng-click="initList(0)">全部</button>
+            <button class="button {{t.className}}" ng-repeat="t in themeTypeList" ng-click="initList(t.id)">{{t.name}}</button>
         </div>
 
+        <a href="#/switch/card/{{p.id}}" class="switch-card-item" ng-repeat="p in dataList">
+            <img ng-src="{{p.picture}}" class="full">
+
+            <div>
+                <span class="name">{{p.username}}</span>
+                <span class="address">{{p.province + p.city}}</span>
+            </div>
+
+            <p>要求：{{p.requirement}}</p>
+
+            <div>
+                <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{p.apply_count}}人</span>
+                <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{p.deadline}}小时</span>
+            </div>  
+        </a>
 
 
-
+        <ion-infinite-scroll
+            ng-if="!noMoreData"
+            icon="ion-loading-c"
+            on-infinite="initList()" distance="10%">
+        </ion-infinite-scroll>
     </ion-content>
-
     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
         <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
         <ion-tab title="互寄" icon-off="ion-arrow-swap" icon-on="ion-arrow-swap" href="#/switch"></ion-tab>

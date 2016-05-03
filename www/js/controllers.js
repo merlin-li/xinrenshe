@@ -348,21 +348,72 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$stateParams',
     function($scope, $http, common, md5, $stateParams) {
+        var type = $stateParams.type, thisUrl, key = 'brandList', pkey = 'brand_id';
+        $scope.pageTitle = '';
+        $scope.pageType = type;
+        if (type === 'baodian') {
+            thisUrl = common.API.manual;
+            $scope.pageTitle = '信人宝典';
+            key = 'manualList';
+            pkey = 'type';
+        } else {
+            thisUrl = common.API.brand;
+            $scope.pageTitle = '品牌手册';
+            key = 'brandList';
+            pkey = 'brand_id';
+        }
+
         common.utility.loadingShow();
-        var paramsObj = {type: $stateParams.id};
+        var paramsObj = {};
+        paramsObj[pkey] = $stateParams.id;
         paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
         $http({
             method: 'post',
-            url: common.API.manual,
+            url: thisUrl,
             data: paramsObj
         }).success(function(data){
             common.utility.loadingHide();
-            $scope.questionList = data.data.manualList;
+            if (data.data.logo) {
+                $scope.dataModel = data.data;
+            } else {
+                $scope.questionList = data.data[key];
+            }
         }).error(function(){
             common.utility.loadingHide();
             alert('api error.');
         });
     }
+])
+
+.controller('TipsListCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$stateParams',
+    function($scope, $http, common, $stateParams) {
+        var type = $stateParams.type, thisUrl, key = 'brandList';
+        $scope.pageTitle = '';
+        $scope.pageType = type;
+        if (type === 'baodian') {
+            thisUrl = common.API.manualList;
+            $scope.pageTitle = '信人宝典';
+            key = 'manualCategoryList';
+        } else {
+            thisUrl = common.API.brandList;
+            $scope.pageTitle = '品牌手册';
+            key = 'brandList';
+        }
+
+        $http({
+            method: 'post',
+            url: thisUrl
+        }).success(function(data){
+            common.utility.handlePostResult(data, function(d){
+                $scope.mlist = d.data[key];
+            });
+        });
+    }
+
 ])
 
 .controller('SignupCtrl', [
@@ -2869,7 +2920,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-
                         d.data.signList.map(function(s){
                             s.avatar = d.data.host + s.avatar;
                             s.create_at = new Date(s.create_at * 1000).format('hh:mm');
@@ -2904,8 +2954,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 data: paramsObj
             }).success(function(data){
                 common.utility.loadingHide();
-                common.utility.alert('提示', data.msg).then(function(){
-                    _init();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg).then(function(){
+                        _init();
+                    });
                 });
             }).error(function() {
                 alert('api error.');
@@ -2959,31 +3011,92 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-.controller('SwitchListCtrl', [
+//互寄列表
+.controller('SwitchCtrl', [
     '$http',
     '$scope',
     'Common',
     'md5',
     '$stateParams',
     function($http, $scope, common, md5, $stateParams){
-        common.utility.loadingShow();
+        
+        $scope.dataList = [];
+        $scope.themeTypeList = [];
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 10;
+        $scope.themeId = 0;
 
-        var paramsObj = {
-            theme_id: $stateParams.id
+        /*********** 获取主题类别的数据 **********/
+        common.utility.loadingShow();
+        var themeParamsObj = {
+            per: 1000
         };
-        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+        themeParamsObj.accessSign = md5.createHash(common.utility.createSign(themeParamsObj));
         $http({
             method: 'post',
-            url: common.API.exchangeList,
-            data: paramsObj
+            url: common.API.themeList,
+            data: themeParamsObj
         }).success(function(data){
             common.utility.loadingHide();
-            $scope.themeList = data.data;
-        }).error(function() {alert('api error.');common.utility.loadingHide();});
+            common.utility.handlePostResult(data, function(d){
+                d.data.themeList.map(function(t){
+                    t.className = t.id === $scope.themeId ? 'button-positivehover' : '';
+                });
+                $scope.themeTypeList = d.data.themeList;
+            });
+        });
+        /*********** 获取主题类别的数据结束 **********/
+
+
+        //获取主题内容数据
+        $scope.initList = function(t) {
+            if (t && t !== $scope.themeId || t === 0) {
+                $scope.dataList = [];
+                $scope.currentPage = 1;
+                $scope.lastPage = 10;
+            }
+            if (t === 0) {
+                $scope.themeId = 0;
+            }
+            $scope.themeId = t || $scope.themeId;
+            $scope.themeTypeList.map(function(x){
+                x.className = x.id === $scope.themeId ? 'button-positivehover' : '';
+            });
+            
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                var paramsObj = {
+                    theme_id: $scope.themeId,
+                    per: 20,
+                    page: $scope.currentPage
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.exchangeList,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.publishList.map(function(c){
+                            c.picture = d.data.host + c.picture;
+                        });
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.dataList = $scope.dataList.concat(d.data.publishList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }
+        }
     }
 ])
 
-
+//互寄详情
 .controller('SwitchCardCtrl', [
     '$http',
     '$scope',
@@ -3083,36 +3196,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-
-.controller('SwitchCtrl', [
-    '$http',
-    '$scope',
-    'Common',
-    'md5',
-    function($http, $scope, common, md5){
-        common.utility.loadingShow();
-        var colors = ['#d26e78', '#b0af6f', '#7387a0', '#89a8ad', '#b97f8e'];
-        $scope.themeColors = colors;
-
-        $http({
-            method: 'post',
-            url: common.API.exchangeHome
-        }).success(function(data){
-            common.utility.loadingHide();
-
-            common.utility.handlePostResult(data, function(d){
-                d.data.themeList.map(function(t){
-                    t.color = {'background-color': colors[t.id % 5]};
-                });
-                $scope.themeList = d.data.themeList;
-                $scope.host = d.data.host;
-            });
-        }).error(function() {alert('api error.');common.utility.loadingHide();});
-    }
-
-])
-
-
+//互寄相册
 .controller('SwitchPhotosCtrl', [
     '$http',
     '$scope',
@@ -3241,13 +3325,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         $scope.userInfo = {};
 
         var options = {
-            quality: 90,
+            quality: 95,
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
-            allowEdit: true,
+            allowEdit: false,
             encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 300,
-            targetHeight: 300,
+            targetWidth: 600,
+            targetHeight: 600,
             popoverOptions: CameraPopoverOptions,
             saveToPhotoAlbum: false,
             correctOrientation: true
@@ -3314,7 +3398,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
 ])
 
-
+//发布互寄
 .controller('SwitchPostCtrl', [
     '$http',
     '$scope',

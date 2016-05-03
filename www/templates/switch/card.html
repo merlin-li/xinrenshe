@@ -14,7 +14,7 @@
                 </div>
             </section>
             <img ng-src="{{publishModel.host + publishModel.picture}}" class="full">
-            <p>要求：{{publishModel.requirement}}</p>
+            <p>{{publishModel.requirement}}</p>
             <div class="middle">
                 <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{publishModel.apply_count}}人</span>
                 <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{publishModel.deadline}}小时</span>
@@ -35,6 +35,7 @@
             <section class="switch">
                 <span class="name">{{p.username}}</span>
                 <span class="address">{{p.province + p.city}}</span>
+                
                 <button ng-if="p.status === 0 && publishModel.isPublisher" class="button button-positive button-small" ng-click="select(p)">选这张</button>
                 <button ng-if="p.status === 1" class="button button-small">
                     <i class="ion ion-checkmark-round"></i>已选中

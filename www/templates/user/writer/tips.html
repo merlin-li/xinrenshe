@@ -1,8 +1,13 @@
-<ion-view title="手册">
+<ion-view title="{{dataModel.name || '内容'}}">
     <ion-content has-header="true" style="background:#f6f6f6;">
         <div class="writer-question" ng-repeat="q in questionList">
             <h4>{{q.question}}</h4>
             <p>{{q.answer}}</p>
+        </div>
+
+        <div class="writer-content" ng-if="dataModel">
+            <img ng-if="dataModel.logo" ng-src="{{dataModel.host + dataModel.logo}}">
+            <div ng-bind-html="dataModel.introduction"></div>
         </div>
     </ion-content>
 </ion-view>

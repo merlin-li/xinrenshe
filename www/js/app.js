@@ -321,9 +321,17 @@ angular.module('xinrenshe', [
                 }
             }
         })
-
+        .state('app_', {
+            url: '/tips/:type',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/writer/list.html',
+                    controller: 'TipsListCtrl'
+                }
+            }
+        })
         .state('app_writer_tips', {
-            url: '/tips/:id',
+            url: '/tipsdetail/:id/:type',
             views: {
                 'content': {
                     templateUrl: 'templates/user/writer/tips.html',
@@ -383,15 +391,6 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/switch/index.html',
                     controller: 'SwitchCtrl'
-                }
-            }
-        })
-        .state('switch_list', {
-            url: '/switch/list/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/switch/list.html',
-                    controller: 'SwitchListCtrl'
                 }
             }
         })

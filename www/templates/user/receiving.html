@@ -18,7 +18,7 @@
                     <span ng-hide="statusObj.hide">{{statusObj.txt}} {{card.travel_days}}天</span>
                     <button ng-hide="statusObj.hideBtn" ng-click="done(card)">确认收信</button>
                 </div>
-                <div class="footer" ng-if="card.order_type === 3 || card.order_type === 5">
+                <div class="footer" ng-if="card.order_type === 2 || card.order_type === 3 || card.order_type === 5">
                     <section class="left">
                         <img class="avatar" ng-src="{{card.sender_avatar}}">
                     </section>

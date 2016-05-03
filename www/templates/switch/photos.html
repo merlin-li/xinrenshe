@@ -1,12 +1,4 @@
 <ion-view title="互寄相册" cache-view="false">
-<!--     <ion-nav-bar class="bar-stable">
-        <ion-nav-buttons>
-            <a href="#/user" class="button back-button buttons button-clear header-item">
-                <i class="icon ion-ios-arrow-back"></i> 
-            </a>
-        </ion-nav-buttons>
-    </ion-nav-bar> -->
-    
     <ion-nav-buttons side="right">
         <a href="#/switch/upload" ng-if="pagetype !== 'select'" class="button">上传照片</a>
     </ion-nav-buttons>
@@ -53,7 +45,7 @@
         </div>
 
         <div ng-if="!showTip && pagetype === 'select'">
-            <h4 class="tip">请先在互寄相册中上传明信片正面照～</h4>
+            <h4 class="tip">请先在个人中心－互寄相册 中上传明信片正面照～</h4>
         </div>
 
         <ion-infinite-scroll
