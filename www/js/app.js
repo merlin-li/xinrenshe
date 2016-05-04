@@ -367,6 +367,15 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('app_setting_send', {
+            url: '/setting/send',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/setting/send.html',
+                    controller: 'SettingSendCtrl'
+                }
+            }
+        })
         .state('switch_photos', {
             url: '/switch/photos/:type',
             views: {
@@ -412,28 +421,21 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('app_search', {
+            url: '/search',
+            views: {
+                'content': {
+                    templateUrl: 'templates/search/index.html',
+                    controller: 'SearchCtrl'
+                }
+            }
+        })
 
 
 
 
-        // .state('user_view', {
-        //     url: '/user/view/:id',
-        //     views: {
-        //         'content': {
-        //             templateUrl: 'templates/user/view/index.html',
-        //             controller: 'UserViewCtrl'
-        //         }
-        //     }
-        // })
-
-        // .state('app_regist_agreement', {
-        //     url: '/agreement/register',
-        //     views: { 'content': { templateUrl: 'templates/agreement/register.html' } }
-        // }).state('app_loan_agreement', {
-        //     url: '/agreement/loan',
-        //     views: { 'content': { templateUrl: 'templates/agreement/loan.html' } }
-        // })
         ;
+
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/home');
 

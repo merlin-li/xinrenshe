@@ -1,0 +1,33 @@
+<ion-view title="寄信设置">
+    <ion-content has-header="true">
+        <ul class="list">
+            <li class="item item-toggle">
+                允许Postcrossing抽到我
+                <label class="toggle toggle-balanced" ng-click="select()">
+                    <input type="checkbox" ng-model="dataModel.allowPC">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                允许收到我寄出片的人给我寄
+                <label class="toggle toggle-balanced" ng-click="select()">
+                    <input type="checkbox" ng-model="dataModel.allowSending">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                允许没收到我寄出片的人给我寄
+                <label class="toggle toggle-balanced" ng-click="select()">
+                    <input type="checkbox" ng-model="dataModel.allowReceiving">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+        </ul>
+    </ion-content>
+</ion-view>

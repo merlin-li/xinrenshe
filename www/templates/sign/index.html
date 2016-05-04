@@ -35,7 +35,7 @@
         </div>
 
         <div class="list member-list sign-list">
-            <div class="item member-item sign-item" ng-repeat="s in signListObj">
+            <a class="item member-item sign-item" ng-repeat="s in signListObj" href="#/user/view/{{s.uid}}">
                 <span class="index" ng-if="s.sign_order === 1"><img src="img/icon_diyi.png"></span>
                 <span class="index" ng-if="s.sign_order === 2"><img src="img/icon_dier.png"></span>
                 <span class="index" ng-if="s.sign_order === 3"><img src="img/icon_disan.png"></span>
@@ -50,7 +50,7 @@
                 <img ng-if="s.status === 1 && s.prize_id === 1" class="gift" src="img/icon_liwu.png">
                 <img ng-if="s.status === 1 && s.prize_id === 3" class="gift" src="img/icon_libaop.png">
                 <img ng-if="s.status === 1 && s.prize_id === 2" class="gift" src="img/icon_libaoy.png">
-            </div>
+            </a>
         </div>
 
     </ion-content>

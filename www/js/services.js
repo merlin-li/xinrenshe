@@ -341,7 +341,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 themeList: apiBaseUrl + 'exchanged/themeList',
                 manualList: apiBaseUrl + 'common/manualCategory',
                 brandList: apiBaseUrl + 'common/getBrandList',
-                brand: apiBaseUrl + 'common/brand'
+                brand: apiBaseUrl + 'common/brand',
+                searchUser: apiBaseUrl + 'search/searchUser'
             },
             utility: {
                 'checkPhone': function(p) {
@@ -366,7 +367,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'postData': _postData,
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
-                'takePicture': _takePicture
+                'takePicture': _takePicture,
+                'getVersion': '1.0.2'
             },
             tempData: {
                 userAddressInfo: '',

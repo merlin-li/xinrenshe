@@ -1,0 +1,27 @@
+<ion-view title="搜索">
+    <ion-content has-header="false" hide-nav-bar="true">
+        <div class="bar bar-header item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-model="dataModel.searchTxt">
+            </label>
+            <button class="button button-clear" ng-click="search()">搜索</button>
+        </div>
+
+        <ion-list class="list joint-list" style="top:0">
+            <a class="item item-avatar" ng-repeat="m in dataModel.userList">
+                <img ng-src="{{memberList.host + m.avatar}}">
+                <h2>
+                    <span ng-bind="m.username"></span>
+                    <span ng-switch on="m.sex">
+                        <span class="sex-icon ion-female" data-pack="default" data-tags="lady, girl, dudette" ng-switch-when="0"></span>
+                        <span class="sex-icon ion-male" data-pack="default" data-tags="male, guy, boy, dude" ng-switch-when="1"></span>
+                    </span>
+                </h2>
+                <p ng-bind="m.province + ' ' + m.city"></p>
+            </a>
+        </ion-list>
+
+        
+    </ion-content>
+</ion-view>

@@ -122,29 +122,16 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .lmqd{
     background: #fff;
-    /*position: inherit;*/
 }
 .lmqd div{
     width: 90%;
-    height: 70px;
-    padding: 10px 0;
     margin: 0 auto;
-    border: solid 1px blue;
-/*    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;  
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;*/
 }
 .lmqd img{
-    /*height: 100%;*/
     width: 100%;
 }
 .lmqd a{
-    width: 24%;
+    width: 19%;
     display: inline-block;
 }
 .lmqd a:last-child{

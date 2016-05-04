@@ -21,6 +21,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$location',
     '$ionicSlideBoxDelegate',
     function($scope, $http, common, $location, $ionicSlideBoxDelegate) {
+
+        // $scope.test = function(){
+        //     Wechat.isInstalled(function (installed) {
+        //         alert("Wechat installed: " + (installed ? "Yes" : "No"));
+        //     }, function (reason) {
+        //         alert("Failed: " + reason);
+        //     });
+        // };
+
+        // $scope.test1 = function(){
+
+        // };
+
+
+
         ! function() {
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
@@ -3479,6 +3494,71 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
+
+.controller('SettingSendCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    function($http, $scope, common, md5, $location){
+        $scope.dataModel = {
+            allowPC: true,
+            allowSending: false,
+            allowReceiving: false
+        };
+        $scope.select = function() {
+
+            console.log($scope.dataModel);
+        };
+    }
+])
+
+.controller('SearchCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    function($http, $scope, common, md5, $location){
+
+        $scope.dataModel = {
+            searchTxt: '',
+            userList: [],
+            userInfo: {}
+        };
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                $scope.dataModel.userInfo = u;
+                console.log(u);
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        }();
+        $scope.search = function() {
+
+            console.log($scope.dataModel);
+
+            common.utility.loadingShow();
+            var dataObj = {
+                uid: $scope.dataModel.userInfo.uid,
+                token: $scope.dataModel.userInfo.token,
+                username: $scope.dataModel.searchTxt
+            };
+            dataObj.accessSign = md5.createHash(common.utility.createSign(dataObj));
+            $http({
+                method: 'post',
+                url: common.API.searchUser,
+                data: dataObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.dataModel.userList = d.data.userList;
+                });
+            });
+        };
+    }
+]);
 
 
 ;
