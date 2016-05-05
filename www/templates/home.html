@@ -1,22 +1,20 @@
 <ion-view view-title="信人社" hide-back-button="true">
     <ion-content>
         <div class="home-container">
-            <div style="padding-bottom:15px;background:#fff">
             <ion-slide-box>
                 <ion-slide ng-repeat="banner in dataObj.bannerList">
                     <a ng-click="go(banner)" class="item-image"><img class="index-banner" ng-src="{{dataObj.host + banner.picture}}"></a>
                 </ion-slide>
             </ion-slide-box>
-            </div>
 
             <section class="lmqd">
-                <div>
-                <a href="#"><img src="img/icon_geitaji.png"></a>
+                <!-- <div> -->
+                <a href="#/search"><img src="img/icon_geitaji.png"></a>
                 <a href="#/joint"><img src="img/icon_lianm.png"></a>
                 <a href="#/sign"><img src="img/icon_qiandao.png"></a>
                 <a href="#/tips/baodian"><img src="img/icon_baodian.png"></a>
                 <a href="#/tips/shouce"><img src="img/icon_shouce.png"></a>
-                </div>
+                <!-- </div> -->
             </section>
 
             <div class="home-send">

@@ -1,6 +1,6 @@
 <ion-view title="我的">
     <ion-nav-buttons side="right">
-        <a ng-click="save()" ng-if="!hideEle" class="button">保存修改</a>
+        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="share()"><i class="icon ion-share"></i></a>
     </ion-nav-buttons>
     <ion-content has-header="true" style="background:#f6f6f6;">
         <div class="list me-list">
@@ -54,8 +54,39 @@
             </a>
         </div>
 
-        <div class="padding" ng-if="hideEle">
-            <button class="button button-positive button-block">给Ta寄</button>
+        <div class="padding">
+            <button class="button button-positive button-block" ng-click="sendto()" ng-if="hideEle">给Ta寄</button>
+            <button class="button button-positive button-block" ng-click="save()" ng-if="!hideEle">保存修改</button>
         </div>
+
+<!--         <section class="share-list">
+            <ul>
+                <li>
+                    <a href="#"><img src="img/icon_pengyouquan.png"></a>
+                    <span>朋友圈</span>
+                </li>
+                <li>
+                    <a href="#"><img src="img/icon_weixin.png"></a>
+                    <span>微信</span>
+                </li>
+                <li>
+                    <a href="#"><img src="img/icon_kongjian.png"></a>
+                    <span>空间</span>
+                </li>
+                <li>
+                    <a href="#"><img src="img/icon_qq.png"></a>
+                    <span>QQ</span>
+                </li>
+                <li>
+                    <a href="#"><img src="img/icon_weibo.png"></a>
+                    <span>微博</span>
+                </li>
+            </ul>
+            <a href="#" class="cancel">取消</a>
+        </section> -->
+
     </ion-content>
+
+
+    
 </ion-view>

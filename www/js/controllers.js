@@ -989,6 +989,128 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
+.controller('OrderDetailCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    '$stateParams',
+    '$ionicPopup',
+    function($scope, $http, common, $location, md5, $stateParams, $ionicPopup) {
+        var orderId = $stateParams.id;
+        $scope.userInfo = {};
+        common.utility.checkLogin().success(function(u){
+            common.utility.loadingShow();
+            $scope.userInfo = u;
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token,
+                order_id: orderId
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.orderDetail,
+                data: paramsObj
+            }).success(function(data){
+                console.log(data.data);
+                common.utility.loadingHide();
+                $scope.card = data.data;
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        $scope.done = function(){
+            var c = $scope.card,
+                confirmObj = {
+                    order_id: c.id,
+                    uid: $scope.userInfo.uid,
+                    token: $scope.userInfo.token
+                },
+                confirmPopup = $ionicPopup.confirm({
+                    title: '温馨提示',
+                    template: '您已经收到该编码的明信片?',
+                    cancelText: '取消',
+                    okText: '确定'
+                });
+            confirmPopup.then(function(res) {
+                if (res) {
+                    //确定收到当前的明信片
+                    confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+                    $http({
+                        method: 'post',
+                        url: common.API.confirmReceipt,
+                        data: confirmObj
+                    }).success(function(data) {
+                        common.utility.alert('提示', data.msg);
+                    }).error(function(){
+                        alert('api error.');
+                    });
+                }
+            });
+        };
+
+        $scope.noreceive = function(){
+            common.utility.loadingShow();
+            var paramsObj = {
+                uid: $scope.userInfo.uid,
+                token: $scope.userInfo.token,
+                order_id: orderId,
+                module_type: 2,
+                opt_type: 21
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.warningOrderDeal,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.alert('提示', data.msg);
+            });
+        };
+    }
+])
+
+.controller('OrderTrashCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    'md5',
+    '$stateParams',
+    '$ionicPopup',
+    function($scope, $http, common, $location, md5, $stateParams, $ionicPopup) {
+        console.log($stateParams.id);
+
+        $scope.userInfo = {};
+        !function(){
+            common.utility.checkLogin().success(function(u){
+                $scope.userInfo = u;
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token,
+                    type: 1,
+                    per: 10000
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.warningOrderList,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    console.log(data);
+                });
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        }();
+    }
+])
+
 .controller('MemberCardCtrl', [
     '$scope',
     '$http',
@@ -1449,6 +1571,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     });
                 }
             });
+        };
+
+        $scope.go = function(c) {
+            if (c && c.order_type === 2) {
+                $location.path('/order/' + c.id);
+            }
         };
 
         !function(){
@@ -2809,6 +2937,29 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 $location.path('/my/userinfo');
             };
         }
+
+
+        $scope.sendto = function(){
+            var userobj = common.utility.getUserCookie(),
+                pobj = {
+                    uid: userobj.uid,
+                    token: userobj.token,
+                    recipient_uid: userId
+                };
+            pobj.accessSign = md5.createHash(common.utility.createSign(pobj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.sendSomeone,
+                data: pobj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                });
+            });
+        };
+
     }
 ])
 
@@ -2820,6 +2971,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     function($http, $scope, common, md5){
         !function(){
             common.utility.checkLogin().success(function(u){
+                common.utility.loadingShow();
                 var paramsObj = {
                     uid: u.uid,
                     token: u.token
@@ -2830,6 +2982,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     url: common.API.msgCategoryList,
                     data: paramsObj
                 }).success(function(data){
+                    common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         if (d.data.msgCategoryList && d.data.msgCategoryList.length > 0) {
                             d.data.msgCategoryList.map(function(m){
@@ -3504,12 +3657,58 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     function($http, $scope, common, md5, $location){
         $scope.dataModel = {
             allowPC: true,
-            allowSending: false,
-            allowReceiving: false
+            allowSending: true,
+            allowReceiving: true,
+            userinfo: {}
         };
-        $scope.select = function() {
 
-            console.log($scope.dataModel);
+        !function(){
+            common.utility.loadingShow();
+            common.utility.checkLogin().success(function(u){
+                $scope.dataModel.userinfo = u;
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.postcardConf,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.dataModel.allowPC = d.data.open_destiny === 1;
+                        $scope.dataModel.allowSending = d.data.receive_send === 1;
+                        $scope.dataModel.allowReceiving = d.data.receive_all === 1;
+                    });
+                });
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        }();
+
+        $scope.save = function(){
+            var self = $scope.dataModel;
+            var paramsObj = {
+                uid: self.userinfo.uid,
+                token: self.userinfo.token,
+                open_destiny: self.allowPC ? 1 : 0,
+                receive_send: self.allowSending ? 1 : 0,
+                receive_all: self.allowReceiving ? 1 : 0
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.savePostcardConf,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg);
+                });
+            });
         };
     }
 ])
@@ -3521,24 +3720,20 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$location',
     function($http, $scope, common, md5, $location){
-
         $scope.dataModel = {
             searchTxt: '',
             userList: [],
-            userInfo: {}
+            userInfo: {},
+            host: ''
         };
         !function(){
             common.utility.checkLogin().success(function(u){
                 $scope.dataModel.userInfo = u;
-                console.log(u);
             }).fail(function(){
                 common.utility.resetToken();
             });
         }();
         $scope.search = function() {
-
-            console.log($scope.dataModel);
-
             common.utility.loadingShow();
             var dataObj = {
                 uid: $scope.dataModel.userInfo.uid,
@@ -3554,6 +3749,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     $scope.dataModel.userList = d.data.userList;
+                    $scope.dataModel.host = d.data.host;
                 });
             });
         };

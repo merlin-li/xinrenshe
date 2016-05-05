@@ -430,6 +430,24 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('app_orderdetail', {
+            url: '/order/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/detail.html',
+                    controller: 'OrderDetailCtrl'
+                }
+            }
+        })
+        .state('app_trash', {
+            url: '/trash/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/trash.html',
+                    controller: 'OrderTrashCtrl'
+                }
+            }
+        })
 
 
 

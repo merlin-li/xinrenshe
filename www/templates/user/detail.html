@@ -1,0 +1,59 @@
+<ion-view title="详情">
+    <ion-content has-header="true" has-bouncing="true">
+        <section class="card-item">
+            <div class="header receive-header">
+                <i class="badgex" ng-if="card.order_type === 2">互寄</i>
+                <i class="badgex" ng-if="card.order_type === 3">PC</i>
+                <i class="badgex" ng-if="card.order_type === 4">联名</i>
+                <i class="badgex" ng-if="card.order_type === 5">福利</i>
+                <span class="{{card.order_type === 2 ? 'red' : ''}}">{{card.order_number}}</span>
+                <span ng-hide="!statusObj.hide" class="status">等待寄出</span>
+                <span ng-hide="statusObj.hide">
+                    已旅行 {{card.travel_days}}天
+                    <i class="icon ion-ios-bell-outline" ng-if="card.order_warning"></i>
+                </span>
+                <button ng-hide="statusObj.hideBtn" ng-click="done()">确认收信</button>
+            </div>
+            <div class="card-detail">
+                <img class="avatar" ng-src="{{card.host + card.sender_avatar}}">
+                <div><img src="img/icon_hujitb.png"></div>
+                <img class="avatar" ng-src="{{card.host + card.recipient_avatar}}">
+            </div>
+
+            <div class="card-bottom">
+                <div><img ng-src="{{card.host + card.picture}}"></div>
+                <div><img ng-src="{{card.host + card.recipient_picture}}"></div>
+            </div>
+
+            <div class="footer" ng-if="card.order_warning">
+                <section class="left">
+                    <img class="avatar" ng-src="{{card.host + card.sender_avatar}}">
+                </section>
+                <section class="center">
+                    <span>{{card.sender_username}}</span>
+                    <span>{{card.sender_sex ==1? '男':'女'}}</span>
+                    <span class="address">{{card.sender_province + card.sender_city}}</span>
+                </section>
+                <section class="right">
+                    <img ng-src="{{card.host + card.picture}}">
+                </section>
+            </div>
+
+            <div class="card-tip" ng-if="card.order_warning">
+                <div>追踪原因</div>
+                <p>{{card.warning_reason}}</p>
+            </div>
+
+            <div class="card-tip card-tip1" ng-if="card.order_warning">
+                <div>追踪结果</div>
+                <p>{{card.warning_result}}</p>
+            </div>
+
+            <div class="padding" ng-if="card.order_warning">
+                <a class="button button-small button-block button-positive">系统关闭剩余时间{{card.warning_deadline}}天</a>
+                <a class="button button-small button-block button-positive" ng-click="done()">确认收信</a>
+                <a class="button button-small button-block button-positive" ng-click="noreceive()">没收到</a>
+            </div>
+        </section>
+    </ion-content>
+</ion-view>

@@ -1,24 +1,33 @@
 <ion-view title="收信">
-    <ion-content has-header="true" has-bouncing="true">
-        <div style="background:#f2f2f2">
+    <ion-nav-buttons side="right">
+        <a href="#/trash/2" class="button buttons button-clear header-item"><i class="icon ion-ios-trash-outline"></i></a>
+    </ion-nav-buttons>
+    <ion-content has-header="true" has-bouncing="true" style="background:#f2f2f2">
             <div class="button-bar">
                 <a class="button {{btnClass1}}" ng-click="readCardList(3)">等待收信</a>
                 <a class="button {{btnClass2}}" ng-click="readCardList(2)">旅行中</a>
                 <a class="button {{btnClass3}}" ng-click="readCardList(6)">旅行结束</a>
             </div>
 
-            <section class="card-item" ng-repeat="card in orderList">
+            <section class="card-item" ng-repeat="card in orderList" ng-click="go(card)">
                 <div class="header receive-header">
-                    <i class="badgex" ng-if="card.order_type === 2">互寄</i>
-                    <i class="badgex" ng-if="card.order_type === 3">PC</i>
-                    <i class="badgex" ng-if="card.order_type === 4">联名</i>
-                    <i class="badgex" ng-if="card.order_type === 5">福利</i>
-                    <span>{{card.order_number}}</span>
-                    <span ng-hide="!statusObj.hide">等待寄出</span>
-                    <span ng-hide="statusObj.hide">{{statusObj.txt}} {{card.travel_days}}天</span>
+                    <i class="badgex badgex1" ng-if="card.order_type === 1"><img src="img/icon_gtj.png"></i>
+                    <i class="badgex badgex1" ng-if="card.order_type === 2"><img src="img/icon_hj.png"></i>
+                    <i class="badgex badgex1" ng-if="card.order_type === 3"><img src="img/icon_pc.png"></i>
+                    <i class="badgex badgex1" ng-if="card.order_type === 4"><img src="img/icon_lm.png"></i>
+                    <i class="badgex badgex1" ng-if="card.order_type === 5"><img src="img/icon_fl.png"></i>
+
+                    <span class="{{card.order_type === 2 ? 'red' : ''}}">{{card.order_number}}</span>
+                    <label ng-if="statusObj.hide" class="status">等待寄出</label>
+                    <label ng-if="!statusObj.hide" class="day">
+                        {{statusObj.txt}} {{card.travel_days}}天
+                        <i class="icon ion-ios-bell-outline" ng-if="card.order_warning"></i>
+                    </label>
                     <button ng-hide="statusObj.hideBtn" ng-click="done(card)">确认收信</button>
                 </div>
-                <div class="footer" ng-if="card.order_type === 2 || card.order_type === 3 || card.order_type === 5">
+
+
+<!--                 <div class="footer" ng-if="card.order_type === 2 || card.order_type === 3 || card.order_type === 5">
                     <section class="left">
                         <img class="avatar" ng-src="{{card.sender_avatar}}">
                     </section>
@@ -43,7 +52,7 @@
                     <section class="right">
                         <img ng-src="{{card.picture}}">
                     </section>
-                </div>
+                </div> -->
 
             </section>
 
@@ -54,6 +63,5 @@
             </ion-infinite-scroll>
 
             <img src="img/xltb_1.png" class="full" ng-hide="showTip">
-        </div>
     </ion-content>
 </ion-view>
