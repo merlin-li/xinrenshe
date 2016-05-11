@@ -1,11 +1,11 @@
-<ion-view title="寄信">
-    <ion-nav-buttons>
+<ion-view title="寄信" cache-view="false" hide-back-button="true">
+    <ion-nav-buttons side="left">
         <a href="#/user" class="button back-button buttons button-clear header-item">
-            <i class="icon ion-ios-arrow-back"></i> 
+            <i class="icon ion-ios-arrow-back"></i>
         </a>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a href="#/trash/1" class="button buttons button-clear header-item"><i class="icon ion-ios-trash-outline"></i></a>
+        <a href="#/trash/1" class="button buttons button-clear header-item"><img class="icon icon-trash" src="img/icon_lajix.png"/></a>
     </ion-nav-buttons>
     <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
         <div class="button-bar">
@@ -14,17 +14,18 @@
             <a class="button {{btnClass3}}" ng-click="readCardList(5)">旅行结束</a>
         </div>
 
-        <section class="card-item" ng-repeat="card in orderList">
-            <div class="header">
+        <section class="card-item" ng-repeat="card in orderList" ng-click="goDetail(card)">
+            <div class="header {{card.order_warning ? 'headerwarn' : ''}}">
                 <i class="badgex" ng-if="card.order_type === 1"><img src="img/icon_gtj.png"></i>
                 <i class="badgex" ng-if="card.order_type === 2"><img src="img/icon_hj.png"></i>
                 <i class="badgex" ng-if="card.order_type === 3"><img src="img/icon_pc.png"></i>
                 <i class="badgex" ng-if="card.order_type === 4"><img src="img/icon_lm.png"></i>
                 <i class="badgex" ng-if="card.order_type === 5"><img src="img/icon_fl.png"></i>
                 <span class="title">{{card.order_number}}</span>
-                <label ng-if="statusObj.hide" ng-click="show()">请将该编码写于明信片上！<a href="#">示例</a></label>
 
-                <button ng-click="send(card)" ng-if="statusObj.hide">寄出</button>
+                <label ng-if="statusObj.hide && !card.order_warning" class="message" ng-click="show()">请将该编码写于明信片上！<a href="#">示例</a></label>
+
+                <button ng-click="send($event, card)" ng-if="statusObj.hide">寄出</button>
                 <span ng-if="!statusObj.hide" class="tip">
                     <i class="icon ion-paper-airplane"></i>
                     {{statusObj.txt}}{{card.travel_days}}天

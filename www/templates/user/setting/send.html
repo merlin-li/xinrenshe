@@ -1,7 +1,7 @@
-<ion-view title="寄信设置">
+<ion-view title="收信设置">
     <ion-content has-header="true">
         <ul class="list">
-            <li class="item item-toggle">
+<!--             <li class="item item-toggle">
                 允许Postcrossing抽到我
                 <label class="toggle toggle-balanced" ng-click="select()">
                     <input type="checkbox" ng-model="dataModel.allowPC">
@@ -11,17 +11,17 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                允许收到我寄出片的人给我寄
+                允许收信方给我寄
                 <label class="toggle toggle-balanced" ng-click="select()">
                     <input type="checkbox" ng-model="dataModel.allowSending">
                     <div class="track">
                         <div class="handle"></div>
                     </div>
                 </label>
-            </li>
+            </li> -->
             <li class="item item-toggle">
-                允许没收到我寄出片的人给我寄
-                <label class="toggle toggle-balanced" ng-click="select()">
+                允许所有人给我寄
+                <label class="toggle toggle-balanced" ng-click="save()">
                     <input type="checkbox" ng-model="dataModel.allowReceiving">
                     <div class="track">
                         <div class="handle"></div>
@@ -29,8 +29,8 @@
                 </label>
             </li>
         </ul>
-        <div class="padding">
+<!--         <div class="padding">
             <button class="button button-positive button-block" ng-click="save()">保存设置</button>
-        </div>
+        </div> -->
     </ion-content>
 </ion-view>

@@ -4,8 +4,7 @@ angular.module('xinrenshe', [
     'xinrenshe.controllers',
     'xinrenshe.services',
     'ionic-datepicker',
-    'ionic-timepicker',
-    'aCarousel'
+    'ionic-timepicker'
 ]).config([
     '$stateProvider',
     '$urlRouterProvider',
@@ -39,7 +38,7 @@ angular.module('xinrenshe', [
             }
         })
         .state('app_message', {
-            url: '/message',
+            url: '/messagesx',
             views: {
                 'content': {
                     templateUrl: 'templates/message/index.html',
@@ -431,7 +430,7 @@ angular.module('xinrenshe', [
             }
         })
         .state('app_orderdetail', {
-            url: '/order/:id',
+            url: '/order/:id/:type',
             views: {
                 'content': {
                     templateUrl: 'templates/user/detail.html',

@@ -5,7 +5,7 @@
                 <i class="icon ion-ios-search placeholder-icon"></i>
                 <input type="search" placeholder="请输入用户昵称" ng-model="dataModel.searchTxt">
             </label>
-            <button class="button button-clear" ng-click="search()">搜索</button>
+            <button class="button button-clear" ng-click="search()" style="color:#000">搜索</button>
         </div>
 
         <ion-list class="list joint-list" style="top:0">
@@ -21,6 +21,6 @@
                 <p ng-bind="m.province + ' ' + m.city"></p>
             </a>
         </ion-list>
-
+        <img ng-if="showTip" src="img/icon_tishi_2.png" class="full">
     </ion-content>
 </ion-view>

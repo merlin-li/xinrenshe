@@ -7,7 +7,7 @@
             <a ng-click="go()" class="item item-icon-right" style="padding:0">
                 <img src="img/bj_1.png" class="full">
                 <div class="me-container">
-                    <img ng-src={{userModel.avatar}}>
+                    <img ng-src="{{userModel.avatar}}">
                     <div>
                         <span>
                             {{userModel.username}}
@@ -58,35 +58,33 @@
             <button class="button button-positive button-block" ng-click="sendto()" ng-if="hideEle">给Ta寄</button>
             <button class="button button-positive button-block" ng-click="save()" ng-if="!hideEle">保存修改</button>
         </div>
+    </ion-content>
 
-<!--         <section class="share-list">
+    <section id="share_bg" ng-hide="hideShare">
+        <section class="share-list">
             <ul>
                 <li>
-                    <a href="#"><img src="img/icon_pengyouquan.png"></a>
+                    <a ng-click="shareWechat()"><img src="img/icon_pengyouquan.png"></a>
                     <span>朋友圈</span>
                 </li>
                 <li>
-                    <a href="#"><img src="img/icon_weixin.png"></a>
-                    <span>微信</span>
+       <!--              <a href="#"><img src="img/icon_weixin.png"></a>
+                    <span>微信</span> -->
                 </li>
                 <li>
-                    <a href="#"><img src="img/icon_kongjian.png"></a>
-                    <span>空间</span>
+<!--                     <a href="#"><img src="img/icon_kongjian.png"></a>
+                    <span>空间</span> -->
                 </li>
                 <li>
-                    <a href="#"><img src="img/icon_qq.png"></a>
-                    <span>QQ</span>
+<!--                     <a href="#"><img src="img/icon_qq.png"></a>
+                    <span>QQ</span> -->
                 </li>
                 <li>
-                    <a href="#"><img src="img/icon_weibo.png"></a>
-                    <span>微博</span>
+    <!--                 <a href="#"><img src="img/icon_weibo.png"></a>
+                    <span>微博</span> -->
                 </li>
             </ul>
-            <a href="#" class="cancel">取消</a>
-        </section> -->
-
-    </ion-content>
-
-
-    
+            <a ng-click="cancel()" class="cancel">取消</a>
+        </section>
+    </section>
 </ion-view>

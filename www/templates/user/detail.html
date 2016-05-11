@@ -1,33 +1,35 @@
-<ion-view title="详情">
+<ion-view title="{{pageTitle}}">
     <ion-content has-header="true" has-bouncing="true">
         <section class="card-item">
             <div class="header receive-header">
-                <i class="badgex" ng-if="card.order_type === 2">互寄</i>
-                <i class="badgex" ng-if="card.order_type === 3">PC</i>
-                <i class="badgex" ng-if="card.order_type === 4">联名</i>
-                <i class="badgex" ng-if="card.order_type === 5">福利</i>
-                <span class="{{card.order_type === 2 ? 'red' : ''}}">{{card.order_number}}</span>
-                <span ng-hide="!statusObj.hide" class="status">等待寄出</span>
-                <span ng-hide="statusObj.hide">
-                    已旅行 {{card.travel_days}}天
-                    <i class="icon ion-ios-bell-outline" ng-if="card.order_warning"></i>
-                </span>
-                <button ng-hide="statusObj.hideBtn" ng-click="done()">确认收信</button>
-            </div>
-            <div class="card-detail">
-                <img class="avatar" ng-src="{{card.host + card.sender_avatar}}">
-                <div><img src="img/icon_hujitb.png"></div>
-                <img class="avatar" ng-src="{{card.host + card.recipient_avatar}}">
-            </div>
+                <i class="badgex" ng-if="card.order_type === 1"><img src="img/icon_gtj.png"></i>
+                <i class="badgex" ng-if="card.order_type === 2"><img src="img/icon_hj.png"></i>
+                <i class="badgex" ng-if="card.order_type === 3"><img src="img/icon_pc.png"></i>
+                <i class="badgex" ng-if="card.order_type === 4"><img src="img/icon_lm.png"></i>
+                <i class="badgex" ng-if="card.order_type === 5"><img src="img/icon_fl.png"></i>
 
-            <div class="card-bottom">
-                <div><img ng-src="{{card.host + card.picture}}"></div>
+                <span>{{card.order_number}}</span>
+            </div>
+            <ul class="card-detail" ng-if="!card.order_warning">
+                <li>
+                    <img class="avatar" ng-src="{{card.host + card.sender_avatar || card.corporation_avatar}}">
+                    <span>{{card.sender_username}}</span>
+                </li>
+                <li><img class="zj" src="img/icon_hujitb.png"></li>
+                <li>
+                    <img class="avatar" ng-src="{{card.host + card.recipient_avatar}}">
+                    <span>{{card.consignee_username}}</span>
+                </li>
+            </ul>
+
+            <div class="card-bottom" ng-if="!card.order_warning">
+                <div><img ng-src="{{card.picture}}"></div>
                 <div><img ng-src="{{card.host + card.recipient_picture}}"></div>
             </div>
 
             <div class="footer" ng-if="card.order_warning">
                 <section class="left">
-                    <img class="avatar" ng-src="{{card.host + card.sender_avatar}}">
+                    <img class="avatar" ng-src="{{card.sender_avatar}}">
                 </section>
                 <section class="center">
                     <span>{{card.sender_username}}</span>
@@ -35,7 +37,7 @@
                     <span class="address">{{card.sender_province + card.sender_city}}</span>
                 </section>
                 <section class="right">
-                    <img ng-src="{{card.host + card.picture}}">
+                    <img ng-src="{{card.picture}}">
                 </section>
             </div>
 
@@ -48,11 +50,16 @@
                 <div>追踪结果</div>
                 <p>{{card.warning_result}}</p>
             </div>
+            
+            <div class="card-message" ng-if="card.order_warning">
+                <i class="icon ion-ios-information-outline"></i>
+                {{msgObj.infoTxt}}
+                <span>{{card.warning_deadline}}天后关闭</span>
+            </div>
 
-            <div class="padding" ng-if="card.order_warning">
-                <a class="button button-small button-block button-positive">系统关闭剩余时间{{card.warning_deadline}}天</a>
-                <a class="button button-small button-block button-positive" ng-click="done()">确认收信</a>
-                <a class="button button-small button-block button-positive" ng-click="noreceive()">没收到</a>
+            <div class="padding button-bar button-bar-warn" ng-if="card.order_warning">
+                <a class="button button-positive" ng-click="btnAction1()">{{msgObj.btnTxt1}}</a>
+                <a class="button button-positive" ng-click="btnAction2()">{{msgObj.btnTxt2}}</a>
             </div>
         </section>
     </ion-content>

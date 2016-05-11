@@ -265,9 +265,18 @@ angular.module('xinrenshe.services', []).factory('Common', [
                     }
                 });
             },
-            _uploadPicture = function(imgurl) {
-                
-            };
+            _deviceInfo = function () {
+                var ua = navigator.userAgent.toLowerCase(); 
+                if (/iphone|ipad|ipod/.test(ua)) {
+                    return 'ios';
+                } else if (/android/.test(ua)) {
+                    return 'android';
+                } else {
+                    return '';
+                }
+
+            }()
+            ;
 
 
         return {
@@ -348,7 +357,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 sendSomeone: apiBaseUrl + 'createOrders/sendSomeone',
                 orderDetail: apiBaseUrl + 'postCard/orderDetail',
                 warningOrderDeal: apiBaseUrl + 'postCard/warningOrderDeal',
-                warningOrderList: apiBaseUrl + 'postCard/warningOrderList'
+                warningOrderList: apiBaseUrl + 'postCard/warningOrderList',
+                giveRP: apiBaseUrl + 'postCard/giveRP',
+                checkVersion: apiBaseUrl + 'common/checkVersion'
             },
             utility: {
                 'checkPhone': function(p) {
@@ -374,7 +385,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
                 'takePicture': _takePicture,
-                'getVersion': '1.0.2'
+                'getVersion': '1.0.3',
+                'deviceInfo': _deviceInfo
             },
             tempData: {
                 userAddressInfo: '',

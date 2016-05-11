@@ -1,5 +1,5 @@
 'use strict';
-angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
+angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-ratings'])
     .config([
         '$sceDelegateProvider',
         '$httpProvider',
@@ -20,23 +20,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'Common',
     '$location',
     '$ionicSlideBoxDelegate',
-    function($scope, $http, common, $location, $ionicSlideBoxDelegate) {
-
-        // $scope.test = function(){
-        //     Wechat.isInstalled(function (installed) {
-        //         alert("Wechat installed: " + (installed ? "Yes" : "No"));
-        //     }, function (reason) {
-        //         alert("Failed: " + reason);
-        //     });
-        // };
-
-        // $scope.test1 = function(){
-
-        // };
-
-
-
+    '$ionicPopup',
+    '$ionicLoading',
+    function($scope, $http, common, $location, $ionicSlideBoxDelegate, $ionicPopup, $ionicLoading) {
         ! function() {
+            var platformType = common.utility.deviceInfo,
+                os = 0;
+            if (platformType === 'ios') {
+                os = 1;
+            }
+            if (platformType === 'android') {
+                os = 2;
+            }
+
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
             common.utility.cookieStore.remove('areainfo3');
@@ -44,14 +40,80 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             //初始化事件
             common.utility.loadingShow();
             $http({
-                method: 'post',
-                url: common.API.home
+                method: 'get',
+                url: common.API.home,
+                params: {
+                    os: os,
+                    version: common.utility.getVersion
+                }
             }).success(function(data) {
+                //检查是否需要版本更新
                 common.utility.loadingHide();
                 if (data.status === 200) {
                     $scope.dataObj = data.data;
                     $scope.dataObj.host = data.data.host;
                     $ionicSlideBoxDelegate.update();
+                    var startUpdate = false;
+                    if (common.utility.cookieStore.get('installedDate')) {
+                        var installedDate = common.utility.cookieStore.get('installedDate'),
+                            now = Date.parse(new Date());
+                        if (now > installedDate) {
+                            //提示更新
+                            startUpdate = true;
+                        } else {
+                            startUpdate = false;
+                        }
+                    } else {
+                        startUpdate = true;
+                    }
+
+                    if (startUpdate && data.data.updateInfo && data.data.updateInfo.need_update && data.data.updateInfo.need_update === 1) {
+                        //有更新，进行提醒
+                        var confirmPopup = $ionicPopup.confirm({
+                            title: '温馨提示',
+                            template: '检查到新版本',
+                            cancelText: '取消',
+                            okText: '去更新'
+                        });
+                        
+                        confirmPopup.then(function(res) {
+                            if (res) {
+                                $ionicLoading.show({
+                                    template: '正在下载'
+                                });
+                                //可以从服务端获取更新APP的路径
+                                var uri = encodeURI(data.data.updateInfo.url),
+                                    targetPath = "file:///storage/sdcard0/Download/1.apk",
+                                    fileTransfer = new FileTransfer(),
+                                    cordovaFileOpener2 = cordova.plugins.fileOpener2;
+
+                                fileTransfer.download(uri, targetPath, function (entry) {
+                                    var fileurl = entry.toURL();
+
+                                    // 打开下载下来的APP
+                                    cordovaFileOpener2.open(fileurl, 
+                                        'application/vnd.android.package-archive',
+                                        {
+                                            error: function (err) {
+                                                alert(err);
+                                            }, 
+                                            success: function () {
+                                                alert('成功');
+                                            }
+                                        }
+                                    );
+                                    $ionicLoading.hide();
+                                }, function (error) {
+                                    alert('下载失败');
+                                }, false);
+                            } else {
+                                //保存更新的时间为5天
+                                var time = new Date();
+                                time = time.setDate(time.getDate() + 5);
+                                common.utility.cookieStore.put('installedDate', time);
+                            }
+                        });
+                    }
                 }
             }).error(function() {alert('api error.');common.utility.loadingHide();});
         }();
@@ -936,7 +998,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }
         };
 
-        $scope.send = function(i) {
+        $scope.send = function($event, i) {
+
             var sendParamsObj = {
                 order_ids: [i.id],
                 token: userCookie.token,
@@ -958,6 +1021,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     $scope.readCardList();
                 }
             }).error(function() {alert('api error.');common.utility.loadingHide();});
+            $event.stopPropagation();
         };
 
         $scope.show = function() {
@@ -970,6 +1034,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             $scope.modelStyle = {
                 'display': 'none'
             };
+        };
+
+        $scope.goDetail = function(c) {
+            if (c.order_warning) {
+                $location.path('/order/' + c.id + '/sending');
+            }
         };
 
         $scope.takePic = function(c) {
@@ -998,8 +1068,29 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$stateParams',
     '$ionicPopup',
     function($scope, $http, common, $location, md5, $stateParams, $ionicPopup) {
-        var orderId = $stateParams.id;
+        var orderId = $stateParams.id,
+            orderType = $stateParams.type;
+
         $scope.userInfo = {};
+        $scope.pageTitle = '互寄详情';
+        $scope.msgObj = {
+            btnTxt1: '',
+            btnTxt2: '',
+            infoTxt: ''
+        };
+        if (orderType === 'sending') {
+            //寄信追踪
+            $scope.pageTitle = '寄信追踪';
+        }
+        if (orderType === 'receiving') {
+            //收信追踪
+            $scope.pageTitle = '收信追踪';
+        } 
+        if (orderType === 'detail') {
+            //互寄详情
+            $scope.pageTitle = '互寄详情';
+        }
+
         common.utility.checkLogin().success(function(u){
             common.utility.loadingShow();
             $scope.userInfo = u;
@@ -1014,37 +1105,89 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 url: common.API.orderDetail,
                 data: paramsObj
             }).success(function(data){
-                console.log(data.data);
                 common.utility.loadingHide();
+                //如果没有照片，进行更改为 相机背景 的图片
+                if (data.data.picture) {
+                    data.data.picture = data.data.host + data.data.picture;
+                } else {
+                    data.data.picture = 'img/xjbj_1.png';
+                }
+                if (data.data.sender_avatar) {
+                    data.data.sender_avatar = data.data.host + data.data.sender_avatar;
+                } else {
+                    data.data.sender_avatar = data.data.host + data.data.corporation_avatar;
+                }
+
+                if (orderType === 'sending') {
+                    //寄信追踪
+                    $scope.msgObj.btnTxt1 = '取消寄出';
+                    $scope.msgObj.btnTxt2 = '去寄出';
+                    $scope.msgObj.infoTxt = data.data.warning_deadline + '天内不处理，系统将关闭该订单，并扣除相应RP值。'
+                }
+                if (orderType === 'receiving') {
+                    //收信追踪
+                    $scope.msgObj.btnTxt1 = '确认收信';
+                    $scope.msgObj.btnTxt2 = '没收到';
+                    $scope.msgObj.infoTxt = '对方已寄出，如果' + data.data.warning_deadline + '天内仍未处理，系统将关闭该订单。'
+                } 
+                if (orderType === 'detail') {
+                    //互寄详情
+                    // $scope.pageTitle = '互寄详情';
+                }
                 $scope.card = data.data;
             });
         }).fail(function(){
             common.utility.resetToken();
         });
 
-        $scope.done = function(){
+        $scope.btnAction1 = function(){
             var c = $scope.card,
                 confirmObj = {
                     order_id: c.id,
                     uid: $scope.userInfo.uid,
                     token: $scope.userInfo.token
-                },
-                confirmPopup = $ionicPopup.confirm({
-                    title: '温馨提示',
-                    template: '您已经收到该编码的明信片?',
-                    cancelText: '取消',
-                    okText: '确定'
-                });
+                }, templateStr, apiStr;
+            if (orderType === 'sending') {
+                //取消寄出
+                templateStr = '取消寄出RP值减2，您确定要取消吗?';
+            }
+            if (orderType === 'receiving') {
+                //确认收信
+                templateStr = '您已经收到该编码的明信片?';
+            }
+            
+            var confirmPopup = $ionicPopup.confirm({
+                title: '温馨提示',
+                template: templateStr,
+                cancelText: '取消',
+                okText: '确定'
+            });
+            
             confirmPopup.then(function(res) {
                 if (res) {
-                    //确定收到当前的明信片
-                    confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+                    if (orderType === 'sending') {
+                        //取消寄出
+                        confirmObj.module_type = 1;
+                        confirmObj.opt_type = 11;
+                        confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+                        apiStr = common.API.warningOrderDeal;
+                    }
+                    if (orderType === 'receiving') {
+                        //确定收到当前的明信片
+                        confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+                        apiStr = common.API.confirmReceipt;
+                    }
+
+                    common.utility.loadingShow();
                     $http({
                         method: 'post',
-                        url: common.API.confirmReceipt,
+                        url: apiStr,
                         data: confirmObj
                     }).success(function(data) {
-                        common.utility.alert('提示', data.msg);
+                        common.utility.loadingHide();
+                        common.utility.alert('提示', data.msg).then(function(){
+                            $location.path('/my/' + orderType);
+                        });
                     }).error(function(){
                         alert('api error.');
                     });
@@ -1052,23 +1195,43 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             });
         };
 
-        $scope.noreceive = function(){
-            common.utility.loadingShow();
-            var paramsObj = {
-                uid: $scope.userInfo.uid,
-                token: $scope.userInfo.token,
-                order_id: orderId,
-                module_type: 2,
-                opt_type: 21
-            };
-            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-            $http({
-                method: 'post',
-                url: common.API.warningOrderDeal,
-                data: paramsObj
-            }).success(function(data){
-                common.utility.alert('提示', data.msg);
-            });
+        $scope.btnAction2 = function(){
+            if (orderType === 'sending') {
+                //去寄出
+                $location.path('/my/sending');
+            }
+            if (orderType === 'receiving') {
+                //没收到
+                var confirmPopup = $ionicPopup.confirm({
+                    title: '温馨提示',
+                    template: '没收到双方RP值减1，您确定没收到吗？',
+                    cancelText: '取消',
+                    okText: '确定'
+                });
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        common.utility.loadingShow();
+                        var paramsObj = {
+                            uid: $scope.userInfo.uid,
+                            token: $scope.userInfo.token,
+                            order_id: orderId,
+                            module_type: 2,
+                            opt_type: 21
+                        };
+                        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                        $http({
+                            method: 'post',
+                            url: common.API.warningOrderDeal,
+                            data: paramsObj
+                        }).success(function(data){
+                            common.utility.loadingHide();
+                            common.utility.alert('提示', data.msg).then(function(){
+                                $location.path('/my/receiving');
+                            });
+                        });
+                    }
+                });
+            }
         };
     }
 ])
@@ -1082,16 +1245,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$stateParams',
     '$ionicPopup',
     function($scope, $http, common, $location, md5, $stateParams, $ionicPopup) {
-        console.log($stateParams.id);
-
-        $scope.userInfo = {};
         !function(){
+            var id = $stateParams.id;
+            $scope.userInfo = {};
+            $scope.trashType = id;
+            $scope.pageTitle = '收信垃圾箱';
+            if (id == 1) {
+                $scope.pageTitle = '寄信垃圾箱';
+            }
+
             common.utility.checkLogin().success(function(u){
                 $scope.userInfo = u;
                 var paramsObj = {
                     uid: u.uid,
                     token: u.token,
-                    type: 1,
+                    type: id,
                     per: 10000
                 };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
@@ -1102,7 +1270,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                     data: paramsObj
                 }).success(function(data){
                     common.utility.loadingHide();
-                    console.log(data);
+                    
+                    data.data.orderList.map(function(o){
+                        if (o.picture) {
+                            o.picture = data.data.host + o.picture;
+                        } else {
+                            o.picture = 'img/xjbj_1.png';
+                        }
+                        if (o.sender_avatar) {
+                            o.sender_avatar = data.data.host + o.sender_avatar;
+                        }
+                    });
+                    $scope.orderModel = data.data;
                 });
             }).fail(function(){
                 common.utility.resetToken();
@@ -1448,6 +1627,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     '$ionicPopup',
     function($scope, $http, common, $location, md5, $ionicPopup) {
         $scope.showTip = true;
+        $scope.showRateDialog = false;
+        $scope.rateText = [
+            '1星：差  RP - 2',
+            '2星：有点差  RP - 0.1',
+            '3星：一般 RP 0',
+            '4星：挺好 RP + 0.1',
+            '5星：很好 RP + 0.2'
+        ];
+        $scope.rateShowText = $scope.rateText[4];
+        $scope.rpType = 1;
+        $scope.receiveObj = {};
         $scope.selectIndex = 3;
         $scope.orderList = [];
         $scope.noMoreData = false;
@@ -1460,10 +1650,40 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         };
 
         var paramsObj = {
-                type: 3,
-                uid: '',
-                token: ''
-            };
+            type: 3,
+            uid: '',
+            token: ''
+        };
+
+        $scope.ratingsObject = {
+            iconOn: 'ion-ios-star',
+            iconOff: 'ion-ios-star-outline',
+            iconOnColor: 'rgb(255, 216, 0)',
+            iconOffColor: 'rgb(237, 237, 237)',
+            rating: 5,
+            minRating: 0,
+            readOnly:false,
+            callback: function(rating) {
+                $scope.rateShowText = $scope.rateText[rating - 1];
+                switch(rating) {
+                    case 1:
+                        $scope.rpType = 6;
+                    break;
+                    case 2:
+                        $scope.rpType = 4;
+                    break;
+                    case 3:
+                        $scope.rpType = 3;
+                    break;
+                    case 4:
+                        $scope.rpType = 2;
+                    break;
+                    default:
+                        $scope.rpType = 1;
+                    break;
+                }
+            }
+        };
 
         $scope.readCardList = function(t) {
             if (t && t!== $scope.selectIndex) {
@@ -1538,45 +1758,54 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }
         };
 
-        $scope.done = function(c) {
+        $scope.done = function($event, c) {
             var confirmObj = {
-                    order_id: c.id,
-                    uid: paramsObj.uid,
-                    token: paramsObj.token
-                },
-                confirmPopup = $ionicPopup.confirm({
-                    title: '温馨提示',
-                    template: '您已经收到该编码的明信片?',
-                    cancelText: '取消',
-                    okText: '确定'
-                });
-            confirmPopup.then(function(res) {
-                if (res) {
-                    //确定收到当前的明信片
-                    confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
-                    $http({
-                        method: 'post',
-                        url: common.API.confirmReceipt,
-                        data: confirmObj
-                    }).success(function(data) {
-                        if (data.status === 200) {
-                            $scope.orderList = [];
-                            $scope.currentPage = 1;
-                            $scope.readCardList($scope.selectIndex);
-                        } else {
-                            common.utility.alert('提示', data.msg);
-                        }
-                    }).error(function(){
-                        alert('api error.');
-                    });
-                }
-            });
+                order_id: c.id,
+                rp_type: $scope.rpType,
+                uid: paramsObj.uid,
+                token: paramsObj.token
+            };
+       
+            //确定收到当前的明信片
+            confirmObj.accessSign = md5.createHash(common.utility.createSign(confirmObj));
+            $scope.receiveObj = confirmObj;
+            $scope.showRateDialog = true;
+            $event.stopPropagation();
         };
 
         $scope.go = function(c) {
-            if (c && c.order_type === 2) {
-                $location.path('/order/' + c.id);
+            if (c && c.order_warning) {
+                $location.path('/order/' + c.id + '/receiving');
+            } else if (c && c.order_type === 2) {
+                //如果是互寄
+                $location.path('/order/' + c.id + '/detail');
             }
+        };
+
+        $scope.cancel = function() {
+            $scope.showRateDialog = false;
+        };
+
+        $scope.receive = function() {
+            $scope.showRateDialog = false;
+            var p = $scope.receiveObj;
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.confirmReceipt,
+                data: p
+            }).success(function(data) {
+                common.utility.loadingHide();
+                if (data.status === 200) {
+                    $scope.orderList = [];
+                    $scope.currentPage = 1;
+                    $scope.readCardList($scope.selectIndex);
+                } else {
+                    common.utility.alert('提示', data.msg);
+                }
+            }).error(function(){
+                alert('api error.');
+            });
         };
 
         !function(){
@@ -2888,8 +3117,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     'md5',
     '$stateParams',
     '$location',
-    function($http, $scope, common, md5, $stateParams, $location){
+    '$ionicPopup',
+    function($http, $scope, common, md5, $stateParams, $location, $ionicPopup){
         $scope.hideEle = true;
+        $scope.hideShare = true;
+        $scope.userId = 0;
         var userId = $stateParams.id,
             userParamsObj = {
                 suid: userId
@@ -2897,6 +3129,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
         userParamsObj.accessSign = md5.createHash(common.utility.createSign(userParamsObj));
 
         if (userId) {
+            $scope.userId = userId;
             $http({
                 method: 'post',
                 url: common.API.searchUserInfo,
@@ -2911,6 +3144,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             $scope.hideEle = false;
             var paramsObj = {};
             common.utility.checkLogin().success(function(u){
+                $scope.userId = u.uid;
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
                 u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
@@ -2940,26 +3174,75 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
 
 
         $scope.sendto = function(){
-            var userobj = common.utility.getUserCookie(),
-                pobj = {
-                    uid: userobj.uid,
-                    token: userobj.token,
-                    recipient_uid: userId
-                };
-            pobj.accessSign = md5.createHash(common.utility.createSign(pobj));
-            common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.sendSomeone,
-                data: pobj
-            }).success(function(data){
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d){
-                    common.utility.alert('提示', d.msg);
-                });
+            var confirmPopup = $ionicPopup.confirm({
+                title: '提示',
+                template: '你确定要寄给Ta一张吗?',
+                cancelText: '取消',
+                okText: '确定'
+            });
+
+            confirmPopup.then(function(res) {
+                if(res) {
+                    var userobj = common.utility.getUserCookie(),
+                        pobj = {
+                            uid: userobj.uid,
+                            token: userobj.token,
+                            recipient_uid: userId
+                        };
+                    pobj.accessSign = md5.createHash(common.utility.createSign(pobj));
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.sendSomeone,
+                        data: pobj
+                    }).success(function(data){
+                        common.utility.loadingHide();
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg);
+                        });
+                    });
+                }
             });
         };
 
+        $scope.share = function(){
+            $scope.hideShare = false;
+        };
+
+        $scope.cancel = function(){
+            $scope.hideShare = true;
+        };
+
+        $scope.shareWechat = function(){
+            Wechat.isInstalled(function (installed) {
+                // alert("Wechat installed: " + (installed ? "Yes" : "No"));
+                if (installed) {
+                    Wechat.share({
+                        message: {
+                            title: "来信人社，一起玩转明信片吧！",
+                            description: "最受欢迎的明信片爱好者社群，都在这里！",
+                            thumb: "http://www.xinrenclub.com/app/img/logo2.png",
+                            // mediaTagName: "TEST-TAG-001",
+                            messageExt: "",
+                            // messageAction: "<action>dotalist</action>",
+                            media: {
+                                type: Wechat.Type.LINK,
+                                webpageUrl: "http://www.xinrenclub.com/wechatshare/?suid=" + $scope.userId
+                            }
+                        },
+                        scene: Wechat.Scene.TIMELINE   // share to Timeline
+                    }, function () {
+                        // alert("分享成功");
+                    }, function (reason) {
+                        alert("失败: " + reason);
+                    });
+                } else {
+                    alert('微信尚未安装！');
+                }
+            }, function (reason) {
+                alert("Failed: " + reason);
+            });
+        };
     }
 ])
 
@@ -2993,7 +3276,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                         }
                         $scope.msgList = d.data;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {
+                    alert('api error.');common.utility.loadingHide();
+                });
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -3563,7 +3848,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             }).error(function() {alert('api error.');common.utility.loadingHide();});
         };
     }
-
 ])
 
 //发布互寄
@@ -3647,7 +3931,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
     }
 ])
 
-
 .controller('SettingSendCtrl', [
     '$http',
     '$scope',
@@ -3678,8 +3961,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-                        $scope.dataModel.allowPC = d.data.open_destiny === 1;
-                        $scope.dataModel.allowSending = d.data.receive_send === 1;
+                        // $scope.dataModel.allowPC = d.data.open_destiny === 1;
+                        // $scope.dataModel.allowSending = d.data.receive_send === 1;
                         $scope.dataModel.allowReceiving = d.data.receive_all === 1;
                     });
                 });
@@ -3693,21 +3976,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             var paramsObj = {
                 uid: self.userinfo.uid,
                 token: self.userinfo.token,
-                open_destiny: self.allowPC ? 1 : 0,
-                receive_send: self.allowSending ? 1 : 0,
+                // open_destiny: self.allowPC ? 1 : 0,
+                // receive_send: self.allowSending ? 1 : 0,
                 receive_all: self.allowReceiving ? 1 : 0
             };
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-            common.utility.loadingShow();
+            // common.utility.loadingShow();
             $http({
                 method: 'post',
                 url: common.API.savePostcardConf,
                 data: paramsObj
             }).success(function(data){
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d){
-                    common.utility.alert('提示', d.msg);
-                });
+                // common.utility.loadingHide();
+                // common.utility.handlePostResult(data, function(d){
+                //     common.utility.alert('提示', d.msg);
+                // });
             });
         };
     }
@@ -3726,6 +4009,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
             userInfo: {},
             host: ''
         };
+        $scope.showTip = false;
         !function(){
             common.utility.checkLogin().success(function(u){
                 $scope.dataModel.userInfo = u;
@@ -3733,31 +4017,34 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5'])
                 common.utility.resetToken();
             });
         }();
+
         $scope.search = function() {
-            common.utility.loadingShow();
-            var dataObj = {
-                uid: $scope.dataModel.userInfo.uid,
-                token: $scope.dataModel.userInfo.token,
-                username: $scope.dataModel.searchTxt
-            };
-            dataObj.accessSign = md5.createHash(common.utility.createSign(dataObj));
-            $http({
-                method: 'post',
-                url: common.API.searchUser,
-                data: dataObj
-            }).success(function(data){
-                common.utility.loadingHide();
-                common.utility.handlePostResult(data, function(d){
-                    $scope.dataModel.userList = d.data.userList;
-                    $scope.dataModel.host = d.data.host;
+            if ($scope.dataModel.searchTxt !== '') {
+                common.utility.loadingShow();
+                var dataObj = {
+                    uid: $scope.dataModel.userInfo.uid,
+                    token: $scope.dataModel.userInfo.token,
+                    username: $scope.dataModel.searchTxt
+                };
+                dataObj.accessSign = md5.createHash(common.utility.createSign(dataObj));
+                $http({
+                    method: 'post',
+                    url: common.API.searchUser,
+                    data: dataObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.showTip = (d.data.userList.length === 0);
+                        $scope.dataModel.userList = d.data.userList;
+                        $scope.dataModel.host = d.data.host;
+                    });
                 });
-            });
+            }
         };
     }
 ]);
 
 
-;
 
 
 
