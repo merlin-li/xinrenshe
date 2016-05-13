@@ -67,11 +67,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         startUpdate = true;
                     }
 
-                    if (startUpdate && data.data.updateInfo && data.data.updateInfo.need_update && data.data.updateInfo.need_update === 1) {
+                    if (startUpdate && data.data.updateInfo && data.data.updateInfo.need_update) {
                         //有更新，进行提醒
                         var confirmPopup = $ionicPopup.confirm({
-                            title: '温馨提示',
-                            template: '检查到新版本',
+                            title: '检查到新版本',
+                            template: data.data.updateInfo.update_info,
                             cancelText: '取消',
                             okText: '去更新'
                         });
@@ -3234,10 +3234,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     }, function () {
                         // alert("分享成功");
                     }, function (reason) {
-                        alert("失败: " + reason);
+                        // alert("失败: " + reason);
                     });
                 } else {
-                    alert('微信尚未安装！');
+                    // alert('微信尚未安装！');
                 }
             }, function (reason) {
                 alert("Failed: " + reason);
