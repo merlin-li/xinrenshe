@@ -4042,9 +4042,97 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         };
     }
-]);
+])
+
+.controller('SignKingCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    '$stateParams',
+    function($http, $scope, common, md5, $location, $stateParams){
+
+        console.log('sign king');
+        var userObj = common.utility.cookieStore.get('userinfo');
+
+        $scope.hasLogin = false;
+        $scope.userObj = userObj;
+
+        common.utility.loadingShow();
+        var paramsObj = {};
+        $http({
+            url: common.API.signTop,
+            params: {
+                uid: $stateParams.uid
+            }
+        }).success(function (data) {
+            common.utility.loadingHide();
+            console.log(data);
+
+            if (!data.data.userNum) {
+                $scope.hasLogin = false;
+            } 
+            if (data.data.userNum || data.data.userNum === null) {
+
+            }
+        });
+    }
+])
+
+
+.controller('ExpandCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    function($http, $scope, common, md5, $location){
+        $scope.hideShare = true;
+
+        $scope.share = function(){
+            $scope.hideShare = false;
+        };
+
+        $scope.cancel = function (argument) {
+            $scope.hideShare = true;
+        }
+
+        $scope.shareWechat = function (argument) {
+            Wechat.isInstalled(function (installed) {
+                // alert("Wechat installed: " + (installed ? "Yes" : "No"));
+                if (installed) {
+                    Wechat.share({
+                        message: {
+                            title: "来信人社，一起玩转明信片吧！",
+                            description: "最受欢迎的明信片爱好者社群，都在这里！",
+                            thumb: "http://www.xinrenclub.com/app/img/logo2.png",
+                            // mediaTagName: "TEST-TAG-001",
+                            messageExt: "",
+                            // messageAction: "<action>dotalist</action>",
+                            media: {
+                                type: Wechat.Type.LINK,
+                                webpageUrl: "http://www.xinrenclub.com/wechatshare/?suid=" + $scope.userId
+                            }
+                        },
+                        scene: Wechat.Scene.TIMELINE   // share to Timeline
+                    }, function () {
+                        // alert("分享成功");
+                    }, function (reason) {
+                        // alert("失败: " + reason);
+                    });
+                } else {
+                    // alert('微信尚未安装！');
+                }
+            }, function (reason) {
+                alert("Failed: " + reason);
+            });           
+        }
+    }
+])
 
 
 
 
 
+;

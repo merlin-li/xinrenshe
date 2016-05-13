@@ -1,0 +1,37 @@
+<ion-view view-title="推广大使">
+    <ion-content>
+        <img src="img/icon_dashi.png" class="expand">
+
+        <div class="expand-button">
+            <button class="button button-block button-positive" ng-click="share()">发出邀请</button>
+        </div>
+    </ion-content>
+
+    <section id="share_bg" ng-hide="hideShare">
+        <section class="share-list">
+            <ul>
+                <li>
+                    <a ng-click="shareWechat()"><img src="img/icon_pengyouquan.png"></a>
+                    <span>朋友圈</span>
+                </li>
+                <li>
+       <!--              <a href="#"><img src="img/icon_weixin.png"></a>
+                    <span>微信</span> -->
+                </li>
+                <li>
+<!--                     <a href="#"><img src="img/icon_kongjian.png"></a>
+                    <span>空间</span> -->
+                </li>
+                <li>
+<!--                     <a href="#"><img src="img/icon_qq.png"></a>
+                    <span>QQ</span> -->
+                </li>
+                <li>
+    <!--                 <a href="#"><img src="img/icon_weibo.png"></a>
+                    <span>微博</span> -->
+                </li>
+            </ul>
+            <a ng-click="cancel()" class="cancel">取消</a>
+        </section>
+    </section>
+</ion-view>

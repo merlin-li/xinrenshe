@@ -122,13 +122,17 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     background: #fff;
     overflow: hidden;
 }
+.lmqd div{
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
 .lmqd img{
     width: 100%;
 }
 .lmqd a{
-    width: 20%;
+    width: 24%;
     display: inline-block;
-    float: left;
 }
 .home-send div{
     width: 230px;
@@ -1237,5 +1241,80 @@ h4.tip{
     height: 25px;
     margin-top: 4px;
 }
+.sign-king{
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 70px;
+    z-index: 99;
+}
+.king-list{
+    background: #fbfbfb;
+}
+.king-list li{
+    position: relative;
+}
+.king-list .king{
+    width: 20%;
+    margin-left: 5%;
+}
+.king-list .content{
+    display: inline-block;
+    width: 70%;
+    margin-left: 4%;
+    vertical-align: top;
+}
+.king-list span{
+    display: inline-block;
+    width: 15%;
+}
+.king-list span img{
+    width: 50%;
+}
+.king-list span i{
+    display: inline-block;
+    vertical-align: top;
+}
+.king-list .title{
+    width: 100%;
+    font-size: 14px;
+    font-weight: bolder;
+    display: block;
+    line-height: 60px;
+    border-bottom: solid 1px #e9e9e9;
+}
+.king-list .content div{
+    height: 40px;
+    padding-top: 20px;
+}
+.king-title{
+    background: #fff;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 40px;
+    padding: 20px;
+}
+.king-title span{
+    display: inline-block;
+}
+.expand{
+    width: 60%;
+    display: block;
+    margin: 40px auto;
+}
+.expand-button{
+    width: 40%;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
 
 
