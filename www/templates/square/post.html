@@ -1,0 +1,18 @@
+<ion-view title="广场" hide-back-button="true" cache-view="false">
+    <ion-content>
+        <div class="list">
+            <div class="item item-input">
+                <input ng-model="postModel.title" type="text" placeholder="标题（15字以内）">
+            </div>
+            <div class="item item-input">
+                <textarea class="txt-content" ng-model="postModel.content" placeholder="请输入主题"></textarea>
+            </div>
+            <div class="item">
+                <a class="btn-image icon ion-image"></a>
+            </div>
+            <div class="item">
+                <button class="button button-positive button-block" ng-click="post()">发表</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

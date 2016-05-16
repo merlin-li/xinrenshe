@@ -1307,6 +1307,58 @@ h4.tip{
     margin: 0 auto;
 }
 
+.img-content p{
+    white-space: normal;
+}
+.img-content img{
+    width: 30%;
+    margin: 4px 4px 0 0;
+    display: inline-block;
+    float: left;
+}
+.square-item .comment{
+    background: #f6f6f6;
+    color: #858585;
+    font-size: 12px;
+    line-height: 30px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding-left: 10px;
+    margin-top: 15px;
+}
+.square-item .header{
+    margin-bottom: 10px;
+    position: relative;
+}
+.square-item label{
+    position: absolute;
+    top: 8px;
+    left: 40px;
+}
+.square-item .header div{
+    position: absolute;;
+    right: 0;
+    top: 7px;
+    font-size: 12px;
+    display: inline-block;
+    color: #b3b3b3;
+}
+.square-item .header img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.txt-content{
+    height: 100px;
+}
+.btn-image{
+    font-size: 24px;
+    color: #ff8c9b;
+}
+
 
 
 

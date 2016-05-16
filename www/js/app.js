@@ -468,6 +468,26 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('app_square', {
+            url: '/square',
+            views: {
+                'content': {
+                    templateUrl: 'templates/square/index.html',
+                    controller: 'SquareCtrl'
+                }
+            }
+        })
+
+        .state('app_squarepost', {
+            url: '/squarepost',
+            views: {
+                'content': {
+                    templateUrl: 'templates/square/post.html',
+                    controller: 'SquarePostCtrl'
+                }
+            }
+        })
+
 
 
 

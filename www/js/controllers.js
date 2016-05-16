@@ -4132,6 +4132,69 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 ])
 
 
+.controller('SquareCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    function($http, $scope, common, md5, $location){
+
+
+    }
+])
+
+
+.controller('SquarePostCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    function($http, $scope, common, md5, $location){
+        //
+        $scope.postModel = {
+            title: '',
+            content: '',
+            pictures: []
+        };
+        console.log('square post');
+        
+
+
+        $scope.post = function (argument) {
+            common.utility.checkLogin().success(function (u) {
+                // body...
+                var paramsObj = {
+                    title: $scope.postModel.title,
+                    content: $scope.postModel.content,
+                    uid: u.uid,
+                    token: u.token
+                };
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.createForum,
+                    data: paramsObj
+                }).success(function (data) {
+                    common.utility.loadingHide();
+                    common.utility.alert('提示', data.msg).then(function (argument) {
+                        $location.path('/square');
+                    });
+                }).error(function (argument) {
+                    common.utility.loadingHide();
+                    alert('api error');
+                })
+            }).fail(function (argument) {
+                common.utility.resetToken();
+            });
+        }
+    }
+])
+
+
+
+
 
 
 
