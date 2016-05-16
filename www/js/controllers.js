@@ -1042,12 +1042,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         };
 
-        $scope.takePic = function(c) {
+        $scope.takePic = function($event, c) {
             //保存当前选中的编号
             if ($scope.selectIndex === 1 && c.order_type !== 2){
                 $scope.selectCardIndex = c.id;
                 common.utility.takePicture($cordovaCamera, _loadPicture);
             }
+            $event.stopPropagation();
         };
 
         common.utility.checkLogin().success(function(u){
@@ -3232,12 +3233,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         },
                         scene: Wechat.Scene.TIMELINE   // share to Timeline
                     }, function () {
-                        // alert("分享成功");
+                        alert("分享成功");
                     }, function (reason) {
-                        // alert("失败: " + reason);
+                        alert("失败: " + reason);
                     });
                 } else {
-                    // alert('微信尚未安装！');
+                    alert('微信尚未安装！');
                 }
             }, function (reason) {
                 alert("Failed: " + reason);

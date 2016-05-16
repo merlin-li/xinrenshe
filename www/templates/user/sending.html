@@ -40,7 +40,7 @@
                     <span class="username">收信人：<a href="#/user/view/{{card.recipient_uid}}">{{card.consignee_username}}</a></span>
                     <span class="code">邮编：{{card.zip_code}}</span>
                 </div>
-                <img class="cardimg" ng-src="{{card.picture}}" ng-click="takePic(card)">
+                <img class="cardimg" ng-src="{{card.picture}}" ng-click="takePic($event, card)">
             </div>
         </section>
 
