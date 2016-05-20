@@ -1,28 +1,23 @@
 <ion-view title="广场" hide-back-button="true" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button buttons button-clear header-item" ng-click="share()"><i class="icon ion-edit"></i></a>
+        <a class="button buttons button-clear header-item" href="#/squarepost"><i class="icon ion-edit"></i></a>
     </ion-nav-buttons>
     <ion-content>
-        <a href="#" class="item square-item">
+        <a href="#/squaretheme/{{forum.id}}" class="item square-item" ng-repeat="forum in dataList">
             <div class="header">
-                <img src="img/tx_01.png">
-                <label>昵称</label>
+                <img ng-src="{{forum.avatar}}">
+                <label>{{forum.username}}</label>
                 <div>
-                    <span><i class="ion ion-ios-chatbubble-outline"></i>867</span>
-                    <span><i class="ion ion-ios-clock-outline"></i>2分钟前</span>
+                    <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.comment_count}}</span>
+                    <span><i class="ion ion-ios-clock-outline"></i>&nbsp;{{forum.timeStr}}</span>
                 </div>
             </div>
 
             <div class="img-content">
-                <h2>蘑菇酱新品互寄</h2>
-                <p>蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄</p>
-                <div class="clearfix">
-                    <img src="img/picture_1.png">
-                    <img src="img/picture_2.png">
-                    <img src="img/picture_3.png">
-                    <img src="img/picture_3.png">
-                    <img src="img/picture_3.png">
-                    <img src="img/picture_3.png">
+                <h2>{{forum.title}}</h2>
+                <p>{{forum.content}}</p>
+                <div class="clearfix" ng-if="forum.pictures.length > 0">
+                    <img ng-src="{{p}}" ng-repeat="p in forum.pictures">
                 </div>
             </div>
 
@@ -31,41 +26,16 @@
             </div>
         </a>
 
-        <a href="#" class="item square-item">
-            <div class="header">
-                <img src="img/tx_01.png">
-                <label>昵称</label>
-                <div>
-                    <span><i class="ion ion-ios-chatbubble-outline"></i>867</span>
-                    <span><i class="ion ion-ios-clock-outline"></i>2分钟前</span>
-                </div>
-            </div>
 
-            <div class="img-content">
-                <h2>蘑菇酱新品互寄</h2>
-                <p>蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄蘑菇酱新品互寄</p>
-                <div class="clearfix">
-                    <img src="img/picture_1.png">
-                    <img src="img/picture_2.png">
-                    <img src="img/picture_3.png">
-                </div>
-            </div>
 
-            <div class="comment">
-                我也说一句...
-            </div>
-        </a>
         <br>
         <br>
         <br>
-        <br>
-        <br>
-
-<!--         <ion-infinite-scroll
+        <ion-infinite-scroll
             ng-if="!noMoreData"
             icon="ion-loading-c"
             on-infinite="initList()" distance="10%">
-        </ion-infinite-scroll> -->
+        </ion-infinite-scroll>
     </ion-content>
     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
         <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>

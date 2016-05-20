@@ -3,48 +3,51 @@
         <div class="king-title">
             <span>{{userObj.username}}</span>
 
-            <span>
-                本月在通往王的道路上，还有12个距离
+            <span ng-if="!noNum">
+                本月在通往王的道路上，还有{{kingData.userNum}}个距离
+            </span>
+            <span ng-if="noNum">
+                暂无排名
             </span>
         </div>
 
-        <div class="king-title">
+        <div class="king-title" ng-if="!hasLogin">
             <a class="button button-small button-positive" href="#/user/login">立即登录</a>
             <span>登录查看你的排行</span>
         </div>
 
 
         <ul class="king-list">
-            <li>
-                <img class="king" src="img/picture_king.png">
+            <li ng-repeat="king in kingData.topList">
+                <img class="king" src="img/picture_king.png" ng-if="king.index === 0">
+                <img class="king" src="img/picture_wang.png" ng-if="king.index > 0">
 
                 <div class="content">
-                    <span class="title">测试名字</span>
-
+                    <span class="title">{{king.username}}</span>
                     <div>
                         <span>
                             <img src="img/icon_hg.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['1st'] || 0}}</i>
                         </span>
                         <span>
                             <img src="img/icon_yg.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['2rd'] || 0}}</i>
                         </span>
                         <span>
                             <img src="img/icon_tg.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['3th'] || 0}}</i>
                         </span>
                         <span>
                             <img src="img/icon_libaop.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['2'] || 0}}</i>
                         </span>
                         <span>
                             <img src="img/icon_libaoy.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['3'] || 0}}</i>
                         </span>
                         <span>
                             <img src="img/icon_liwu.png">
-                            <i>12</i>
+                            <i>{{king.prize_arr['1'] || 0}}</i>
                         </span>
                     </div>
                 </div>

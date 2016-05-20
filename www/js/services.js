@@ -362,7 +362,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 checkVersion: apiBaseUrl + 'common/checkVersion',
                 signTop: apiBaseUrl + 'Sign/signTop',
                 createForum: apiBaseUrl + 'Forum/createForum',
-
+                forumHome: apiBaseUrl + 'Forum/forumHome',
+                forumFloor: apiBaseUrl + 'Forum/forumFloor',
+                replyLandlord: apiBaseUrl + 'Forum/replyLandlord'
             },
             utility: {
                 'checkPhone': function(p) {

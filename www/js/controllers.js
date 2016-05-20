@@ -4052,11 +4052,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$location',
     '$stateParams',
     function($http, $scope, common, md5, $location, $stateParams){
-
-        console.log('sign king');
         var userObj = common.utility.cookieStore.get('userinfo');
 
-        $scope.hasLogin = false;
+        $scope.hasLogin = true;
+        $scope.noNum = true;
         $scope.userObj = userObj;
 
         common.utility.loadingShow();
@@ -4069,13 +4068,23 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         }).success(function (data) {
             common.utility.loadingHide();
             console.log(data);
-
-            if (!data.data.userNum) {
+            var signData = data.data;
+            if (!signData.userNum) {
                 $scope.hasLogin = false;
             } 
-            if (data.data.userNum || data.data.userNum === null) {
-
+            if (signData.userNum === null) {
+                //表示没有排名数据
+                $scope.noNum = true;
+                $scope.hasLogin = true;
             }
+            if (signData.userNum) {
+                $scope.noNum = false;
+                $scope.hasLogin = true;
+            }
+            for (var i = 0; i < signData.topList.length; i++) {
+                signData.topList[i].index = i;
+            }
+            $scope.kingData = signData;
         });
     }
 ])
@@ -4139,8 +4148,68 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'md5',
     '$location',
     function($http, $scope, common, md5, $location){
+        $scope.dataList = [];
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 10;
 
+        $scope.initList = function() {
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                var paramsObj = {
+                    per: 20,
+                    page: $scope.currentPage
+                };
+                paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                $http({
+                    method: 'post',
+                    url: common.API.forumHome,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.forumList.map(function(c){
+                            c.avatar = d.data.host + c.avatar;
+                            for (var i = 0; i < c.pictures.length; i++) {
+                                c.pictures[i] = d.data.host + c.pictures[i];
+                            }
 
+                            var now = new Date(), postTime = new Date(c.create_at * 1000), timeStamp;
+                            timeStamp = now - postTime;
+                            //设置发帖的时间
+                            //刚刚，1分钟前，10分钟前，1小时以前，3小时以前，5小时以前，不在当天的显示日期
+                            if (timeStamp < 60000) {
+                                c.timeStr = '刚刚';
+                            } else if (timeStamp < 600000) {
+                                c.timeStr = '1分钟前';
+                            } else if (timeStamp < 60 * 60000) {
+                                c.timeStr = '10分钟前';
+                            } else if (timeStamp < 180 * 60000) {
+                                c.timeStr = '1小时前';
+                            } else if (timeStamp < 300 * 60000) {
+                                c.timeStr = '3小时前';
+                            } else if (timeStamp >= 300 * 60000 && timeStamp < 720 * 60000) { 
+                                //大于5小时并且小于一天，显示5小时前
+                                c.timeStr = '5小时前';
+                            } else if (timeStamp >= 720 * 2 * 60000 && now.getDate() - postTime.getDate() === 1) {
+                                c.timeStr = '昨天';
+                            } else {
+                                c.timeStr = postTime.format('MM-dd');
+                            }
+
+                            // if (timeStamp < )
+                        });
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.dataList = $scope.dataList.concat(d.data.forumList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }
+        };
     }
 ])
 
@@ -4151,44 +4220,227 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     '$location',
-    function($http, $scope, common, md5, $location){
-        //
+    '$cordovaCamera',
+    '$ionicActionSheet',
+    function($http, $scope, common, md5, $location, $cordovaCamera, $ionicActionSheet){
         $scope.postModel = {
             title: '',
             content: '',
             pictures: []
         };
-        console.log('square post');
-        
+        $scope.photos = [];
+        var options = {
+            quality: 95,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: false,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 600,
+            targetHeight: 600,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false,
+            correctOrientation: true
+        }, _savePicture = function(s){
+            $scope.photos.push(s);
+        };
 
+        $scope.post = function () {
+            if ($scope.postModel.title !== '' && $scope.postModel.content !== '') {
+                common.utility.checkLogin().success(function (u) {
+                    var paramsObj = {
+                        title: $scope.postModel.title,
+                        content: $scope.postModel.content,
+                        uid: u.uid,
+                        token: u.token,
+                        pictures: $scope.photos
+                    };
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.createForum,
+                        data: paramsObj
+                    }).success(function (data) {
+                        common.utility.loadingHide();
+                        common.utility.alert('提示', data.msg).then(function (argument) {
+                            $location.path('/square');
+                        });
+                    }).error(function () {
+                        common.utility.loadingHide();
+                        alert('api error');
+                    })
+                }).fail(function () {
+                    common.utility.resetToken();
+                });
+            } else {
+                common.utility.alert('提示', '请输入内容！');
+            }
+        };
 
-        $scope.post = function (argument) {
-            common.utility.checkLogin().success(function (u) {
-                // body...
-                var paramsObj = {
-                    title: $scope.postModel.title,
-                    content: $scope.postModel.content,
-                    uid: u.uid,
-                    token: u.token
-                };
-                common.utility.loadingShow();
-                $http({
-                    method: 'post',
-                    url: common.API.createForum,
-                    data: paramsObj
-                }).success(function (data) {
-                    common.utility.loadingHide();
-                    common.utility.alert('提示', data.msg).then(function (argument) {
-                        $location.path('/square');
-                    });
-                }).error(function (argument) {
-                    common.utility.loadingHide();
-                    alert('api error');
-                })
-            }).fail(function (argument) {
-                common.utility.resetToken();
-            });
+        //上传照片
+        $scope.upload = function () {
+            if ($scope.photos.length >= 9) {
+                common.utility.alert('提示', '图片不能超过9张！');
+            } else {
+                var pictureSheet = $ionicActionSheet.show({
+                    buttons: [{
+                        text: '拍照'
+                    }, {
+                        text: '从相册中选取'
+                    }],
+                    cancelText: '取消',
+                    cancel: function() {},
+                    buttonClicked: function(index) {
+                        if (index === 0) {
+                            pictureSheet();
+                            options.sourceType = Camera.PictureSourceType.CAMERA;
+                            $cordovaCamera.getPicture(options).then(function(imageData) {
+                                _savePicture('data:image/jpeg;base64,' + imageData);
+                            }, function(err) {});
+                        }
+                        if (index === 1) {
+                            pictureSheet();
+                            options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+                            $cordovaCamera.getPicture(options).then(function(imageData) {
+                                _savePicture('data:image/jpeg;base64,' + imageData);
+                            }, function(err) {
+                            });
+                        }
+                    }
+                });
+            }
+        };
+    }
+])
+
+.controller('SquareThemeCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    '$stateParams',
+    '$cordovaCamera',
+    function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
+        console.log($stateParams.id);
+        var forumId = $stateParams.id,
+            // options = {
+            //     quality: 95,
+            //     destinationType: Camera.DestinationType.DATA_URL,
+            //     sourceType: Camera.PictureSourceType.CAMERA,
+            //     allowEdit: false,
+            //     encodingType: Camera.EncodingType.JPEG,
+            //     targetWidth: 600,
+            //     targetHeight: 600,
+            //     popoverOptions: CameraPopoverOptions,
+            //     saveToPhotoAlbum: false,
+            //     correctOrientation: true
+            // }, 
+
+            _savePicture = function(s){
+                $scope.photos.push(s);
+            };
+
+        $scope.dataList = [];
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 10;
+        $scope.userObj = {};
+        $scope.photos = [];
+        $scope.showPhotos = false;
+        $scope.themeRepModel = {
+            content: ''
+        };
+        $scope.replyStyle = {
+            'bottom': '0',
+            'height': ''
+        };
+        common.utility.checkLogin().success(function(u){
+            $scope.userObj = u;
+        });
+        window.addEventListener('native.keyboardshow', keyboardShowHandler);
+         
+        function keyboardShowHandler(e){
+            // alert('Keyboard height is: ' + e.keyboardHeight);
+            $scope.replyStyle = {
+                'bottom': e.keyboardHeight + 'px',
+                'bottom': e.keyboardHeight + 'px'
+            };
         }
+
+        $scope.replay = function (argument) {
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.replyLandlord,
+                data: {
+                    uid: $scope.userObj.uid,
+                    token: $scope.userObj.token,
+                    content: $scope.themeRepModel.content,
+                    forum_id: forumId,
+                    pictures: $scope.photos
+                }
+            }).success(function(data){
+                common.utility.loadingHide();
+                console.log(data);
+                alert(data.msg);
+            });
+        };
+
+        $scope.upload = function(){
+            $scope.showPhotos = !$scope.showPhotos;
+        };
+
+        $scope.uploadPic = function(){
+            options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                _savePicture('data:image/jpeg;base64,' + imageData);
+            }, function(err) {});
+        };
+
+        $scope.uploadCamera = function(){
+            options.sourceType = Camera.PictureSourceType.CAMERA;
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                _savePicture('data:image/jpeg;base64,' + imageData);
+            }, function(err) {});
+        };
+
+        $scope.initList = function() {
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                var paramsObj = {
+                    per: 20,
+                    page: $scope.currentPage,
+                    forum_id: forumId
+                };
+                $http({
+                    method: 'get',
+                    url: common.API.forumFloor,
+                    params: paramsObj
+                }).success(function(data){
+                    console.log(data);
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.forumList.map(function(c){
+                            c.avatar = d.data.host + c.avatar;
+                            for (var i = 0; i < c.pictures.length; i++) {
+                                c.pictures[i] = d.data.host + c.pictures[i];
+                            }
+
+                            var postTime = new Date(c.create_at * 1000);
+
+                            c.timeStr = postTime.format('yyyy-MM-dd');
+                        });
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.dataList = $scope.dataList.concat(d.data.forumList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }
+        };
     }
 ])
 

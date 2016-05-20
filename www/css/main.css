@@ -1306,8 +1306,7 @@ h4.tip{
     width: 40%;
     margin: 0 auto;
 }
-
-.img-content p{
+.img-content p, .detail-content p, .detail-content h2{
     white-space: normal;
 }
 .img-content img{
@@ -1336,6 +1335,16 @@ h4.tip{
     top: 8px;
     left: 40px;
 }
+.squarelist-item label{
+    left: 60px;
+    top: 0;
+}
+.squarelist-item .time{
+    position: absolute;
+    left: 60px;
+    top: 30px;
+    font-size: 12px;
+}
 .square-item .header div{
     position: absolute;;
     right: 0;
@@ -1351,15 +1360,50 @@ h4.tip{
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
 }
+.squarelist-item .header img{
+    width: 50px;
+    height: 50px;
+}
 .txt-content{
     height: 100px;
 }
 .btn-image{
     font-size: 24px;
     color: #ff8c9b;
+    margin-right: 10px;
 }
-
-
+.post-img-list img{
+    width: 20%;
+    margin: 10px 10px 0 0;
+    float: left;
+}
+.full-block{
+    display: block;
+    margin-bottom: 10px;
+}
+i.landlord{
+    font-style: normal;
+    background: #ff8e80;
+    color: #fff;
+    font-size: 12px;
+    padding: 1px 3px;
+}
+.square-item-gray{
+    background: #f8f8f8;
+}
+.square-item-gray p{
+    padding-left: 60px;
+}
+.post-btn-list a{
+    display: inline-block;
+    width: 40px;
+    margin-right: 20px;
+}
+.post-replay{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
 
 
 
