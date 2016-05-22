@@ -364,7 +364,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 createForum: apiBaseUrl + 'Forum/createForum',
                 forumHome: apiBaseUrl + 'Forum/forumHome',
                 forumFloor: apiBaseUrl + 'Forum/forumFloor',
-                replyLandlord: apiBaseUrl + 'Forum/replyLandlord'
+                replyLandlord: apiBaseUrl + 'Forum/replyLandlord',
+                replyFloor: apiBaseUrl + 'Forum/replyFloor',
+                replyUser: apiBaseUrl + 'Forum/replyUser'
             },
             utility: {
                 'checkPhone': function(p) {
@@ -396,7 +398,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
             tempData: {
                 userAddressInfo: '',
                 corporationInfo: '',
-                imgData: ''
+                imgData: '',
+                userData: {}
             }
         };
     }

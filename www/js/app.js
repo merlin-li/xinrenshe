@@ -499,6 +499,16 @@ angular.module('xinrenshe', [
             }
         })
 
+        .state('app_reply', {
+            url: '/square/:id/reply',
+            views: {
+                'content': {
+                    templateUrl: 'templates/square/reply.html',
+                    controller: 'SquareReplyCtrl'
+                }
+            }
+        })
+
 
 
 

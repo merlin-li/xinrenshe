@@ -1325,10 +1325,12 @@ h4.tip{
     -moz-border-radius: 5px;
     padding-left: 10px;
     margin-top: 15px;
+    white-space: normal;
 }
 .square-item .header{
     margin-bottom: 10px;
     position: relative;
+    min-height: 33px;
 }
 .square-item label{
     position: absolute;
@@ -1344,6 +1346,7 @@ h4.tip{
     left: 60px;
     top: 30px;
     font-size: 12px;
+    color: #c4c4c4;
 }
 .square-item .header div{
     position: absolute;;
@@ -1361,8 +1364,8 @@ h4.tip{
     -moz-border-radius: 50%;
 }
 .squarelist-item .header img{
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
 .txt-content{
     height: 100px;
@@ -1413,9 +1416,44 @@ i.landlord{
     height: 60px;
 }
 .ion-ios-chatbubble-outline{
-    font-size: 20px;
+    /*font-size: 20px;*/
 }
-
+.first-comment{
+    border-top: solid 1px #ededed;
+    margin-left: 60px;
+}
+.first-comment p{
+    padding: 0;
+}
+.first-comment span{
+    font-size: 10px;
+}
+.reply-text{
+    width: 100%;
+    height: 100px;
+}
+.list .message-item{
+    background: #fff;
+}
+.message-item .comment{
+    background: #eaeaea;
+    color: #5b5b5b;
+    position: relative;
+    top: -5px;
+}
+.comment-icon{
+    text-align: right;
+    color: #a0a0a0;
+    padding-top: 10px;
+}
+.comment-icon i{
+    color: #f70e36;
+}
+.comment-cont{
+    background: url(../img/icon_triangle.png) no-repeat 10px 0;
+    border: solid 1px #fff;
+    position: relative;
+}
 
 
 

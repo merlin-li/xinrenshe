@@ -11,7 +11,7 @@
 
                 <span class="time">{{forum.floor > 0 ? '第' + forum.floor + '楼' : ''}} {{forum.timeStr}}</span>
 
-                <div>
+                <div ng-click="comment(forum)">
                     <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.commentList.length}}</span>
                 </div>
             </div>
@@ -22,6 +22,15 @@
 
                 <div class="clearfix {{forum.floor > 1 ? 'square-item-img' : ''}}" ng-if="forum.pictures.length > 0">
                     <img class="full full-block" ng-src="{{p}}" ng-repeat="p in forum.pictures">
+                </div>
+                <div class="first-comment" ng-if="forum.commentList.length > 0">
+                    <p ng-repeat="c in forum.commentList">
+                        <a ng-click="comment(c)">{{c.username}}</a>
+                        <i ng-if="c.isLandlord" class="landlord">楼主</i>
+                        ：{{c.content}}
+                        &nbsp;&nbsp;
+                        <span>{{formatDate(c.create_at)}}</span>
+                    </p>
                 </div>
             </div>
         </div>

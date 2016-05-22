@@ -1,0 +1,13 @@
+<ion-view title="评论" cache-view="false" hide-back-button="true">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons side="left">
+            <a ng-click="cancel()" class="button">取消</a>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a ng-click="submit()" class="button">发布</a>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content style="background-color:#f8f8f8">
+        <textarea class="reply-text" ng-model="replyModel.content" placeholder="{{replyModel.placeholder}}"></textarea>
+    </ion-content>
+</ion-view>

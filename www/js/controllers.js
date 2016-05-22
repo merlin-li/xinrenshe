@@ -4328,18 +4328,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
         console.log($stateParams.id);
         var forumId = $stateParams.id,
-              // options = {
-              //     quality: 95,
-              //     destinationType: Camera.DestinationType.DATA_URL,
-              //     sourceType: Camera.PictureSourceType.CAMERA,
-              //     allowEdit: false,
-              //     encodingType: Camera.EncodingType.JPEG,
-              //     targetWidth: 600,
-              //     targetHeight: 600,
-              //     popoverOptions: CameraPopoverOptions,
-              //     saveToPhotoAlbum: false,
-              //     correctOrientation: true
-              // }, 
+            options = {
+              quality: 95,
+              destinationType: Camera.DestinationType.DATA_URL,
+              sourceType: Camera.PictureSourceType.CAMERA,
+              allowEdit: false,
+              encodingType: Camera.EncodingType.JPEG,
+              targetWidth: 600,
+              targetHeight: 600,
+              popoverOptions: CameraPopoverOptions,
+              saveToPhotoAlbum: false,
+              correctOrientation: true
+            }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };
@@ -4396,11 +4396,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         };
 
-        $scope.upload = function(){
+        $scope.upload = function() {
             $scope.showPhotos = !$scope.showPhotos;
         };
 
-        $scope.uploadPic = function(){
+        $scope.uploadPic = function() {
             options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
             $cordovaCamera.getPicture(options).then(function(imageData) {
                 _savePicture('data:image/jpeg;base64,' + imageData);
@@ -4437,7 +4437,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             for (var i = 0; i < c.pictures.length; i++) {
                                 c.pictures[i] = d.data.host + c.pictures[i];
                             }
-
                             var postTime = new Date(c.create_at * 1000);
 
                             c.timeStr = postTime.format('yyyy-MM-dd');
@@ -4451,8 +4450,91 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
+
+        $scope.comment = function(f) { 
+            common.utility.checkLogin().success(function(u){
+                f.uuid = u.uid;
+                f.token = u.token;
+                //判断是回复楼层，还是回复用户
+                if (f.floor === 0) {
+                    return;
+                } else {
+                    common.tempData.userData = f;
+                    $location.path('/square/' + forumId + '/reply'); 
+                }
+            }).fail(function(){
+                common.utility.resetToken();
+            });
+        };
+
+        $scope.formatDate = function(t) {
+            return new Date(t * 1000).format('yyyy-MM-dd');
+        };
     }
 ])
+
+
+.controller('SquareReplyCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    '$stateParams',
+    function($http, $scope, common, md5, $location, $stateParams){
+
+        console.log(common.tempData.userData);
+
+        $scope.replyModel = {
+            content: '回复' + common.tempData.userData.username + '：',
+            placeholder: '回复' + common.tempData.userData.username + '：'
+        };
+
+        $scope.cancel = function(){
+            $location.path('/squaretheme/' + $stateParams.id);
+        };
+
+        $scope.submit = function(){
+            if ($scope.replyModel.content !== '') {
+                var fObj = common.tempData.userData,
+                    paramsObj = {
+                        forum_id: fObj.id,
+                        content: $scope.replyModel.content,
+                        reply_uid: fObj.uid,
+                        uid: fObj.uuid,
+                        token: fObj.token
+                    },
+                    apiUrl = common.API.replyFloor;
+                if (!fObj.floor) {
+                    apiUrl = common.API.replyUser;
+                    paramsObj = {
+                        forum_id: fObj.forum_id,
+                        content: $scope.replyModel.content,
+                        reply_uid: fObj.uid,
+                        reply_comment_id: fObj.id,
+                        uid: fObj.uuid,
+                        token: fObj.token
+                    };
+                }
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: apiUrl,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        common.utility.alert('提示', d.msg).then(function(){
+                            $location.path('/squaretheme/' + $stateParams.id);
+                        });
+                    });
+                });
+            }
+        };
+    }
+])
+
+
 
 
 

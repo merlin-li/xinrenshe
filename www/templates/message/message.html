@@ -1,5 +1,5 @@
 <ion-view title="信箱">
-    <ion-content has-header="true" style="background:#f6f6f6;">
+    <ion-content has-header="true">
         <div class="list list-message">
 
             <!--联名小助手-->
@@ -108,23 +108,27 @@
             </a>
 
             <!--广场小助手-->
-            <div class="item square-item" ng-repeat="forum in msgModel.msgList">
+            <div class="item square-item message-item" ng-repeat="forum in msgModel.msgList">
                 <div class="header">
                     <img ng-src="{{msgModel.host + forum.msgdata.comment_avatar}}">
-                    <label>{{forum.username}}</label>
+                    <label>{{forum.msgdata.comment_username}}</label>
                     <div>
-                        <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.comment_count}}</span>
-                        <span><i class="ion ion-ios-clock-outline"></i>&nbsp;{{forum.timeStr}}</span>
+                        <span><i class="ion ion-ios-clock-outline"></i>&nbsp;{{forum.create_at}}</span>
                     </div>
                 </div>
 
                 <div class="img-content">
-                    <h2>{{forum.message}}</h2>
                     <p>{{forum.msgdata.comment_content}}</p>
                 </div>
 
-                <div class="comment" ng-click="go(forum)">
+                <div class="comment-cont">
+                    <div class="comment">
                     {{forum.msgdata.my_content}}
+                    </div>
+                </div>
+
+                <div ng-click="comment(forum)" class="comment-icon">
+                    <span><i class="ion ion-ios-chatbubble-outline"></i> 回复</span>
                 </div>
             </div>
 
