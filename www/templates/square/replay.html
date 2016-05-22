@@ -25,22 +25,13 @@
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
-
-        <ion-infinite-scroll
-            ng-if="!noMoreData"
-            icon="ion-loading-c"
-            on-infinite="initList()" distance="10%">
-        </ion-infinite-scroll>
     </ion-content>
 
     <div class="post-replay" ng-style="replyStyle">
-        <div class="item item-input-inset theme-reply">
+        <div class="item item-input-inset">
             <a class="btn-image icon ion-image" ng-click="upload()"></a>
             <label class="item-input-wrapper">
-                <input type="text" ng-model="themeRepModel.content" placeholder="回复楼主" ng-focus="inputFocus()">
+                <input type="text" ng-model="themeRepModel.content" placeholder="回复楼主">
             </label>
             <button class="button button-small button-positive" ng-click="replay()">回复</button>
         </div>

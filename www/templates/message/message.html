@@ -96,6 +96,7 @@
                 </div>
             </a>
 
+            <!--系统消息-->
             <a ng-if="sourceType == 'system'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
                 <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">
                 <h2>{{msgModel.categoryInfo.name}}</h2>
@@ -105,6 +106,28 @@
                     <p>{{msg.message}}</p>
                 </div>
             </a>
+
+            <!--广场小助手-->
+            <div class="item square-item" ng-repeat="forum in msgModel.msgList">
+                <div class="header">
+                    <img ng-src="{{msgModel.host + forum.msgdata.comment_avatar}}">
+                    <label>{{forum.username}}</label>
+                    <div>
+                        <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.comment_count}}</span>
+                        <span><i class="ion ion-ios-clock-outline"></i>&nbsp;{{forum.timeStr}}</span>
+                    </div>
+                </div>
+
+                <div class="img-content">
+                    <h2>{{forum.message}}</h2>
+                    <p>{{forum.msgdata.comment_content}}</p>
+                </div>
+
+                <div class="comment" ng-click="go(forum)">
+                    {{forum.msgdata.my_content}}
+                </div>
+            </div>
+
         </div>
 
         <div class="tip-message" ng-if="msgModel.msgList.length <= 0">

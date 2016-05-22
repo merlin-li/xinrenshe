@@ -4210,6 +4210,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).error(function() {alert('api error.');common.utility.loadingHide();});
             }
         };
+
+        $scope.go = function(forum) {
+            $location.path('/squaretheme/' + forum.id);
+        };
     }
 ])
 
@@ -4312,6 +4316,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     }
 ])
 
+
 .controller('SquareThemeCtrl', [
     '$http',
     '$scope',
@@ -4323,19 +4328,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
         console.log($stateParams.id);
         var forumId = $stateParams.id,
-            // options = {
-            //     quality: 95,
-            //     destinationType: Camera.DestinationType.DATA_URL,
-            //     sourceType: Camera.PictureSourceType.CAMERA,
-            //     allowEdit: false,
-            //     encodingType: Camera.EncodingType.JPEG,
-            //     targetWidth: 600,
-            //     targetHeight: 600,
-            //     popoverOptions: CameraPopoverOptions,
-            //     saveToPhotoAlbum: false,
-            //     correctOrientation: true
-            // }, 
-
+              // options = {
+              //     quality: 95,
+              //     destinationType: Camera.DestinationType.DATA_URL,
+              //     sourceType: Camera.PictureSourceType.CAMERA,
+              //     allowEdit: false,
+              //     encodingType: Camera.EncodingType.JPEG,
+              //     targetWidth: 600,
+              //     targetHeight: 600,
+              //     popoverOptions: CameraPopoverOptions,
+              //     saveToPhotoAlbum: false,
+              //     correctOrientation: true
+              // }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };
@@ -4344,46 +4348,52 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.noMoreData = false;
         $scope.currentPage = 1;
         $scope.lastPage = 10;
-        $scope.userObj = {};
         $scope.photos = [];
         $scope.showPhotos = false;
         $scope.themeRepModel = {
             content: ''
         };
         $scope.replyStyle = {
-            'bottom': '0',
             'height': ''
         };
-        common.utility.checkLogin().success(function(u){
-            $scope.userObj = u;
-        });
-        window.addEventListener('native.keyboardshow', keyboardShowHandler);
-         
-        function keyboardShowHandler(e){
-            // alert('Keyboard height is: ' + e.keyboardHeight);
+
+        window.addEventListener('native.keyboardshow', function keyboardShowHandler(e){
             $scope.replyStyle = {
-                'bottom': e.keyboardHeight + 'px',
-                'bottom': e.keyboardHeight + 'px'
+                'height': (e.keyboardHeight + 60) + 'px'
             };
-        }
+            $scope.$apply();
+        });
+
+        $scope.inputFocus = function () {
+            $scope.showPhotos = true;
+        };
 
         $scope.replay = function (argument) {
-            common.utility.loadingShow();
-            $http({
-                method: 'post',
-                url: common.API.replyLandlord,
-                data: {
-                    uid: $scope.userObj.uid,
-                    token: $scope.userObj.token,
-                    content: $scope.themeRepModel.content,
-                    forum_id: forumId,
-                    pictures: $scope.photos
-                }
-            }).success(function(data){
-                common.utility.loadingHide();
-                console.log(data);
-                alert(data.msg);
-            });
+            if ($scope.themeRepModel.content !== '') {
+                common.utility.checkLogin().success(function(u){
+                    common.utility.loadingShow();
+                    $http({
+                        method: 'post',
+                        url: common.API.replyLandlord,
+                        data: {
+                            uid: u.uid,
+                            token: u.token,
+                            content: $scope.themeRepModel.content,
+                            forum_id: forumId,
+                            pictures: $scope.photos
+                        }
+                    }).success(function(data){
+                        common.utility.loadingHide();
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg).then(function(){
+                                $scope.initList();
+                            });
+                        });
+                    });
+                }).fail(function(){
+                    common.utility.resetToken();
+                });
+            }
         };
 
         $scope.upload = function(){

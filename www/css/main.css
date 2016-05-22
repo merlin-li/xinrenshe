@@ -1403,8 +1403,18 @@ i.landlord{
     position: absolute;
     bottom: 0;
     width: 100%;
+    z-index: 99;
+    background: #fff;
 }
-
+.square-item-img{
+    padding-left: 60px;
+}
+.theme-reply{
+    height: 60px;
+}
+.ion-ios-chatbubble-outline{
+    font-size: 20px;
+}
 
 
 

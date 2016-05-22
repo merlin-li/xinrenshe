@@ -3,7 +3,7 @@
         <a class="button buttons button-clear header-item" href="#/squarepost"><i class="icon ion-edit"></i></a>
     </ion-nav-buttons>
     <ion-content>
-        <a href="#/squaretheme/{{forum.id}}" class="item square-item" ng-repeat="forum in dataList">
+        <div class="item square-item" ng-repeat="forum in dataList">
             <div class="header">
                 <img ng-src="{{forum.avatar}}">
                 <label>{{forum.username}}</label>
@@ -21,10 +21,10 @@
                 </div>
             </div>
 
-            <div class="comment">
+            <div class="comment" ng-click="go(forum)">
                 我也说一句...
             </div>
-        </a>
+        </div>
 
 
 
