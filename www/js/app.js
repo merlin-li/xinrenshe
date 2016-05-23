@@ -11,8 +11,6 @@ angular.module('xinrenshe', [
     '$ionicConfigProvider',
     'ionicDatePickerProvider',
     function($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) {
-        // $ionicConfigProvider.backButton.previousTitleText(false);
-        // $ionicConfigProvider.backButton.text('');
         $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
         $ionicConfigProvider.scrolling.jsScrolling(true);
         // $ionicConfigProvider.views.maxCache(0);

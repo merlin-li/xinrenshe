@@ -103,7 +103,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
             _loadingShow = function() {
                 $ionicLoading.show({
                     template: loadingTemplate,
-                    noBackdrop: true
+                    noBackdrop: true,
+                    hideOnStateChange: true
                 });
             },
             _loadingHide = function() {
@@ -392,7 +393,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
                 'takePicture': _takePicture,
-                'getVersion': '1.0.3',
+                'getVersion': '1.0.4',
                 'deviceInfo': _deviceInfo
             },
             tempData: {

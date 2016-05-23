@@ -108,7 +108,7 @@
             </a>
 
             <!--广场小助手-->
-            <div class="item square-item message-item" ng-repeat="forum in msgModel.msgList">
+            <div ng-if="sourceType == 'forum'" class="item square-item message-item" ng-repeat="forum in msgModel.msgList">
                 <div class="header">
                     <img ng-src="{{msgModel.host + forum.msgdata.comment_avatar}}">
                     <label>{{forum.msgdata.comment_username}}</label>

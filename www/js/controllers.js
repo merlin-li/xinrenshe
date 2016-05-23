@@ -115,7 +115,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         });
                     }
                 }
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         }();
 
         $scope.go = function(b) {
@@ -178,7 +178,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 } else {
                     common.utility.alert(data.msg);
                 }
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
 
         ! function() {
@@ -290,7 +290,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
     }
@@ -306,7 +306,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             common.utility.checkLogin().success(function(u) {
                 var paramsObj = {
                     uid: u.uid,
-                    token: u.token
+                    token: u.token,
+                    version: common.utility.getVersion
                 };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
@@ -322,15 +323,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         common.utility.cookieStore.remove('userinfo');
                         common.utility.cookieStore.put('userinfo', $scope.userObj);
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {
+                    alert('网络异常.');common.utility.loadingHide();
+                });
             }).fail(function() {
                 common.utility.resetToken();
             });
         }();
-
-        $scope.logout = function(){
-            common.utility.resetToken();
-        };
     }
 ])
 
@@ -360,7 +359,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.handlePostResult(data, function(d){
                         $scope.postObj = d.data;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
 
                 var paramsObj1 = {
                     uid: u.uid,
@@ -384,7 +383,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         }
                         $scope.taskObj = d.data;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });            
@@ -409,7 +408,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 if (data.status === 200) {
                     _init();
                 }
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
 
         $scope.refresh = function() {
@@ -457,7 +456,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         }).error(function(){
             common.utility.loadingHide();
-            alert('api error.');
+            alert('网络异常.');
         });
     }
 ])
@@ -545,7 +544,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
 
@@ -649,7 +648,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
 
         $scope.takePicture = function() {
@@ -718,20 +717,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
 
         $scope.goAddress = function() {
-            // common.tempData.userAddressInfo = this.userModel;
             common.utility.cookieStore.put('useraddressinfo', this.userModel);
             $location.path('/city/setting/type/');
         };
 
         ! function() {
-            // if (common.tempData.userAddressInfo) {
-            //     $scope.userModel = common.tempData.userAddressInfo;
-            // }
             if (common.utility.cookieStore.get('useraddressinfo')) {
                 $scope.userModel = common.utility.cookieStore.get('useraddressinfo');
             }
@@ -871,7 +866,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                                 $location.path('/home');
                             });
                         }
-                    }).error(function() {alert('api error.');common.utility.loadingHide();});
+                    }).error(function() {alert('网络异常.');common.utility.loadingHide();});
                 }).fail(function(){
                     common.utility.resetToken();
                 });
@@ -911,7 +906,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 data: picParamsObj
             }).success(function(data) {
                 common.utility.loadingHide();
-            }).error(function() {alert('api error.');});
+            }).error(function() {alert('网络异常.');});
 
             //替换当前的上传图片缩略图
             $scope.orderList.map(function(t){
@@ -992,7 +987,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     });
                     common.utility.loadingHide();
                 }).error(function() {
-                    alert('api error.');
+                    alert('网络异常.');
                     common.utility.loadingHide();
                 });
             }
@@ -1020,7 +1015,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     $scope.currentPage = 1;
                     $scope.readCardList();
                 }
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             $event.stopPropagation();
         };
 
@@ -1189,7 +1184,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             $location.path('/my/' + orderType);
                         });
                     }).error(function(){
-                        alert('api error.');
+                        alert('网络异常.');
                     });
                 }
             });
@@ -1752,7 +1747,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     });
                     common.utility.loadingHide();
                 }).error(function() {
-                    alert('api error.');
+                    alert('网络异常.');
                     common.utility.loadingHide();
                 });
             }
@@ -1804,7 +1799,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.alert('提示', data.msg);
                 }
             }).error(function(){
-                alert('api error.');
+                alert('网络异常.');
             });
         };
 
@@ -2881,7 +2876,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.alert('提示', data.msg);
                 _init();
             }).error(function() {
-                alert('api error.');
+                alert('网络异常.');
                 common.utility.loadingHide();
             });
         };
@@ -2985,7 +2980,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $location.path('/joint/corporation/' + id);
                     });
                 });
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
 
         $scope.takePic = function() {
@@ -3030,7 +3025,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     });
                 });
             }).error(function() {
-                alert('api error.');
+                alert('网络异常.');
                 common.utility.loadingHide();
             });
         };
@@ -3078,7 +3073,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             $scope.done = true;
                         });
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
 
@@ -3164,7 +3159,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', d.msg);
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             };
 
             $scope.go = function(){
@@ -3252,6 +3247,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     function($http, $scope, common, md5){
+        console.log('xxxx');
         !function(){
             common.utility.checkLogin().success(function(u){
                 common.utility.loadingShow();
@@ -3277,7 +3273,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.msgList = d.data;
                     });
                 }).error(function() {
-                    alert('api error.');common.utility.loadingHide();
+                    alert('网络异常.');common.utility.loadingHide();
                 });
             }).fail(function(){
                 common.utility.resetToken();
@@ -3292,7 +3288,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     '$stateParams',
-    function($http, $scope, common, md5, $stateParams){
+    '$location',
+    function($http, $scope, common, md5, $stateParams, $location){
+        $scope.userObj = {};
         !function(){
             $scope.sourceType = $stateParams.id;
             $scope.pageTitle = '';
@@ -3304,6 +3302,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     category: $stateParams.id,
                     per: 1000
                 };
+                $scope.userObj = u;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 $http({
                     method: 'post',
@@ -3322,11 +3321,44 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.msgModel = d.data;
                         $scope.pageTitle = d.data.categoryInfo.name;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });
         }();
+
+        $scope.comment = function(c) {
+            console.log(c);
+            //回复跳转到评论的页面
+            var paramsObj = {};
+            if (c.type === 'forum_hfyhlctx') {
+                //表示 回复评论，用户回复了自己的评论，针对当前评论进行回复
+                paramsObj = {
+                    forum_id: c.msgdata.forum_id,
+                    uid: c.msgdata.comment_uid,
+                    id: c.msgdata.comment_id,
+                    uuid: $scope.userObj.uid,
+                    token: $scope.userObj.token,
+                    username: c.msgdata.comment_username,
+                    from: 'message'
+                };
+            }
+
+            if (c.type === 'forum_pllztx') {
+                //表示 评论主题帖， 用户评论的当前的主题帖，就针对该用户的楼层进行回复
+                paramsObj = {
+                    id: c.msgdata.forum_id,
+                    uid: c.msgdata.comment_uid,
+                    uuid: $scope.userObj.uid,
+                    token: $scope.userObj.token,
+                    floor: 2,
+                    username: c.msgdata.comment_username,
+                    from: 'message'
+                };
+            }
+            common.tempData.userData = paramsObj;
+            $location.path('/square/' + paramsObj.id + '/reply');
+        };
     }
 ])
 
@@ -3358,7 +3390,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         d.data.date = new Date(d.data.date * 1000).format('yyyy年MM月dd日');
                         $scope.signObj = d.data;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
 
                 var paramsObj1 = {
                     uid: u.uid,
@@ -3386,7 +3418,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.signListObj = d.data.signList;
                         $scope.usersignObj = d.data.userSignInfo;
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }).fail(function(){
                 common.utility.resetToken();
             });
@@ -3413,7 +3445,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     });
                 });
             }).error(function() {
-                alert('api error.');
+                alert('网络异常.');
                 common.utility.loadingHide();
             });
         };
@@ -3445,7 +3477,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     }).success(function(d){
                         common.utility.loadingHide();
                         common.utility.alert(d.msg);
-                    }).error(function() {alert('api error.');common.utility.loadingHide();});
+                    }).error(function() {alert('网络异常.');common.utility.loadingHide();});
                 }).fail(function(){
                     common.utility.resetToken();
                 });
@@ -3453,7 +3485,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
     }
 ])
-
 
 .controller('AboutCtrl', [
     '$http',
@@ -3543,7 +3574,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.currentPage++;
                         $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         }
     }
@@ -3591,7 +3622,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     data.data.statusText = '互换失败';
                 }
                 $scope.publishModel = data.data;
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
 
 
@@ -3642,7 +3673,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                                 _init($scope.userInfo);
                             });
                         });
-                    }).error(function() {alert('api error.');common.utility.loadingHide();});
+                    }).error(function() {alert('网络异常.');common.utility.loadingHide();});
                 }
             });
         };
@@ -3733,7 +3764,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     });
                     common.utility.loadingHide();
                 }).error(function() {
-                    alert('api error.');
+                    alert('网络异常.');
                     common.utility.loadingHide();
                 });
             }
@@ -3759,7 +3790,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $location.path('/switch/card/' + publishId);
                     });
                 });
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
     }
 ])
@@ -3845,7 +3876,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $location.path('/switch/photos/');
                     });
                 });
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         };
     }
 ])
@@ -3885,7 +3916,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 $scope.cardModel = data.data.themeList;
                 $scope.questionModel = data.data.manualList;
-            }).error(function() {alert('api error.');common.utility.loadingHide();});
+            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
         }).fail(function(){
             common.utility.resetToken();
         });
@@ -3925,7 +3956,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             $location.path('/switch');
                         });
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
     }
@@ -4089,7 +4120,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     }
 ])
 
-
 .controller('ExpandCtrl', [
     '$http',
     '$scope',
@@ -4098,6 +4128,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$location',
     function($http, $scope, common, md5, $location){
         $scope.hideShare = true;
+        $scope.userObj = {};
+
+        common.utility.checkLogin().success(function(u){
+            $scope.userObj = u;
+        }).fail(function(){
+            common.utility.resetToken();
+        });
 
         $scope.share = function(){
             $scope.hideShare = false;
@@ -4109,7 +4146,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.shareWechat = function (argument) {
             Wechat.isInstalled(function (installed) {
-                // alert("Wechat installed: " + (installed ? "Yes" : "No"));
                 if (installed) {
                     Wechat.share({
                         message: {
@@ -4121,7 +4157,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             // messageAction: "<action>dotalist</action>",
                             media: {
                                 type: Wechat.Type.LINK,
-                                webpageUrl: "http://www.xinrenclub.com/wechatshare/?suid=" + $scope.userId
+                                webpageUrl: "http://www.xinrenclub.com/wechatshare/expand.html?uname=" + escape($scope.userObj.username)
                             }
                         },
                         scene: Wechat.Scene.TIMELINE   // share to Timeline
@@ -4139,7 +4175,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         }
     }
 ])
-
 
 .controller('SquareCtrl', [
     '$http',
@@ -4207,7 +4242,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.currentPage++;
                         $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
 
@@ -4216,7 +4251,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
     }
 ])
-
 
 .controller('SquarePostCtrl', [
     '$http',
@@ -4270,7 +4304,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         });
                     }).error(function () {
                         common.utility.loadingHide();
-                        alert('api error');
+                        alert('网络异常');
                     })
                 }).fail(function () {
                     common.utility.resetToken();
@@ -4315,7 +4349,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
     }
 ])
-
 
 .controller('SquareThemeCtrl', [
     '$http',
@@ -4447,7 +4480,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.currentPage++;
                         $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                }).error(function() {alert('api error.');common.utility.loadingHide();});
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
 
@@ -4472,7 +4505,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
     }
 ])
-
 
 .controller('SquareReplyCtrl', [
     '$http',
@@ -4525,7 +4557,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', d.msg).then(function(){
-                            $location.path('/squaretheme/' + $stateParams.id);
+                            if (fObj.from) {
+                                $location.path('/message/forum');
+                            } else {
+                                $location.path('/squaretheme/' + $stateParams.id);
+                            }
                         });
                     });
                 });
