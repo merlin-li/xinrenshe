@@ -330,6 +330,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.resetToken();
             });
         }();
+
+        $scope.logout = function(){
+            common.utility.resetToken();
+        };
     }
 ])
 
@@ -1037,12 +1041,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         };
 
-        $scope.takePic = function(c) {
+        $scope.takePic = function($event, c) {
             //保存当前选中的编号
             if ($scope.selectIndex === 1 && c.order_type !== 2){
                 $scope.selectCardIndex = c.id;
                 common.utility.takePicture($cordovaCamera, _loadPicture);
             }
+            $event.stopPropagation();
         };
 
         common.utility.checkLogin().success(function(u){
@@ -3247,7 +3252,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     function($http, $scope, common, md5){
-        console.log('xxxx');
         !function(){
             common.utility.checkLogin().success(function(u){
                 common.utility.loadingShow();
@@ -3300,7 +3304,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     uid: u.uid,
                     token: u.token,
                     category: $stateParams.id,
-                    per: 1000
+                    per: 10000
                 };
                 $scope.userObj = u;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
@@ -3328,7 +3332,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         }();
 
         $scope.comment = function(c) {
-            console.log(c);
+            $event.stopPropagation();
             //回复跳转到评论的页面
             var paramsObj = {};
             if (c.type === 'forum_hfyhlctx') {
@@ -3503,51 +3507,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'md5',
     '$stateParams',
     function($http, $scope, common, md5, $stateParams){
-        
         $scope.dataList = [];
         $scope.themeTypeList = [];
         $scope.noMoreData = false;
         $scope.currentPage = 1;
         $scope.lastPage = 10;
         $scope.themeId = 0;
-
-        /*********** 获取主题类别的数据 **********/
-        common.utility.loadingShow();
-        var themeParamsObj = {
-            per: 1000
-        };
-        themeParamsObj.accessSign = md5.createHash(common.utility.createSign(themeParamsObj));
-        $http({
-            method: 'post',
-            url: common.API.themeList,
-            data: themeParamsObj
-        }).success(function(data){
-            common.utility.loadingHide();
-            common.utility.handlePostResult(data, function(d){
-                d.data.themeList.map(function(t){
-                    t.className = t.id === $scope.themeId ? 'button-positivehover' : '';
-                });
-                $scope.themeTypeList = d.data.themeList;
-            });
-        });
-        /*********** 获取主题类别的数据结束 **********/
-
-
         //获取主题内容数据
         $scope.initList = function(t) {
-            if (t && t !== $scope.themeId || t === 0) {
-                $scope.dataList = [];
-                $scope.currentPage = 1;
-                $scope.lastPage = 10;
-            }
-            if (t === 0) {
-                $scope.themeId = 0;
-            }
-            $scope.themeId = t || $scope.themeId;
-            $scope.themeTypeList.map(function(x){
-                x.className = x.id === $scope.themeId ? 'button-positivehover' : '';
-            });
-            
             if ($scope.currentPage > $scope.lastPage) {
                 $scope.noMoreData = true;
             } else {
@@ -3613,6 +3580,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 url: common.API.exchangeDetail,
                 data: paramsObj
             }).success(function(data){
+                console.log(data);
                 common.utility.loadingHide();
                 if (data.data.status === 0) {
                     data.data.statusText = '正在互换';
@@ -3700,6 +3668,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.lastPage = 10;
         $scope.showTip = false;
         $scope.pagetype = $stateParams.type ? 'select' : '';
+        $scope.switchModel = {note: ''};
 
         common.utility.checkLogin().success(function(u){
             $scope.userInfo = u;
@@ -3775,7 +3744,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 uid: $scope.userInfo.uid,
                 token: $scope.userInfo.token,
                 photo_id: p.id,
-                publish_id: publishId
+                publish_id: publishId,
+                note: $scope.switchModel.note
             };
             paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
             common.utility.loadingShow();
@@ -4246,9 +4216,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         };
 
-        $scope.go = function(forum) {
-            $location.path('/squaretheme/' + forum.id);
-        };
+        // $scope.go = function(forum) {
+        //     $location.path('/squaretheme/' + forum.id);
+        // };
     }
 ])
 
@@ -4359,19 +4329,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$stateParams',
     '$cordovaCamera',
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
-        console.log($stateParams.id);
         var forumId = $stateParams.id,
             options = {
-              quality: 95,
-              destinationType: Camera.DestinationType.DATA_URL,
-              sourceType: Camera.PictureSourceType.CAMERA,
-              allowEdit: false,
-              encodingType: Camera.EncodingType.JPEG,
-              targetWidth: 600,
-              targetHeight: 600,
-              popoverOptions: CameraPopoverOptions,
-              saveToPhotoAlbum: false,
-              correctOrientation: true
+                quality: 95,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: false,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 600,
+                targetHeight: 600,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                correctOrientation: true
             }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
@@ -4390,15 +4359,23 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             'height': ''
         };
 
-        window.addEventListener('native.keyboardshow', function keyboardShowHandler(e){
+        window.addEventListener('native.keyboardshow', function(e){
             $scope.replyStyle = {
                 'height': (e.keyboardHeight + 60) + 'px'
             };
             $scope.$apply();
         });
 
-        $scope.inputFocus = function () {
-            $scope.showPhotos = true;
+        $scope.inputBlur = function () {
+            // $scope.showPhotos = true;
+            //失去焦点的时候
+            if ($scope.photos.length === 0) {
+                if (!$scope.showPhotos) {
+                    $scope.replyStyle = {
+                        'height': '60px'
+                    };
+                }
+            }
         };
 
         $scope.replay = function (argument) {
@@ -4419,7 +4396,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         common.utility.loadingHide();
                         common.utility.handlePostResult(data, function(d){
                             common.utility.alert('提示', d.msg).then(function(){
+                                // 回复成功
+                                $scope.noMoreData = false;
+                                $scope.currentPage = 1;
+                                $scope.dataList = [];
                                 $scope.initList();
+
+                                $scope.replyStyle = {
+                                    'height': '60px'
+                                };
+                                $scope.themeRepModel.content = '';
                             });
                         });
                     });
@@ -4462,7 +4448,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     url: common.API.forumFloor,
                     params: paramsObj
                 }).success(function(data){
-                    console.log(data);
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         d.data.forumList.map(function(c){
@@ -4489,7 +4474,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 f.uuid = u.uid;
                 f.token = u.token;
                 //判断是回复楼层，还是回复用户
-                if (f.floor === 0) {
+                if (f.floor === 1) {
                     return;
                 } else {
                     common.tempData.userData = f;
@@ -4514,16 +4499,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$location',
     '$stateParams',
     function($http, $scope, common, md5, $location, $stateParams){
-
-        console.log(common.tempData.userData);
-
         $scope.replyModel = {
             content: '回复' + common.tempData.userData.username + '：',
             placeholder: '回复' + common.tempData.userData.username + '：'
         };
 
         $scope.cancel = function(){
-            $location.path('/squaretheme/' + $stateParams.id);
+            var fObj = common.tempData.userData;
+            if (fObj.from) {
+                $location.path('/message/forum');
+            } else {
+                $location.path('/squaretheme/' + $stateParams.id);
+            }
         };
 
         $scope.submit = function(){

@@ -25,27 +25,27 @@
                 <div class="content">
                     <span class="title">{{king.username}}</span>
                     <div>
-                        <span>
+                        <span ng-if="king.prize_arr['1st']">
                             <img src="img/icon_hg.png">
                             <i>{{king.prize_arr['1st'] || 0}}</i>
                         </span>
-                        <span>
+                        <span ng-if="king.prize_arr['2rd']">
                             <img src="img/icon_yg.png">
                             <i>{{king.prize_arr['2rd'] || 0}}</i>
                         </span>
-                        <span>
+                        <span ng-if="king.prize_arr['3th']">
                             <img src="img/icon_tg.png">
                             <i>{{king.prize_arr['3th'] || 0}}</i>
                         </span>
-                        <span>
+                        <span ng-if="king.prize_arr['2']">
                             <img src="img/icon_libaop.png">
                             <i>{{king.prize_arr['2'] || 0}}</i>
                         </span>
-                        <span>
+                        <span ng-if="king.prize_arr['3']">
                             <img src="img/icon_libaoy.png">
                             <i>{{king.prize_arr['3'] || 0}}</i>
                         </span>
-                        <span>
+                        <span ng-if="king.prize_arr['1']">
                             <img src="img/icon_liwu.png">
                             <i>{{king.prize_arr['1'] || 0}}</i>
                         </span>

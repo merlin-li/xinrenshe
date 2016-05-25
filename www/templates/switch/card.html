@@ -16,9 +16,17 @@
             <img ng-src="{{publishModel.host + publishModel.picture}}" class="full">
             <p>{{publishModel.requirement}}</p>
             <div class="middle">
-                <span><i class="ion ion-ios-personadd-outline"></i>&nbsp; {{publishModel.apply_count}}人</span>
-                <span><i class="ion ion-ios-clock-outline"></i>&nbsp; {{publishModel.deadline}}小时</span>
+                <span>
+                    <!-- <i class="ion ion-ios-personadd-outline"></i>   -->
+                    还能申请：{{publishModel.remain_apply_count}}人</span>
+                <span><!-- <i class="ion ion-ios-clock-outline"></i>   -->
+                    离结束还剩：{{publishModel.deadline}}小时</span>
             </div>
+
+            <div class="tag">
+                <span ng-repeat="tag in publishModel.theme_name">{{tag}}</span>
+            </div>
+
             <div class="buttons">
                 <button ng-if="!publishModel.isPublisher && publishModel.status === 0" class="button button-small {{publishModel.hasApply ? '' : 'button-positive'}}" ng-click="switchCard()">{{publishModel.hasApply ? '已申请' : '我想换'}}</button>
 
@@ -30,8 +38,6 @@
         </div>
 
         <div class="switch-card-item" ng-repeat="p in publishModel.applyList">
-            <img ng-src="{{publishModel.host + p.picture}}" class="full">
-
             <section class="switch">
                 <span class="name">{{p.username}}</span>
                 <span class="address">{{p.province + p.city}}</span>
@@ -40,7 +46,9 @@
                 <button ng-if="p.status === 1" class="button button-small">
                     <i class="ion ion-checkmark-round"></i>已选中
                 </button>
-            </section> 
+            </section>
+            <img ng-src="{{publishModel.host + p.picture}}" class="full">
+            <p>{{p.note}}</p>
         </div>
     </ion-content>
 </ion-view>

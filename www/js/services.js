@@ -393,7 +393,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
                 'takePicture': _takePicture,
-                'getVersion': '1.0.4',
+                'getVersion': '1.1.0',
                 'deviceInfo': _deviceInfo
             },
             tempData: {

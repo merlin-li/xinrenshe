@@ -1,9 +1,9 @@
-<ion-view title="广场" hide-back-button="true" cache-view="false">
+<ion-view title="社区" hide-back-button="true" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button buttons button-clear header-item" href="#/squarepost"><i class="icon ion-edit"></i></a>
+        <a class="button buttons button-clear header-item" href="#/squarepost"><i class="icon ion-post"></i></a>
     </ion-nav-buttons>
     <ion-content>
-        <div class="item square-item" ng-repeat="forum in dataList">
+        <a href="#/squaretheme/{{forum.id}}" class="item square-item" ng-repeat="forum in dataList">
             <div class="header">
                 <img ng-src="{{forum.avatar}}">
                 <label>{{forum.username}}</label>
@@ -21,10 +21,10 @@
                 </div>
             </div>
 
-            <div class="comment" ng-click="go(forum)">
+            <div class="comment">
                 我也说一句...
             </div>
-        </div>
+        </a>
 
 
 
@@ -39,7 +39,7 @@
     </ion-content>
     <ion-tabs class="tabs-icon-top tabs-color-active-positive">
         <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-        <ion-tab title="广场" icon-off="ion-arrow-swap" icon-on="ion-arrow-swap" href="#/square"></ion-tab>
+        <ion-tab title="社区" icon-off="ion-sofa" icon-on="ion-sofa-on" href="#/square"></ion-tab>
         <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/messagesx"></ion-tab>
         <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
     </ion-tabs>

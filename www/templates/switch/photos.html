@@ -11,11 +11,18 @@
 
         <div class="list photo-list">
             <div class="item" ng-repeat="p in dataList" ng-if="loadtype === 1">
-                <img ng-src="{{p.picture}}">
-                <button ng-if="pagetype!=='select' && loadtype === 1" class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+                <div><img ng-src="{{p.picture}}" class="full"></div>
+                <div class="item">
+                    <button ng-if="pagetype!=='select' && loadtype === 1" class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+                </div>
 
-                <button class="button button-positive button-small" ng-if="pagetype === 'select'" ng-click="select(p)">选这张</button>
-
+                <div class="item item-input-inset" ng-if="pagetype === 'select'">
+                    <label class="item-input-wrapper">
+                        <input type="text" ng-model="switchModel.note" placeholder="请输入你想说的话">
+                    </label>
+                    <button class="button button-positive button-small" ng-click="select(p)">选这张</button>
+                </div>
+                
                 <div class="tip-container" ng-if="loadtype === 2 || loadtype === 3">
                     <span>{{p.theme}}</span><br>
                     <span><i class="ion ion-ios-clock-outline"></i> {{p.deadline}}小时</span>
@@ -23,7 +30,7 @@
             </div>
 
             <a class="item" ng-repeat="p in dataList" ng-if="loadtype === 2" href="#/switch/card/{{p.id}}">
-                <img ng-src="{{p.picture}}">
+                <div><img ng-src="{{p.picture}}" class="full"></div>
                 <div class="tip-container" ng-if="loadtype === 2 || loadtype === 3">
                     <span>{{p.theme}}</span><br>
                     <span><i class="ion ion-ios-clock-outline"></i> {{p.deadline}}小时</span>
@@ -31,7 +38,7 @@
             </a>
 
             <a class="item" ng-repeat="p in dataList" ng-if="loadtype === 3">
-                <img ng-src="{{p.picture}}">
+                <div><img ng-src="{{p.picture}}" class="full"></div>
                 <div class="tip-container" ng-if="loadtype === 2 || loadtype === 3">
                     <span>{{p.theme}}</span><br>
                     <span><i class="ion ion-ios-clock-outline"></i> {{p.deadline}}小时</span>

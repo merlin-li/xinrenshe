@@ -1,4 +1,9 @@
-<ion-view title="主题帖" cache-view="false">
+<ion-view title="主题帖" cache-view="false" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <a href="#/square" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-ios-arrow-back"></i> 
+        </a>
+    </ion-nav-buttons>
     <ion-content>
         <div class="item square-item squarelist-item {{forum.floor > 1 ? 'square-item-gray' : ''}}" ng-repeat="forum in dataList">
             <div class="header">
@@ -49,15 +54,15 @@
         <div class="item item-input-inset theme-reply">
             <a class="btn-image icon ion-image" ng-click="upload()"></a>
             <label class="item-input-wrapper">
-                <input type="text" ng-model="themeRepModel.content" placeholder="回复楼主" ng-focus="inputFocus()">
+                <input type="text" ng-model="themeRepModel.content" placeholder="回复楼主" ng-blur="inputBlur()">
             </label>
             <button class="button button-small button-positive" ng-click="replay()">回复</button>
         </div>
-        <div class="item post-img-list clearfix" ng-if="photos.length > 0">
+        <div class="item post-img-list clearfix" ng-hide="photos.length === 0">
             <img ng-src="{{img}}" ng-repeat="img in photos">
             <img src="img/icon_tianjia2.png" ng-click="uploadPic()">
         </div>
-        <div class="item post-btn-list" ng-if="showPhotos">
+        <div class="item post-btn-list" ng-hide="!showPhotos">
             <a ng-click="uploadPic()"><img class="full" src="img/button_zp.png"></a>
             <a ng-click="uploadCamera()"><img class="full" src="img/button_pz.png"></a>
         </div>
