@@ -14,6 +14,7 @@
                 <div><img ng-src="{{p.picture}}" class="full"></div>
                 <div class="item">
                     <button ng-if="pagetype!=='select' && loadtype === 1" class="button button-positive button-small" ng-click="send(p)">发起互寄</button>
+                    <button ng-if="pagetype!=='select' && loadtype === 1" class="button button-positive button-small" ng-click="delete(p)">删除</button>
                 </div>
 
                 <div class="item item-input-inset" ng-if="pagetype === 'select'">

@@ -367,7 +367,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 forumFloor: apiBaseUrl + 'Forum/forumFloor',
                 replyLandlord: apiBaseUrl + 'Forum/replyLandlord',
                 replyFloor: apiBaseUrl + 'Forum/replyFloor',
-                replyUser: apiBaseUrl + 'Forum/replyUser'
+                replyUser: apiBaseUrl + 'Forum/replyUser',
+                deleteMyPhoto: apiBaseUrl + 'exchanged/deleteMyPhoto'
             },
             utility: {
                 'checkPhone': function(p) {

@@ -3144,10 +3144,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             $scope.hideEle = false;
             var paramsObj = {};
             common.utility.checkLogin().success(function(u){
+                console.log(u);
                 $scope.userId = u.uid;
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
                 u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
+                u.last_login_time = new Date(u.last_login_time * 1000).format('yyyy-MM-dd');
                 $scope.userModel = u;
             }).fail(function(){
                 common.utility.resetToken();
@@ -3760,7 +3762,38 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $location.path('/switch/card/' + publishId);
                     });
                 });
-            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+            }).error(function() {
+                alert('网络异常.');common.utility.loadingHide();
+            });
+        };
+
+        $scope.delete = function(p){
+            console.log(p);
+            common.utility.loadingShow();
+            var paramsObj = {
+                uid: $scope.userInfo.uid,
+                token: $scope.userInfo.token,
+                photo_id: p.id
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.deleteMyPhoto,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', d.msg).then(function(){
+                        $scope.dataList = [];
+                        $scope.noMoreData = false;
+                        $scope.currentPage = 1;
+                        $scope.lastPage = 2;
+                        $scope.initList();
+                    });
+                });
+            }).error(function(){
+                alert('网络异常.');common.utility.loadingHide();
+            });
         };
     }
 ])
