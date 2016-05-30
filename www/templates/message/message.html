@@ -1,4 +1,9 @@
-<ion-view title="信箱">
+<ion-view title="信箱" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <a href="#/messagesx" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-ios-arrow-back"></i> 
+        </a>
+    </ion-nav-buttons>
     <ion-content>
         <div class="list list-message">
 
@@ -108,7 +113,7 @@
             </a>
 
             <!--广场小助手-->
-            <a ng-if="sourceType == 'forum'" class="item square-item message-item" ng-repeat="forum in msgModel.msgList">
+            <a ng-if="sourceType == 'forum'" ng-click="go(forum)" class="item square-item message-item" ng-repeat="forum in msgModel.msgList">
                 <div class="header">
                     <img ng-src="{{msgModel.host + forum.msgdata.comment_avatar}}">
                     <label>{{forum.msgdata.comment_username}}</label>
@@ -127,7 +132,7 @@
                     </div>
                 </div>
 
-                <div ng-click="comment(forum)" class="comment-icon">
+                <div ng-click="comment($event, forum)" class="comment-icon">
                     <span><i class="ion ion-ios-chatbubble-outline"></i> 回复</span>
                 </div>
             </a>

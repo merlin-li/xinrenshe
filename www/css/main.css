@@ -103,6 +103,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .sign-header span{
     display: block;
     color: #fff;
+    font-size: 14px;
 }
 .sign-header span:first-child{
     margin-top: 10px;
@@ -740,7 +741,6 @@ ul.send-tip{
 }
 .list-message p{
     white-space: normal;
-    border-bottom: solid 1px #f6f6f6;
     padding-bottom: 7px;
 }
 .list-message div img{
@@ -896,10 +896,10 @@ ul.send-tip{
 }
 .writer-question h4{
     color: #777777;
-    /*border-bottom: solid 1px #f3f3f3;*/
 }
 .writer-question p{
     color: #bebebe;
+    font-size: 14px;
 }
 .about-icon{
     width: 100px;
@@ -983,6 +983,7 @@ ul.send-tip{
 .switch-card-item .name{
     font-weight: bolder;
     color: #2f2f2f;
+    font-size: 14px;
 }
 .switch-card-item .full{
     width: 96%;
@@ -1484,6 +1485,11 @@ i.landlord{
     height: 20px;
     color: #fff;
     padding-left: 5px;
+}
+#act_container{
+    width:100%;
+    height:600px;
+    overflow: scroll;
 }
 
 

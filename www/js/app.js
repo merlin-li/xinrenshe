@@ -488,7 +488,7 @@ angular.module('xinrenshe', [
         })
 
         .state('app_squaredetail', {
-            url: '/squaretheme/:id',
+            url: '/squaretheme/:id/:from',
             views: {
                 'content': {
                     templateUrl: 'templates/square/theme.html',

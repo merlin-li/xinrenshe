@@ -1,18 +1,18 @@
 'use strict';
 angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-ratings'])
-    .config([
-        '$sceDelegateProvider',
-        '$httpProvider',
-        function($sceDelegateProvider, $httpProvider) {
-            $sceDelegateProvider.resourceUrlWhitelist([
-                'self',
-                'http://activity.xinrenclub.com/**',
-                'http://www.xinrenclub.com/**'
-            ]);
-            $httpProvider.defaults.useXDomain = true;
-            delete $httpProvider.defaults.headers.common['X-Requested-With'];
-        }
-    ])
+.config([
+    '$sceDelegateProvider',
+    '$httpProvider',
+    function($sceDelegateProvider, $httpProvider) {
+        $sceDelegateProvider.resourceUrlWhitelist([
+            'self',
+            'http://activity.xinrenclub.com/**',
+            'http://www.xinrenclub.com/**'
+        ]);
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+])
 
 .controller('HomeCtrl', [
     '$scope',
@@ -25,27 +25,32 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     function($scope, $http, common, $location, $ionicSlideBoxDelegate, $ionicPopup, $ionicLoading) {
         ! function() {
             var platformType = common.utility.deviceInfo,
-                os = 0;
+                os = 0, userObj, paramsObj;
             if (platformType === 'ios') {
                 os = 1;
             }
             if (platformType === 'android') {
                 os = 2;
             }
-
+            paramsObj = {
+                os: os,
+                version: common.utility.getVersion
+            };
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
             common.utility.cookieStore.remove('areainfo3');
             common.utility.cookieStore.remove('bannerurl');
+            common.utility.cookieStore.remove('picurl');
+            common.utility.checkLogin().success(function(u){
+                paramsObj.uid = u.uid;
+                paramsObj.token = u.token;
+            });
             //初始化事件
             common.utility.loadingShow();
             $http({
                 method: 'get',
                 url: common.API.home,
-                params: {
-                    os: os,
-                    version: common.utility.getVersion
-                }
+                params: paramsObj
             }).success(function(data) {
                 //检查是否需要版本更新
                 common.utility.loadingHide();
@@ -284,7 +289,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).success(function(data) {
                     if (data.status === 200) {
                         common.utility.alert('提示', '重置密码成功！').then(function(){
-                            // common.utility.cookieStore.put('userinfo', data.data);
                             $location.path('/user/login');
                         });
                     } else {
@@ -318,8 +322,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).success(function(data) {
                     common.utility.handlePostResult(data, function(d){
                         $scope.userObj = d.data.userInfo;
-                        $scope.userObj.avatar = d.data.host + d.data.userInfo.avatar;
+                        $scope.userObj.avatar = d.data.userInfo.avatar;
+                        $scope.userObj.host = d.data.host;
                         $scope.userObj.token = d.data.token;
+                        // $scope.userObj.last_login_time = (new Date(d.data.last_login_time * 1000)).format('yyyy-MM-dd')
                         common.utility.cookieStore.remove('userinfo');
                         common.utility.cookieStore.put('userinfo', $scope.userObj);
                     });
@@ -710,7 +716,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
                 var accessSign = md5.createHash(common.utility.createSign(paramsObj));
                 paramsObj.accessSign = accessSign;
-                // console.log(paramsObj);
                 $http({
                     method: 'post',
                     url: common.API.setConsigneeInfo,
@@ -2403,7 +2408,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     i = selectedTime.getUTCMinutes();
                 }
                 $scope.activity_time_his = h + ':' + i;
-                //console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
                 $scope.activity_time = $scope.activity_time_ymd + ' ' + $scope.activity_time_his;
             }
         }
@@ -3136,6 +3140,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 data: userParamsObj
             }).success(function(d){
                 d.data.userInfo.create_at = new Date(d.data.userInfo.create_at * 1000).format('yyyy-MM-dd');
+                d.data.userInfo.last_login_time = new Date(d.data.userInfo.last_login_time * 1000).format('yyyy-MM-dd');
                 d.data.userInfo.avatar = d.data.host + d.data.userInfo.avatar;
                 $scope.userModel = d.data.userInfo;
                 $scope.hideEle = true;
@@ -3144,7 +3149,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             $scope.hideEle = false;
             var paramsObj = {};
             common.utility.checkLogin().success(function(u){
-                console.log(u);
                 $scope.userId = u.uid;
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
@@ -3333,8 +3337,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             });
         }();
 
-        $scope.comment = function(c) {
-            $event.stopPropagation();
+        $scope.comment = function($event, c) {
             //回复跳转到评论的页面
             var paramsObj = {};
             if (c.type === 'forum_hfyhlctx') {
@@ -3364,6 +3367,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
             common.tempData.userData = paramsObj;
             $location.path('/square/' + paramsObj.id + '/reply');
+            $event.stopPropagation();
+        };
+
+        $scope.go = function (f) {
+            $location.path('squaretheme/' + f.msgdata.forum_pid + '/message_forum');
         };
     }
 ])
@@ -3582,7 +3590,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 url: common.API.exchangeDetail,
                 data: paramsObj
             }).success(function(data){
-                console.log(data);
                 common.utility.loadingHide();
                 if (data.data.status === 0) {
                     data.data.statusText = '正在互换';
@@ -3768,7 +3775,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.delete = function(p){
-            console.log(p);
             common.utility.loadingShow();
             var paramsObj = {
                 uid: $scope.userInfo.uid,
@@ -4101,7 +4107,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }
         }).success(function (data) {
             common.utility.loadingHide();
-            console.log(data);
             var signData = data.data;
             if (!signData.userNum) {
                 $scope.hasLogin = false;
@@ -4248,10 +4253,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
         };
-
-        // $scope.go = function(forum) {
-        //     $location.path('/squaretheme/' + forum.id);
-        // };
     }
 ])
 
@@ -4392,16 +4393,20 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             'height': ''
         };
 
-        window.addEventListener('native.keyboardshow', function(e){
-            $scope.replyStyle = {
-                'height': (e.keyboardHeight + 60) + 'px'
-            };
-            $scope.$apply();
-        });
+        $scope.goBack = function() {
+            $location.path($stateParams.from.split('_').join('/'));
+        };
+
+        // window.addEventListener('native.keyboardshow', function(e){
+        //     $scope.replyStyle = {
+        //         'height': (e.keyboardHeight + 60) + 'px'
+        //     };
+        //     $scope.$apply();
+        // });
 
         $scope.inputBlur = function () {
             // $scope.showPhotos = true;
-            //失去焦点的时候
+            //失去焦点的时候，上传照片总数为0并且上传照片照片不显示的时候，隐藏
             if ($scope.photos.length === 0) {
                 if (!$scope.showPhotos) {
                     $scope.replyStyle = {
@@ -4410,6 +4415,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }
             }
         };
+
 
         $scope.replay = function (argument) {
             if ($scope.themeRepModel.content !== '') {
@@ -4430,11 +4436,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         common.utility.handlePostResult(data, function(d){
                             common.utility.alert('提示', d.msg).then(function(){
                                 // 回复成功
-                                $scope.noMoreData = false;
-                                $scope.currentPage = 1;
-                                $scope.dataList = [];
-                                $scope.initList();
-
+                                var replyObj = d.data;
+                                replyObj.username = u.username;
+                                replyObj.timeStr = (new Date(replyObj.create_at * 1000)).format('yyyy-MM-dd');
+                                //楼层
+                                replyObj.floor = $scope.dataList.length + 1;
+                                //是否是楼主
+                                replyObj.isLandlord = u.uid === $scope.dataList[0].uid;
+                                //头像
+                                replyObj.avatar = replyObj.host + replyObj.avatar;
+                                for (var i = 0; i < replyObj.pictures.length; i++) {
+                                    replyObj.pictures[i] = replyObj.host + replyObj.pictures[i];
+                                }
+                                $scope.dataList.push(replyObj);
                                 $scope.replyStyle = {
                                     'height': '60px'
                                 };
@@ -4449,7 +4463,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.upload = function() {
-            $scope.showPhotos = !$scope.showPhotos;
+            //左侧上传图片的小图标
+//            var inputHeight = parseInt($scope.replyStyle.height);
+//            if (inputHeight > 60) {
+//                //表示键盘开启
+//                $scope.showPhotos = true;
+//            } else {
+                $scope.showPhotos = !$scope.showPhotos;
+                if (!$scope.showPhotos) {
+                    $scope.replyStyle = {
+                        'height': '60px'
+                    };
+                }
+//            }
         };
 
         $scope.uploadPic = function() {
@@ -4542,7 +4568,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             if (fObj.from) {
                 $location.path('/message/forum');
             } else {
-                $location.path('/squaretheme/' + $stateParams.id);
+                $location.path('/squaretheme/' + $stateParams.id + '/square');
             }
         };
 
@@ -4580,7 +4606,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             if (fObj.from) {
                                 $location.path('/message/forum');
                             } else {
-                                $location.path('/squaretheme/' + $stateParams.id);
+                                $location.path('/squaretheme/' + $stateParams.id + '/square');
                             }
                         });
                     });

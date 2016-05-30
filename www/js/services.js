@@ -14,8 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        offline = true;
-        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.4/' : 'http://api.xinrenclub.com/v1.3/';
+        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.4/' : 'http://api.xinrenclub.com/v1.4/';
 
         //判断是不是stage环境
         // if (location.indexOf('?stage') >= 0) {
