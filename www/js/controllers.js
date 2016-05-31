@@ -55,6 +55,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 //检查是否需要版本更新
                 common.utility.loadingHide();
                 if (data.status === 200) {
+                    common.tempData.homeData = data.data;
                     $scope.dataObj = data.data;
                     $scope.dataObj.host = data.data.host;
                     $ionicSlideBoxDelegate.update();
@@ -307,14 +308,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'md5',
     function($scope, $http, common, md5) {
         ! function() {
+            $scope.userObj = {
+                hasLogin: false,
+                avatar: 'img/tx_1.png'
+            };
             common.utility.checkLogin().success(function(u) {
+                $scope.userObj.hasLogin = true;
                 var paramsObj = {
                     uid: u.uid,
                     token: u.token,
                     version: common.utility.getVersion
                 };
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
-
                 $http({
                     method: 'post',
                     url: common.API.getUserInfo,
@@ -325,15 +330,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.userObj.avatar = d.data.userInfo.avatar;
                         $scope.userObj.host = d.data.host;
                         $scope.userObj.token = d.data.token;
-                        // $scope.userObj.last_login_time = (new Date(d.data.last_login_time * 1000)).format('yyyy-MM-dd')
                         common.utility.cookieStore.remove('userinfo');
                         common.utility.cookieStore.put('userinfo', $scope.userObj);
                     });
                 }).error(function() {
-                    alert('网络异常.');common.utility.loadingHide();
+                    alert('网络异常.');
+                    common.utility.loadingHide();
                 });
-            }).fail(function() {
-                common.utility.resetToken();
             });
         }();
 
@@ -838,48 +841,52 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$location',
     'md5',
     '$http',
-    function($scope, common, $location, md5, $http) {
-        $scope.sendModel = {
-            agree: true,
-            showResult: false
-        };
+    '$ionicPopup',
+    function($scope, common, $location, md5, $http, $ionicPopup) {
+        console.log(common.tempData.homeData);
+        $scope.dataModel = common.tempData.homeData;
+        $scope.send = function() {
+            var confirmPopup = $ionicPopup.confirm({
+                title: '温馨提示',
+                template: '你要为陌生人写片，并且满足对方的要求在15天内寄出？',
+                cancelText: '不寄了',
+                okText: '确定'
+            });
+            confirmPopup.then(function(res){
+                if (res) {
+                    // console.log(res);
+                    common.utility.checkLogin().success(function(u){
+                        common.utility.loadingShow();
+                        var paramsObj = {
+                            uid: u.uid,
+                            token: u.token
+                        };
+                        paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
-        $scope.request = function() {            
-            if (!this.sendModel.agree) {
-                common.utility.alert('提示', '请同意阅读提示！');
-            } else {
-                // $location.path('/card/send');
-                common.utility.checkLogin().success(function(u){
-                    common.utility.loadingShow();
-                    var paramsObj = {
-                        uid: u.uid,
-                        token: u.token
-                    };
-                    paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                        $http({
+                            method: 'post',
+                            url: common.API.getDestinyUser,
+                            data: paramsObj
+                        }).success(function(data) {
+                            common.utility.loadingHide();
+                            if(data.status === 402) {
+                                common.utility.resetToken();
+                            } else if (data.status === 501 || data.status === 200) {
+                                common.utility.alert('提示', data.msg).then(function(){
+                                    $location.path('/home');
+                                });
+                            }
+                        }).error(function() {
+                            alert('网络异常.');
+                            common.utility.loadingHide();
+                        });
+                    }).fail(function(){
+                        common.utility.resetToken();
+                    });
+                } else {
 
-                    $http({
-                        method: 'post',
-                        url: common.API.getDestinyUser,
-                        data: paramsObj
-                    }).success(function(data) {
-                        common.utility.loadingHide();
-                        if (data.status === 200) {
-                            $scope.sendModel.showResult = true;
-                            data.data.userInfo.avatar = data.data.host + data.data.userInfo.avatar;
-                            data.data.userInfo.create_at = new Date(data.data.userInfo.create_at * 1000).format('yyyy-MM-dd');
-                            $scope.userObj = data.data.userInfo;
-                        } else if(data.status === 402) {
-                            common.utility.resetToken();
-                        } else if (data.status === 501) {
-                            common.utility.alert('提示', data.msg).then(function(){
-                                $location.path('/home');
-                            });
-                        }
-                    }).error(function() {alert('网络异常.');common.utility.loadingHide();});
-                }).fail(function(){
-                    common.utility.resetToken();
-                });
-            }
+                }
+            });
         };
     }
 ])
@@ -4090,21 +4097,22 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     '$location',
-    '$stateParams',
-    function($http, $scope, common, md5, $location, $stateParams){
-        var userObj = common.utility.cookieStore.get('userinfo');
-
+    function($http, $scope, common, md5, $location){
+        var userObj = common.utility.cookieStore.get('userinfo'), paramsObj;
         $scope.hasLogin = true;
         $scope.noNum = true;
         $scope.userObj = userObj;
 
+        if (!userObj) {
+            $scope.hasLogin = false;
+            console.log('xx');
+        } else  {
+            paramsObj = {uid: userObj.uid};
+        }
         common.utility.loadingShow();
-        var paramsObj = {};
         $http({
             url: common.API.signTop,
-            params: {
-                uid: $stateParams.uid
-            }
+            params: paramsObj
         }).success(function (data) {
             common.utility.loadingHide();
             var signData = data.data;
@@ -4140,9 +4148,27 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         common.utility.checkLogin().success(function(u){
             $scope.userObj = u;
+            common.utility.loadingShow();
+            $http({
+                method: 'get',
+                url: common.API.inviteHome,
+                params: {
+                    uid: u.uid,
+                    token: u.token
+                }
+            }).success(function(data){
+                common.utility.handlePostResult(data, function(d){
+                    $scope.dataModel = d.data;
+                });
+            }).error(function(){
+                alert('网络异常.');
+                common.utility.loadingHide();
+            });
         }).fail(function(){
             common.utility.resetToken();
         });
+
+
 
         $scope.share = function(){
             $scope.hideShare = false;
@@ -4181,6 +4207,15 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 alert("Failed: " + reason);
             });           
         }
+    }
+])
+
+.controller('ExpandKingCtrl', [
+    '$http', 
+    '$scope', 
+    'Common',
+    function($http, $scope, common){
+        
     }
 ])
 

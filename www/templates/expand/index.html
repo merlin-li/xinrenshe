@@ -1,9 +1,15 @@
 <ion-view view-title="推广大使">
     <ion-content>
-        <img src="img/icon_dashi.png" class="expand">
 
-        <div class="expand-button">
-            <button class="button button-block button-positive" ng-click="share()">发出邀请</button>
+        <div class="pc-background padding">
+            <h2>好东西总是要和好友分享</h2>
+            <button class="button button-positive button-block" ng-click="send()">邀请好友</button>
+
+            <div class="pc-text">您总共有效邀请{{dataModel.total_invite_count}}人，本月有效邀请{{dataModel.invite_count}}人</div>
+            <div class="pc-avatar-list">
+                <img ng-src="{{dataModel.host + avatar.avatar}}" ng-repeat="avatar in dataModel.invitationList">
+                ……
+            </div>
         </div>
     </ion-content>
 

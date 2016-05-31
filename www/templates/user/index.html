@@ -1,41 +1,61 @@
 <ion-view title="我的" hide-back-button="true" cache-view="false">
     <ion-content has-header="true" style="background:#f6f6f6;" has-bouncing="true">
-        <div>
-            <img src="img/wd_1.jpg" class="full">
-            <div class="avatar-container">
-                <img ng-src="{{userObj.host + userObj.avatar}}">
+
+        <div class="item item-icon-right avatar-container">
+            <img ng-src="{{userObj.host + userObj.avatar}}">
+
+            <div class="name-address">
                 <span>{{userObj.username}}</span>
-                <label>收到{{userObj.receivedCount}}张  寄出{{userObj.sendCount}}张</label>
+                <label>{{userObj.province + userObj.city}}</label>
             </div>
+
+            <div class="rate" ng-if="userObj.hasLogin">
+                <a href="#">资料完善度{{userObj.completeRate}}</a>
+            </div>
+            <div class="rate rate-login" ng-if="!userObj.hasLogin">
+                <a href="#/user/login">立即登录</a>
+            </div>
+            <i ng-if="userObj.hasLogin" class="icon ion-ios-arrow-right icon-userinfo-right"></i>
         </div>
-        <br>
-        <div class="list user-list">
-            <a class="item item-icon-right" href="#/writer" ng-if="userObj.isPostcardMaster">
-                写片小能手工作室<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/switch/photos/">
-                互寄相册<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/joint/manage/myCorporation">
-                联名<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/my/sending">
-                寄信<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/my/receiving">
-                收信<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/user/view/">
-                个人资料<i class="icon ion-ios-arrow-right"></i>
-            </a>
-            <a class="item item-icon-right" href="#/setting">
-                设置<i class="icon ion-ios-arrow-right"></i>
-            </a>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
+
+        <section class="user-icon-list clearfix">
+            <div>
+                <img src="img/icon_grade.png">
+                <span>{{userObj.lv}}</span>
+                <label>等级</label>
+            </div>
+            <div>
+                <img src="img/icon_character.png">
+                <span>{{userObj.rp}}</span>
+                <label>RP值</label>
+            </div>
+            <div>
+                <img src="img/icon_bean.png">
+                <span>{{userObj.bean}}</span>
+                <label>社豆</label>
+            </div>
+            <div>
+                <img src="img/icon_rate.png">
+                <span ng-if="userObj.hasLogin">{{userObj.arrivalRate + '%'}}</span>
+                <label>到达率</label>
+            </div>
+        </section>
+
+        <section class="box clearfix">
+            <a href="#/my/receiving"><img src="img/icon_inbox.png"></a>
+            <a href="#/my/sending"><img src="img/icon_mailbox.png"></a>
+        </section>
+
+        <section class="box-icon clearfix">
+            <a href="#/switch/photos/"><img src="img/icon_album.png"></a>
+            <a href="#/joint/manage/myCorporation"><img src="img/icon_jointly.png"></a>
+            <a href="#/writer" ng-if="userObj.isPostcardMaster"><img src="img/icon_master.png"></a>
+            <a href="#/"><img src="img/icon_canon.png"></a>
+        </section>
+
+        <section class="box-icon clearfix">
+            <a href="#/setting"><img src="img/icon_setup.png"></a>
+        </section>
     </ion-content>
 
     <ion-tabs class="tabs-icon-top tabs-color-active-positive">

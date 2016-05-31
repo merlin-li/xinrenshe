@@ -448,7 +448,7 @@ angular.module('xinrenshe', [
         })
 
         .state('app_signking', {
-            url: '/sign/king/:uid',
+            url: '/sign/king',
             views: {
                 'content': {
                     templateUrl: 'templates/sign/king.html',
@@ -463,6 +463,16 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/expand/index.html',
                     controller: 'ExpandCtrl'
+                }
+            }
+        })
+
+        .state('app_expandking', {
+            url: '/expand/king',
+            views: {
+                'content': {
+                    templateUrl: 'templates/expand/king.html',
+                    controller: 'ExpandKingCtrl'
                 }
             }
         })

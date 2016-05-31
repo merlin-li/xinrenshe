@@ -367,7 +367,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 replyLandlord: apiBaseUrl + 'Forum/replyLandlord',
                 replyFloor: apiBaseUrl + 'Forum/replyFloor',
                 replyUser: apiBaseUrl + 'Forum/replyUser',
-                deleteMyPhoto: apiBaseUrl + 'exchanged/deleteMyPhoto'
+                deleteMyPhoto: apiBaseUrl + 'exchanged/deleteMyPhoto',
+                inviteHome: apiBaseUrl + 'Promote/inviteHome'
             },
             utility: {
                 'checkPhone': function(p) {
@@ -400,7 +401,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 userAddressInfo: '',
                 corporationInfo: '',
                 imgData: '',
-                userData: {}
+                userData: {},
+                homeData: {}
             }
         };
     }
