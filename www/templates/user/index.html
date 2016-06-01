@@ -10,7 +10,7 @@
             </div>
 
             <div class="rate" ng-if="userObj.hasLogin">
-                <a href="#">资料完善度{{userObj.completeRate}}</a>
+                <a href="#/user/view/">资料完善度{{userObj.completeRate}}</a>
             </div>
             <div class="rate rate-login" ng-if="!userObj.hasLogin">
                 <a href="#/user/login">立即登录</a>
@@ -19,7 +19,7 @@
         </div>
 
         <section class="user-icon-list clearfix">
-            <div>
+            <div ng-click="goLevel()">
                 <img src="img/icon_grade.png">
                 <span>{{userObj.lv}}</span>
                 <label>等级</label>
@@ -50,7 +50,7 @@
             <a href="#/switch/photos/"><img src="img/icon_album.png"></a>
             <a href="#/joint/manage/myCorporation"><img src="img/icon_jointly.png"></a>
             <a href="#/writer" ng-if="userObj.isPostcardMaster"><img src="img/icon_master.png"></a>
-            <a href="#/"><img src="img/icon_canon.png"></a>
+            <a href="#/tips/baodian"><img src="img/icon_canon.png"></a>
         </section>
 
         <section class="box-icon clearfix">

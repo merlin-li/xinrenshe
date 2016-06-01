@@ -67,15 +67,25 @@ angular.module('xinrenshe', [
             url: '/user/login',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/login.html',
+                    templateUrl: 'templates/user/account/login.html',
                     controller: 'LoginCtrl'
                 }
             }
-        }).state('app_signup', {
+        })
+        .state('app_user_level', {
+            url: '/user/level',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/info/level.html',
+                    controller: 'UserCtrl'
+                }
+            }
+        })
+        .state('app_signup', {
             url: '/user/signup',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/signup.html',
+                    templateUrl: 'templates/user/account/signup.html',
                     controller: 'SignupCtrl'
                 }
             }
@@ -84,7 +94,7 @@ angular.module('xinrenshe', [
             url: '/user/forgetpwd',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/forgetpwd.html',
+                    templateUrl: 'templates/user/account/forgetpwd.html',
                     controller: 'ForgetpwdCtrl'
                 }
             }
@@ -105,7 +115,9 @@ angular.module('xinrenshe', [
                     controller: 'SetUserInfoCtrl'
                 }
             }
-        }).state('app_setting_address', {
+        })
+
+        .state('app_setting_address', {
             url: '/setting/address',
             views: {
                 'content': {
@@ -113,7 +125,18 @@ angular.module('xinrenshe', [
                     controller: 'SetAddressCtrl'
                 }
             }
-        }).state('app_city_setting', {
+        })
+
+        .state('app_add_address', {
+            url: '/my/address/add',
+            views: {
+                'content': {
+                    templateUrl: 'templates/setting/address.html'
+                }
+            }
+        })
+
+        .state('app_city_setting', {
             url: '/city/setting/type/:type',
             views: {
                 'content': {
@@ -141,7 +164,7 @@ angular.module('xinrenshe', [
             url: '/my/sending',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/sending.html',
+                    templateUrl: 'templates/user/card/sending.html',
                     controller: 'MySendingCtrl'
                 }
             }
@@ -157,7 +180,7 @@ angular.module('xinrenshe', [
             url: '/my/receiving',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/receiving.html',
+                    templateUrl: 'templates/user/card/receiving.html',
                     controller: 'MyReceivingCtrl'
                 }
             }
@@ -165,8 +188,8 @@ angular.module('xinrenshe', [
             url: '/my/address',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/useraddress.html',
-                    controller: 'MyAddressCtrl'
+                    templateUrl: 'templates/user/info/addresslist.html',
+                    controller: 'MyAddressListCtrl'
                 }
             }
         }).state('app_joint', {
@@ -513,6 +536,27 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/square/reply.html',
                     controller: 'SquareReplyCtrl'
+                }
+            }
+        })
+
+        .state('app_user_wish', {
+            url: '/user/wish',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/info/wish.html',
+                    controller: 'UserViewCtrl'
+                }
+            }
+        })
+
+
+        .state('app_report', {
+            url: '/report/:from/:id',
+            views: {
+                'content': {
+                    templateUrl: 'templates/square/report.html',
+                    controller: 'ReportCtrl'
                 }
             }
         })

@@ -1,0 +1,23 @@
+<ion-view title="收信地址">
+    <ion-nav-buttons side="right">
+        <a href="#/setting/address/my_address" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-android-add"></i> 
+        </a>
+    </ion-nav-buttons>
+    <ion-content has-header="true">
+
+        <div class="item" ng-repeat="address in consigneeList">
+            <section>
+                <div>
+                    <span>{{address.consignee_username}}</span>
+                    <span>{{address.zip_code}}</span>
+                </div>
+                {{address.consignee_addr}}
+            </section>
+            <select>
+
+            </select>
+        </div>
+
+    </ion-content>
+</ion-view>

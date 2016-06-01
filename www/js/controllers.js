@@ -306,14 +306,15 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$http',
     'Common',
     'md5',
-    function($scope, $http, common, md5) {
+    '$location',
+    function($scope, $http, common, md5, $location) {
         ! function() {
             $scope.userObj = {
                 hasLogin: false,
                 avatar: 'img/tx_1.png'
             };
             common.utility.checkLogin().success(function(u) {
-                $scope.userObj.hasLogin = true;
+                
                 var paramsObj = {
                     uid: u.uid,
                     token: u.token,
@@ -332,6 +333,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.userObj.token = d.data.token;
                         common.utility.cookieStore.remove('userinfo');
                         common.utility.cookieStore.put('userinfo', $scope.userObj);
+                        $scope.userObj.hasLogin = true;
                     });
                 }).error(function() {
                     alert('网络异常.');
@@ -342,6 +344,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.logout = function(){
             common.utility.resetToken();
+        };
+
+        $scope.goLevel = function(){
+            $location.path('/user/level');
         };
     }
 ])
@@ -758,6 +764,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         }();
     }
 ])
+
+
 
 .controller('CitySettingCtrl', [
     '$scope',
@@ -1888,8 +1896,41 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.postData(url, params, true, true, success);
             }
         };
+
+
     }
 ])
+
+.controller('MyAddressListCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    '$location',
+    function($scope, $http, common, $location) {
+
+        common.utility.loadingShow();
+        common.utility.checkLogin().success(function(u){
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token
+            };
+
+            $http({
+                method: 'post',
+                url: common.API.consigneeList,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                console.log(data);
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+    }
+])
+
+
+
 
 .controller('JointHomeCtrl', [
     '$scope',
@@ -3136,7 +3177,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         var userId = $stateParams.id,
             userParamsObj = {
                 suid: userId
-            };
+            }, now = new Date();
         userParamsObj.accessSign = md5.createHash(common.utility.createSign(userParamsObj));
 
         if (userId) {
@@ -3146,9 +3187,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 url: common.API.searchUserInfo,
                 data: userParamsObj
             }).success(function(d){
-                d.data.userInfo.create_at = new Date(d.data.userInfo.create_at * 1000).format('yyyy-MM-dd');
-                d.data.userInfo.last_login_time = new Date(d.data.userInfo.last_login_time * 1000).format('yyyy-MM-dd');
+                d.data.userInfo.create_at = Math.floor((now.getTime() - d.data.userInfo.create_at * 1000) / (24 * 3600000));
+                d.data.userInfo.last_login_time = new Date(d.data.userInfo.last_login_time * 1000).format('MM-dd');
                 d.data.userInfo.avatar = d.data.host + d.data.userInfo.avatar;
+                if (d.data.userInfo.province === d.data.userInfo.city) {
+                    d.data.userInfo.city = '';
+                }
                 $scope.userModel = d.data.userInfo;
                 $scope.hideEle = true;
             });
@@ -3159,8 +3203,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 $scope.userId = u.uid;
                 paramsObj.uid = u.uid;
                 paramsObj.token = u.token;
-                u.create_at = new Date(u.create_at * 1000).format('yyyy-MM-dd');
-                u.last_login_time = new Date(u.last_login_time * 1000).format('yyyy-MM-dd');
+                u.last_login_time = new Date(u.last_login_time * 1000).format('MM-dd');
+                u.create_at = Math.floor((now.getTime() - u.create_at * 1000) / (24 * 3600000));
+                if (u.province === u.city) {
+                    u.city = '';
+                }
                 $scope.userModel = u;
             }).fail(function(){
                 common.utility.resetToken();
@@ -3169,22 +3216,45 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             $scope.save = function(){
                 paramsObj.introduction = this.userModel.introduction;
                 paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                common.utility.loadingShow();
                 $http({
                     method: 'post',
                     url: common.API.introduction,
                     data: paramsObj
                 }).success(function(data){
+                    common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-                        common.utility.alert('提示', d.msg);
+                        common.utility.alert('提示', d.msg).then(function(){
+                            //重置保存在storage的数据
+                            var userCookieObj = common.utility.cookieStore.get('userinfo');
+                            userCookieObj.introduction = paramsObj.introduction;
+                            common.utility.cookieStore.remove('userinfo');
+                            common.utility.cookieStore.put('userinfo', userCookieObj);
+                            $location.path('/user/view/');
+                        });
                     });
-                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+                }).error(function() {
+                    alert('网络异常.');
+                    common.utility.loadingHide();
+                });
             };
 
             $scope.go = function(){
                 $location.path('/my/userinfo');
             };
+
+            $scope.updateAddress = function(){
+                //更新收信地址
+                $location.path('/my/address');
+            };
+
+            $scope.updateWish = function(){
+                //更新wish
+                $location.path('/user/wish');
+            };
         }
 
+        $scope.backgroundImg = 'img/theme/icon_image' + now.getDay() + '.png';
 
         $scope.sendto = function(){
             var confirmPopup = $ionicPopup.confirm({
@@ -3472,7 +3542,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
     }
 ])
-
 
 .controller('FeedbackCtrl', [
     '$http',
@@ -4397,20 +4466,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$location',
     '$stateParams',
     '$cordovaCamera',
-    function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
+    '$ionicActionSheet',
+    function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera, $ionicActionSheet){
         var forumId = $stateParams.id,
-            options = {
-                quality: 95,
-                destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.CAMERA,
-                allowEdit: false,
-                encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 600,
-                targetHeight: 600,
-                popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false,
-                correctOrientation: true
-            }, 
+            // options = {
+            //     quality: 95,
+            //     destinationType: Camera.DestinationType.DATA_URL,
+            //     sourceType: Camera.PictureSourceType.CAMERA,
+            //     allowEdit: false,
+            //     encodingType: Camera.EncodingType.JPEG,
+            //     targetWidth: 600,
+            //     targetHeight: 600,
+            //     popoverOptions: CameraPopoverOptions,
+            //     saveToPhotoAlbum: false,
+            //     correctOrientation: true
+            // }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };
@@ -4432,6 +4502,29 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             $location.path($stateParams.from.split('_').join('/'));
         };
 
+        $scope.operation = function() {
+            var operationSheet = $ionicActionSheet.show({
+                buttons: [{
+                    text: '举报'
+                }, {
+                    text: '删除'
+                }],
+                cancelText: '取消',
+                cancel: function() {},
+                buttonClicked: function(index) {
+                    if (index === 0) {
+                        //举报
+                        $location.path('/report/forum/' + forumId);
+                    }
+                    if (index === 1) {
+                        //删除
+                        operationSheet();
+                        
+                    }
+                }
+            });
+        };
+
         // window.addEventListener('native.keyboardshow', function(e){
         //     $scope.replyStyle = {
         //         'height': (e.keyboardHeight + 60) + 'px'
@@ -4450,7 +4543,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }
             }
         };
-
 
         $scope.replay = function (argument) {
             if ($scope.themeRepModel.content !== '') {
@@ -4498,19 +4590,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.upload = function() {
-            //左侧上传图片的小图标
-//            var inputHeight = parseInt($scope.replyStyle.height);
-//            if (inputHeight > 60) {
-//                //表示键盘开启
-//                $scope.showPhotos = true;
-//            } else {
-                $scope.showPhotos = !$scope.showPhotos;
-                if (!$scope.showPhotos) {
-                    $scope.replyStyle = {
-                        'height': '60px'
-                    };
-                }
-//            }
+            $scope.showPhotos = !$scope.showPhotos;
+            if (!$scope.showPhotos) {
+                $scope.replyStyle = {
+                    'height': '60px'
+                };
+            }
         };
 
         $scope.uploadPic = function() {
@@ -4579,9 +4664,77 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             });
         };
 
+        $scope.report = function(f) {
+            console.log(f);
+            $location.path('/report/forum/' + f.id);
+        };
+
         $scope.formatDate = function(t) {
             return new Date(t * 1000).format('yyyy-MM-dd');
         };
+    }
+])
+
+.controller('ReportCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    'md5',
+    '$location',
+    '$stateParams',
+    function($http, $scope, common, md5, $location, $stateParams){
+        var from = $stateParams.from, 
+            id = $stateParams.id;
+
+        $scope.reportList = [];
+        $scope.reportItem = {};
+        $scope.userInfo = {};
+        $scope.submit = function() {
+            console.log(this.reportItem);
+            if ($scope.reportItem.id) {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.forumReport,
+                    data: {
+                        forum_id: id,
+                        option_id: $scope.reportItem.id,
+                        uid: $scope.userInfo.uid,
+                        token: $scope.userInfo.token
+                    }
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        $location.path('/square');
+                    });
+                });
+            }
+        };
+
+        $scope.select = function(o) {
+            $scope.reportItem = o;
+        };
+
+        common.utility.checkLogin().success(function(u){
+            var paramsObj = {
+                uid: u.uid,
+                token: u.token,
+                report_type: 1
+            };
+            $scope.userInfo = u;
+            $http({
+                method: 'post',
+                url: common.API.reportoptions,
+                data: paramsObj
+            }).success(function(data){
+                console.log(data);
+                common.utility.handlePostResult(data, function(d){
+                    $scope.reportList = d.data.optionList;
+                });
+            });
+        }).fail(function(){
+            common.utility.resetToken();
+        });
     }
 ])
 

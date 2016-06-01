@@ -1,62 +1,77 @@
 <ion-view title="个人资料">
     <ion-nav-buttons side="right">
-        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="share()"><i class="icon ion-share"></i></a>
+        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="share()"><i class="icon ion-ios-more"></i></a>
     </ion-nav-buttons>
-    <ion-content has-header="true" style="background:#f6f6f6;">
+    <ion-content has-header="true">
         <div class="list me-list">
-            <a ng-click="go()" class="item item-icon-right" style="padding:0">
-                <img src="img/bj_1.png" class="full">
-                <div class="me-container">
-                    <img ng-src="{{userModel.host + userModel.avatar}}">
+            <div class="item item-icon-right" style="padding:0">
+                <img ng-src="{{backgroundImg}}" class="full">
+
+                <div class="me-container" ng-click="go()">
+                    <img class="avatar" ng-src="{{userModel.host + userModel.avatar}}">
                     <div>
                         <span>
                             {{userModel.username}}
                             <i class="gender gender{{userModel.sex}}"></i>
                         </span>
-                        <br>
-                        <span>{{userModel.province}} {{userModel.city}} {{userModel.area}}</span>
                     </div>
+                    <i class="icon ion-edit" ng-if="!hideEle"></i>
                 </div>
-                <i class="icon ion-edit" ng-if="!hideEle" style="font-size:18px"></i>
-            </a>
-            <a class="item data-mine">
-                <h4>Wish</h4>
-                <textarea ng-if="!hideEle" style="width:100%" ng-model="userModel.introduction"></textarea>
-                <span ng-if="hideEle" style="white-space:normal;">{{userModel.introduction}}</span>
-            </a>
 
-            <a href="#/my/address" class="item data-mine item-icon-right" ng-if="!hideEle">
-                <h4>收信地址</h4>
-                <p>{{userModel.consignee_addr}}</p>
-                <p>{{userModel.consignee_username}}</p>
-                <p>{{userModel.zip_code}}</p>
-                <i class="icon ion-edit" style="font-size:18px"></i>
-            </a>
-            <a class="item data-mine">
-                <h4>数据</h4>
+                <ul class="me-info clearfix">
+                    <li>
+                        <span>{{userModel.province}} {{userModel.city}}</span>
+                        <img class="level" ng-src="{{'img/levelicon/' + userModel.lv + '.png'}}">
+                    </li>
+                    <li>
+                        <span>RP值</span>
+                        <label>{{userModel.rp}}</label>
+                    </li>
+                    <li class="border-left">
+                        <span>到达率</span>
+                        <label>{{userModel.arrivalRate}}%</label>
+                    </li>
+                    <li class="border-left">
+                        <span>寄信</span>
+                        <label>{{userModel.sendCount}}</label>
+                    </li>
+                    <li class="border-left">
+                        <span>入社</span>
+                        <label>{{userModel.create_at}}天</label>
+                    </li>
+                    <li class="border-left">
+                        <span>最近登录</span>
+                        <label>{{userModel.last_login_time}}</label>
+                    </li>
+                </ul>
+            </div>
 
-                <div>
-                    <span>加入时间</span>
-                    <span>{{userModel.create_at}}</span>
-                </div>
-                <div>
-                    <span>最后登录时间</span>
-                    <span>{{userModel.last_login_time}}</span>
-                </div>
-                <div>
-                    <span>到达率</span>
-                    <span>{{userModel.arrivalRate}}%</span>
-                </div>
-                <div>
-                    <span>寄出</span>
-                    <span>{{userModel.sendCount}}</span>
-                </div>
-            </a>
+            <div class="data-mine">
+                <h4 ng-click="updateWish()">
+                    Wish
+                    <i class="icon ion-edit" ng-if="!hideEle"></i>
+                </h4>
+                <section>{{userModel.introduction}}</section>
+            </div>
+            
+            <div class="data-mine">
+                <h4 ng-click="updateAddress()">
+                    收信地址
+                    <i class="icon ion-edit" ng-if="!hideEle"></i>
+                </h4>
+                <section>
+                    <div>
+                        <span>{{userModel.consignee_username}}</span>
+                        <span>{{userModel.zip_code}}</span>
+                    </div>
+                    {{userModel.consignee_addr}}
+                </section>
+            </div>
         </div>
 
         <div class="padding">
             <button class="button button-positive button-block" ng-click="sendto()" ng-if="hideEle">给Ta寄</button>
-            <button class="button button-positive button-block" ng-click="save()" ng-if="!hideEle">保存修改</button>
+            <!-- <button class="button button-positive button-block" ng-click="save()" ng-if="!hideEle">保存修改</button> -->
         </div>
     </ion-content>
 

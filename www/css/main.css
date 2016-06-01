@@ -11,20 +11,20 @@ body{
     border-color: #fff;
 }
 .button.button-positive{
-    background: #ff8c9b;
-    border-color: #ff8c9b;
+    background: #ff8e80;
+    border-color: #ff8e80;
 }
 .button.button-positive.activated{
     border-color: #ff8c9b;
 }
 .button.button-positive.activated, .button.button-positive.activate{
-    background: #ff8c9b;
+    background: #ff8e80;
 }
 .item{
     border-color: #f1f1f1;
 }
 ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-color-active-positive .tab-item.tab-item-active{
-    color: #ff8c9b;
+    color: #ff8e80;
 }
 .item-icon-left .icon, .item-icon-right .icon{
     color: #d84c60;
@@ -182,20 +182,31 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .me-container{
     position: absolute;
     top: 20px;
-    left: 20px;
     width: 100%;
     color: #fff;
 }
-.me-container span:first-child{
+.me-container span{
+    font-size: 14px;
     font-weight: bold;
 }
-.me-container span:last-child{
-    font-size: 12px;
+.me-container .icon{
+    font-size: 20px;
 }
 .me-container div{
+    height: 100%;
+    display: flex;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -webkit-box;
+    display: -ms-flex-box;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
     position: absolute;
-    left: 70px;
-    top: 10px;
+    top: 0;
+    left: 80px;
 }
 .me-list .item{
     margin-bottom: 10px;
@@ -209,24 +220,6 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 }
 .data-mine p{
     font-size: 12px;
-}
-.data-mine div{
-    border: solid 1px #dcdcdc;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    color: #adadad;
-    display: inline-block;
-    min-width: 20%;
-    padding: 10px;
-    font-size: 12px;
-}
-.data-mine div span{
-    display: block;
-    text-align: center;
-}
-.data-mine div span:last-child{
-    font-weight: bold;
 }
 .avatar-container {
     background: #fff;
@@ -271,18 +264,39 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .avatar-container .icon-userinfo-right{
     color: #bababa;
 }
+.level-container{
+    font-size: 14px;
+    text-align: center;
+}
+.level-container span{
+    color: #f81205;
+}
+.level-des{
+    text-align: left;
+    margin-top: 40px;
+}
+.level-avatar{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    display: block;
+    margin: 20px auto;
+}
 .name-address{
     width: 70px;
     top: 15px;
     left: 80px;
 }
 
-.avatar-container img, .me-container img{
+.avatar-container img, .me-container .avatar{
     width: 60px;
     height: 60px;
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
+    margin-left: 10px;
 }
 .avatar-container span, .avatar-container label{
     display: block;
@@ -1387,8 +1401,28 @@ h4.tip{
     display: inline-block;
     float: left;
 }
+.img-content span{
+    /*display: inline-block;*/
+    border: solid 1px #ff7149;
+    color: #ff7149;
+    font-size: 12px;
+    padding: 0 5px;
+}
+.img-content section{
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+}
+.img-content h2{
+    display: inline-block;
+    margin-left: 10px;
+}
 .square-item {
     border-bottom: solid 5px #e5e5e5;
+}
+.square-item-top{
+    padding: 10px;
+    border-bottom: solid 1px #e5e5e5
 }
 .squarelist-item {
     border-bottom: solid 1px #e5e5e5;
@@ -1434,16 +1468,20 @@ h4.tip{
     display: inline-block;
     color: #b3b3b3;
 }
-.square-item .header img{
+.square-item .avatar{
     width: 30px;
     height: 30px;
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
 }
-.squarelist-item .header img{
-    width: 40px;
-    height: 40px;
+.square-item .level{
+    width: 50px;
+    vertical-align: middle;
+}
+.square-item .sq-icon{
+    font-size: 14px;
+    margin-right: 10px;
 }
 .txt-content{
     height: 100px;
@@ -1662,5 +1700,61 @@ i.landlord{
 .box-icon img{
     height: 100%;
 }
-
+.me-info{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    color: #fff;
+}
+.me-info span, .me-info label{
+    display: block;
+    text-align: center;
+    font-size: 13px;
+}
+.me-info span{
+    margin-bottom: 10px;
+}
+.me-info li{
+    float: left;
+    min-width: 13%;
+}
+.me-info .border-left{
+    border-left: solid 1px #fff;
+}
+.me-info li:first-child{
+    min-width: 25%;
+}
+.me-info li:last-child{
+    min-width: 20%;
+}
+.me-info .level{
+    width: 57px;
+    height: auto;
+    border-radius: 0;
+    display: block;
+    margin: 0 auto;
+}
+.data-mine section{
+    white-space: normal;
+    font-size: 14px;
+    line-height: 30px;
+    background: #f6f6f6;
+    padding: 10px;
+    width: 92%;
+    margin: 0 auto;
+}
+.data-mine h4{
+    margin: 20px auto 10px;
+    width: 90%;
+    line-height: 40px;
+}
+.data-mine h4 i{
+    float: right;
+    color: #d84c60;
+    font-size: 20px;
+}
+.full-height{
+    height: 100px;
+    padding: 10px;
+}
 

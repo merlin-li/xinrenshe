@@ -4,20 +4,27 @@
             <i class="icon ion-ios-arrow-back"></i> 
         </a>
     </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="operation()"><i class="icon ion-ios-more"></i></a>
+    </ion-nav-buttons>
     <ion-content>
         <div class="item square-item squarelist-item {{forum.floor > 1 ? 'square-item-gray' : ''}}" ng-repeat="forum in dataList">
             <div class="header">
-                <img ng-src="{{forum.avatar}}">
+                <img class="avatar" ng-src="{{forum.avatar}}">
                 <label>
-                    {{forum.username}}
+                    {{forum.username}}<img ng-src="{{'img/levelicon/' + forum.lv + '.png'}}" class="level">
                     <i class="gender gender{{forum.sex}}"></i>
                     <i ng-if="forum.isLandlord" class="landlord">楼主</i>
                 </label>
 
                 <span class="time">{{forum.floor > 0 ? '第' + forum.floor + '楼' : ''}} {{forum.timeStr}}</span>
 
-                <div ng-click="comment(forum)" ng-if="forum.floor > 1">
-                    <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.commentList.length}}</span>
+                <div ng-if="forum.floor > 1">
+                    <span class="sq-icon" ng-click="comment(forum)">
+                        <i class="ion ion-ios-chatbubble-outline"></i>&nbsp;
+                        {{forum.commentList.length}}
+                    </span>
+                    <span class="sq-icon" ng-click="report(forum)"><i class="ion ion-ios-more"></i></span>
                 </div>
             </div>
 

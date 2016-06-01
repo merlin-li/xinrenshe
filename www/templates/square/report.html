@@ -1,0 +1,12 @@
+<ion-view title="举报">
+    <ion-content has-header="true">
+        <ion-list>
+            <!-- <ion-checkbox class="checkbox-assertive" ng-click="select(opt)" ng-repeat="opt in reportList">{{opt.name}}</ion-checkbox> -->
+            <ion-radio ng-repeat="opt in reportList" ng-click="select(opt)">{{opt.name}}</ion-radio>
+        </ion-list>
+
+        <div class="padding">
+            <button class="button button-positive button-block" ng-click="submit()">提交</button>
+        </div>
+    </ion-content>
+</ion-view>

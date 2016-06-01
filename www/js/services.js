@@ -14,7 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.4/' : 'http://api.xinrenclub.com/v1.4/';
+        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.4/';
 
         //判断是不是stage环境
         // if (location.indexOf('?stage') >= 0) {
@@ -368,7 +368,11 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 replyFloor: apiBaseUrl + 'Forum/replyFloor',
                 replyUser: apiBaseUrl + 'Forum/replyUser',
                 deleteMyPhoto: apiBaseUrl + 'exchanged/deleteMyPhoto',
-                inviteHome: apiBaseUrl + 'Promote/inviteHome'
+                inviteHome: apiBaseUrl + 'Promote/inviteHome',
+                consigneeList: apiBaseUrl + 'My/consigneeList',
+                reportoptions: apiBaseUrl + 'Report/options',
+                forumReport: apiBaseUrl + 'Report/forumReport',
+                publishReport: apiBaseUrl + 'Report/publishReport'
             },
             utility: {
                 'checkPhone': function(p) {

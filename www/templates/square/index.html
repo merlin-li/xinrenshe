@@ -3,10 +3,12 @@
         <a class="button header-item" href="#/squarepost">发帖</a>
     </ion-nav-buttons>
     <ion-content>
-        <a href="#/squaretheme/{{forum.id}}/square" class="item square-item" ng-repeat="forum in dataList">
-            <div class="header">
-                <img ng-src="{{forum.avatar}}">
-                <label>{{forum.username}}</label>
+        <a href="#/squaretheme/{{forum.id}}/square" class="item square-item {{forum.to_top ? 'square-item-top' : ''}}" ng-repeat="forum in dataList">
+            <div class="header" ng-if="!forum.to_top">
+                <img class="avatar" ng-src="{{forum.avatar}}">
+                <label>{{forum.username}}
+                    <img ng-src="{{'img/levelicon/' + forum.lv + '.png'}}" class="level">
+                </label>
                 <div>
                     <span><i class="ion ion-ios-chatbubble-outline"></i>&nbsp;{{forum.comment_count}}</span>
                     <span><i class="ion ion-ios-clock-outline"></i>&nbsp;{{forum.timeStr}}</span>
@@ -14,14 +16,17 @@
             </div>
 
             <div class="img-content">
-                <h2>{{forum.title}}</h2>
-                <p>{{forum.content}}</p>
-                <div class="clearfix" ng-if="forum.pictures.length > 0">
+                <section>
+                    <span ng-if="forum.to_top">置顶</span>
+                    <h2>{{forum.title}}</h2>
+                </section>
+                <p ng-if="!forum.to_top">{{forum.content}}</p>
+                <div class="clearfix" ng-if="!forum.to_top && forum.pictures.length > 0">
                     <img ng-src="{{p}}" ng-repeat="p in forum.pictures">
                 </div>
             </div>
 
-            <div class="comment">
+            <div class="comment" ng-if="!forum.to_top">
                 我也说一句...
             </div>
         </a>
