@@ -1,6 +1,6 @@
 <ion-view title="收信地址">
     <ion-nav-buttons side="right">
-        <a href="#/setting/address/my_address" class="button back-button buttons button-clear header-item">
+        <a href="#/my/address/add" class="button back-button buttons button-clear header-item">
             <i class="icon ion-android-add"></i> 
         </a>
     </ion-nav-buttons>
@@ -14,9 +14,26 @@
                 </div>
                 {{address.consignee_addr}}
             </section>
-            <select>
+            <section>
 
-            </select>
+            </section>
+        </div>
+
+        <div class="list">
+            <div class="item address-item">
+                <section>
+                    <div>
+                        <span>小强</span>
+                        <span>310000</span>
+                    </div>
+                    杭州市西湖区西斗门路
+                </section>
+                <section class="btn-container">
+                    <a href="#" class="button button-small icon-left ion-checkmark">设为默认</a>
+                    <a href="#" class="button button-small icon-left ion-edit">编辑</a>
+                    <a href="#" class="button button-small icon-left ion-trash-a">删除</a>
+                </section>
+            </div>
         </div>
 
     </ion-content>

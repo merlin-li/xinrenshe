@@ -765,8 +765,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     }
 ])
 
-
-
 .controller('CitySettingCtrl', [
     '$scope',
     '$http',
@@ -840,6 +838,79 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         _init(1);
+    }
+])
+
+.controller('AddAddressCtrl', [
+    '$scope',
+    '$http',
+    'Common',
+    'md5',
+    function($scope, $http, common, md5) {
+        console.log('添加地址');
+
+        $scope.userModel = {};
+
+        $scope.save = function() {
+            console.log($scope.userModel);
+            if (this.userModel.consignee_username === '' || this.userModel.zip_code === '' || this.userModel.consignee_address === '' || this.userModel.area === '') {
+                common.utility.alert('提示', '信息不能为空！');
+            } else {
+                //邮编检查
+                var reg = /^\d{6}$/;
+                if (!reg.test($scope.userModel.zip_code)) {
+                    common.utility.alert('提示', '邮编格式不正确！');
+                    return false;
+                }
+                var self = $scope.userModel,
+                    paramsObj = {
+                        consignee_username: self.consignee_username,
+                        zip_code: self.zip_code,
+                        consignee_addr: self.consignee_address,
+                        province: self.province,
+                        city: self.city,
+                        area: self.area
+                    },
+                    userObj;
+                if (common.utility.cookieStore.get('userinfo')) {
+                    userObj = common.utility.cookieStore.get('userinfo');
+                }
+                paramsObj.uid = userObj.uid;
+                paramsObj.token = userObj.token;
+
+                var signStr = common.utility.createSign(paramsObj);
+
+                var accessSign = md5.createHash(common.utility.createSign(paramsObj));
+                paramsObj.accessSign = accessSign;
+                $http({
+                    method: 'post',
+                    url: common.API.setUserinfoConsignee,
+                    data: paramsObj
+                }).success(function(data) {
+                    if (data.status === 200) {
+                        $location.path('/home');
+                    } else {
+                        common.utility.alert('提示', data.msg);
+                    }
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+            }
+        };
+
+        //获取省市区数据
+        var province = common.utility.cookieStore.get('areainfo1'),
+            city = common.utility.cookieStore.get('areainfo2'),
+            area = common.utility.cookieStore.get('areainfo3');
+
+        console.log(province);
+        if (province) {
+            $scope.userModel.province = province.name;
+        }
+        if (city) {
+            $scope.userModel.city = city.name;
+        }
+        if (area) {
+            $scope.userModel.area = area.name;
+        }
     }
 ])
 
@@ -1928,9 +1999,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         });
     }
 ])
-
-
-
 
 .controller('JointHomeCtrl', [
     '$scope',
@@ -3170,7 +3238,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$stateParams',
     '$location',
     '$ionicPopup',
-    function($http, $scope, common, md5, $stateParams, $location, $ionicPopup){
+    '$ionicActionSheet',
+    function($http, $scope, common, md5, $stateParams, $location, $ionicPopup, $ionicActionSheet){
         $scope.hideEle = true;
         $scope.hideShare = true;
         $scope.userId = 0;
@@ -3196,6 +3265,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 $scope.userModel = d.data.userInfo;
                 $scope.hideEle = true;
             });
+
+            $scope.report = function() {
+                var operationSheet = $ionicActionSheet.show({
+                    buttons: [{
+                        text: '举报'
+                    }],
+                    cancelText: '取消',
+                    buttonClicked: function(index) {
+                        if (index === 0) {
+                            //举报
+                            $location.path('/report/user/' + userId);
+                        }
+                    }
+                });
+            };
         } else {
             $scope.hideEle = false;
             var paramsObj = {};
@@ -4469,18 +4553,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$ionicActionSheet',
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera, $ionicActionSheet){
         var forumId = $stateParams.id,
-            // options = {
-            //     quality: 95,
-            //     destinationType: Camera.DestinationType.DATA_URL,
-            //     sourceType: Camera.PictureSourceType.CAMERA,
-            //     allowEdit: false,
-            //     encodingType: Camera.EncodingType.JPEG,
-            //     targetWidth: 600,
-            //     targetHeight: 600,
-            //     popoverOptions: CameraPopoverOptions,
-            //     saveToPhotoAlbum: false,
-            //     correctOrientation: true
-            // }, 
+            options = {
+                quality: 95,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: false,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 600,
+                targetHeight: 600,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                correctOrientation: true
+            }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };
@@ -4682,30 +4766,58 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'md5',
     '$location',
     '$stateParams',
-    function($http, $scope, common, md5, $location, $stateParams){
+    '$cordovaCamera',
+    function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera){
         var from = $stateParams.from, 
             id = $stateParams.id;
 
         $scope.reportList = [];
         $scope.reportItem = {};
         $scope.userInfo = {};
+        $scope.photos = [];
+        $scope.reportModel = {
+            content: '',
+            from: from
+        };
+
+        var _savePicture = function(s){
+            $scope.photos.push(s);
+        };
+
         $scope.submit = function() {
-            console.log(this.reportItem);
             if ($scope.reportItem.id) {
                 common.utility.loadingShow();
-                $http({
-                    method: 'post',
-                    url: common.API.forumReport,
-                    data: {
+                var reportUrl = common.API.forumReport,
+                    reportData = {
                         forum_id: id,
                         option_id: $scope.reportItem.id,
                         uid: $scope.userInfo.uid,
                         token: $scope.userInfo.token
-                    }
+                    };
+                if (from === 'user') {
+                    //表示举报用户
+                    reportUrl = common.API.personReport;
+                    reportData = {
+                        uid: $scope.userInfo.uid,
+                        token: $scope.userInfo.token,
+                        picture: $scope.photos,
+                        r_uid: id,
+                        contents: $scope.reportModel.content
+                    };
+                }
+
+                $http({
+                    method: 'post',
+                    url: reportUrl,
+                    data: reportData
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-                        $location.path('/square');
+                        if (from === 'user') {
+                            $location.path('/user/view/' + id);
+                        } else {
+                            $location.path('/square');
+                        }
                     });
                 });
             }
@@ -4715,23 +4827,51 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             $scope.reportItem = o;
         };
 
-        common.utility.checkLogin().success(function(u){
-            var paramsObj = {
-                uid: u.uid,
-                token: u.token,
-                report_type: 1
-            };
-            $scope.userInfo = u;
-            $http({
-                method: 'post',
-                url: common.API.reportoptions,
-                data: paramsObj
-            }).success(function(data){
-                console.log(data);
-                common.utility.handlePostResult(data, function(d){
-                    $scope.reportList = d.data.optionList;
+        //上传照片
+        $scope.upload = function () {
+            if ($scope.photos.length >= 9) {
+                common.utility.alert('提示', '图片不能超过9张！');
+            } else {
+                var options = {
+                    quality: 95,
+                    destinationType: Camera.DestinationType.DATA_URL,
+                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                    allowEdit: false,
+                    encodingType: Camera.EncodingType.JPEG,
+                    targetWidth: 600,
+                    targetHeight: 600,
+                    popoverOptions: CameraPopoverOptions,
+                    saveToPhotoAlbum: false,
+                    correctOrientation: true
+                };
+                $cordovaCamera.getPicture(options).then(function(imageData) {
+                    _savePicture('data:image/jpeg;base64,' + imageData);
+                }, function(err) {
                 });
-            });
+            }
+        };
+
+        common.utility.checkLogin().success(function(u){
+            // 如果是举报用户，不需要获取举报的选项
+            if (from === 'user') {
+
+            } else {
+                var paramsObj = {
+                    uid: u.uid,
+                    token: u.token,
+                    report_type: 1
+                };
+                $scope.userInfo = u;
+                $http({
+                    method: 'post',
+                    url: common.API.reportoptions,
+                    data: paramsObj
+                }).success(function(data){
+                    common.utility.handlePostResult(data, function(d){
+                        $scope.reportList = d.data.optionList;
+                    });
+                });
+            }
         }).fail(function(){
             common.utility.resetToken();
         });

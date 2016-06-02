@@ -274,9 +274,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else {
                     return '';
                 }
-
-            }()
-            ;
+            }();
 
 
         return {
@@ -372,7 +370,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 consigneeList: apiBaseUrl + 'My/consigneeList',
                 reportoptions: apiBaseUrl + 'Report/options',
                 forumReport: apiBaseUrl + 'Report/forumReport',
-                publishReport: apiBaseUrl + 'Report/publishReport'
+                publishReport: apiBaseUrl + 'Report/publishReport',
+                personReport: apiBaseUrl + 'Report/personReport',
+                setUserinfoConsignee: apiBaseUrl + 'setUserInfo/consignee'
             },
             utility: {
                 'checkPhone': function(p) {

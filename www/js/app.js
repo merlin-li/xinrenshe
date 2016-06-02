@@ -131,7 +131,8 @@ angular.module('xinrenshe', [
             url: '/my/address/add',
             views: {
                 'content': {
-                    templateUrl: 'templates/setting/address.html'
+                    templateUrl: 'templates/setting/address.html',
+                    controller: 'AddAddressCtrl'
                 }
             }
         })

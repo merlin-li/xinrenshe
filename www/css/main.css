@@ -1757,4 +1757,15 @@ i.landlord{
     height: 100px;
     padding: 10px;
 }
-
+.address-item{
+    font-size: 13px;
+}
+.address-item-select{
+    background: #ff8e80;
+    color: #fff;
+}
+.address-item .btn-container{
+    text-align: right;
+    padding-top: 10px;
+    border-top: solid 1px #fff;
+}
