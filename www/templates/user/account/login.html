@@ -1,13 +1,13 @@
 <ion-view title="登录">
     <ion-nav-bar class="bar-stable">
         <ion-nav-buttons side="left">
-            <a href="#/home" class="button back-button buttons button-clear header-item">
+            <a href="#/tab/home" class="button back-button buttons button-clear header-item">
                 <i class="icon ion-ios-home-outline"></i> 
                 <span class="back-text" style="transform: translate3d(0px, 0px, 0px);"></span>
             </a>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <a href="#/user/signup" class="button">新用户注册</a>
+            <a href="#/tab/user/signup" class="button">新用户注册</a>
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content has-header="true">
@@ -23,7 +23,7 @@
             <div class="padding common-link">
                 <button class="button button-positive button-block" ng-click="login()" ng-disabled="login_form.$invalid">登录</button>
 
-                <a href="#/user/forgetpwd">忘记密码？</a><br>
+                <a href="#/tab/user/forgetpwd">忘记密码？</a><br>
             </div>
         </form>
     </ion-content>

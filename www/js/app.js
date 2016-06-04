@@ -13,549 +13,545 @@ angular.module('xinrenshe', [
     function($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) {
         $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
         $ionicConfigProvider.scrolling.jsScrolling(true);
-        // $ionicConfigProvider.views.maxCache(0);
+        $ionicConfigProvider.views.maxCache(0);
         $ionicConfigProvider.platform.android.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
         $ionicConfigProvider.views.swipeBackEnabled(false);
+        $ionicConfigProvider.views.forwardCache(false);
 
-        $stateProvider.state('app_home', {
+        $stateProvider
+        .state('tab', {
+            url: '/tab',
+            abstract: true,
+            templateUrl: 'templates/tabs.html',
+            controller: 'TabCtrl'
+        })
+        .state('tab.home', {
             url: '/home',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/home.html',
                     controller: 'HomeCtrl'
                 }
             }
         })
-        .state('app_banner', {
+        .state('tab.banner', {
             url: '/banner',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/banner/index.html',
                     controller: 'BannerCtrl'
                 }
             }
         })
-        .state('app_message', {
-            url: '/messagesx',
+        .state('tab.message', {
+            url: '/message',
             views: {
-                'content': {
+                'tab-message': {
                     templateUrl: 'templates/message/index.html',
                     controller: 'MessageCtrl'
                 }
             }
         })
-        .state('app_messagedetail', {
+        .state('tab.messagedetail', {
             url: '/message/:id',
             views: {
-                'content': {
+                'tab-message': {
                     templateUrl: 'templates/message/message.html',
                     controller: 'MessageDetCtrl'
                 }
             }
         })
-        .state('app_feedback', {
+        .state('tab.feedback', {
             url: '/feedback',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/feedback/index.html',
                     controller: 'FeedbackCtrl'
                 }
             }
         })
-        .state('app_login', {
+        .state('tab.login', {
             url: '/user/login',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/account/login.html',
                     controller: 'LoginCtrl'
                 }
             }
         })
-        .state('app_user_level', {
+        .state('tab.userLevel', {
             url: '/user/level',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/info/level.html',
                     controller: 'UserCtrl'
                 }
             }
         })
-        .state('app_signup', {
+        .state('tab.signup', {
             url: '/user/signup',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/account/signup.html',
                     controller: 'SignupCtrl'
                 }
             }
         })
-        .state('app_forgetpwd', {
+        .state('tab.forgetpwd', {
             url: '/user/forgetpwd',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/account/forgetpwd.html',
                     controller: 'ForgetpwdCtrl'
                 }
             }
         })
-        .state('app_user', {
+        .state('tab.user', {
             url: '/user',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/index.html',
                     controller: 'UserCtrl'
                 }
             }
-        }).state('app_setting_userinfo', {
-            url: '/setting/userinfo',
-            views: {
-                'content': {
-                    templateUrl: 'templates/setting/userinfo.html',
-                    controller: 'SetUserInfoCtrl'
-                }
-            }
         })
-
-        .state('app_setting_address', {
-            url: '/setting/address',
-            views: {
-                'content': {
-                    templateUrl: 'templates/setting/address.html',
-                    controller: 'SetAddressCtrl'
-                }
-            }
-        })
-
-        .state('app_add_address', {
-            url: '/my/address/add',
-            views: {
-                'content': {
-                    templateUrl: 'templates/setting/address.html',
-                    controller: 'AddAddressCtrl'
-                }
-            }
-        })
-
-        .state('app_city_setting', {
-            url: '/city/setting/type/:type',
-            views: {
-                'content': {
-                    templateUrl: 'templates/city/setting.html',
-                    controller: 'CitySettingCtrl'
-                }
-            }
-        }).state('app_city_setting_id', {
-            url: '/city/setting/:areaId',
-            views: {
-                'content': {
-                    templateUrl: 'templates/city/setting.html',
-                    controller: 'CitySettingCtrl'
-                }
-            }
-        }).state('app_sendtip', {
-            url: '/card/sendtip',
-            views: {
-                'content': {
-                    templateUrl: 'templates/card/sendtip.html',
-                    controller: 'SendtipCtrl'
-                }
-            }
-        }).state('app_mysending', {
-            url: '/my/sending',
-            views: {
-                'content': {
-                    templateUrl: 'templates/user/card/sending.html',
-                    controller: 'MySendingCtrl'
-                }
-            }
-        }).state('app_my_userinfo', {
-            url: '/my/userinfo',
-            views: {
-                'content': {
-                    templateUrl: 'templates/user/userinfo.html',
-                    controller: 'MyUserInfoCtrl'
-                }
-            }
-        }).state('app_myreceiving', {
-            url: '/my/receiving',
-            views: {
-                'content': {
-                    templateUrl: 'templates/user/card/receiving.html',
-                    controller: 'MyReceivingCtrl'
-                }
-            }
-        }).state('app_my_address', {
-            url: '/my/address',
-            views: {
-                'content': {
-                    templateUrl: 'templates/user/info/addresslist.html',
-                    controller: 'MyAddressListCtrl'
-                }
-            }
-        }).state('app_joint', {
-            url: '/joint',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/index.html',
-                    controller: 'JointHomeCtrl'
-                }
-            }
-        }).state('corporation', {
-            url: '/joint/corporation/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/corporation.html',
-                    controller: 'CorporationCtrl'
-                }
-            }
-        }).state('joint_manage_associator', {
-            url: '/joint/manage/associator/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/manage/associator.html',
-                    controller: 'JointManageAssociatorCtrl'
-                }
-            }
-        }).state('joint_manage_release_activity', {
-            url: '/joint/manage/releaseActivity/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/manage/releaseActivity.html',
-                    controller: 'JointManagereleaseActivityCtrl'
-                }
-            }
-        }).state('joint_manage_cadgeList', {
-            url: '/joint/manage/cadgeList/:corporationId/:activityId',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/manage/cadgeList.html',
-                    controller: 'JointManageCadgeListCtrl'
-                }
-            }
-        })
-
-        .state('activity', {
-            url: '/joint/activity/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/activity/index.html',
-                    controller: 'JointActivityCtrl'
-                }
-            }
-        })
-
-        .state('activity_question', {
-            url: '/joint/activity/:id/question',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/activity/question.html',
-                    controller: 'JointActivityQuestionCtrl'
-                }
-            }
-        })
-
-        .state('activity_member', {
-            url: '/joint/activity/:id/member',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/activity/memberlist.html',
-                    controller: 'ActivityMemberCtrl'
-                }
-            }
-        })
-
-        .state('activity_membercard', {
-            url: '/joint/activity/:id/membercard',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/activity/membercard.html',
-                    controller: 'MemberCardCtrl'
-                }
-            }
-        })
-
-        .state('activity_join_member', {
-            url: '/joint/activity/:id/joinmember/:show',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/activity/joinuserlist.html',
-                    controller: 'JoinUserListCtrl'
-                }
-            }
-        })
-
-        .state('my_corporation_list', {
-            url: '/joint/manage/myCorporation',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/manage/mycorporationList.html',
-                    controller: 'myCorporationCtrl'
-                }
-            }
-        })
-        .state('corporation_notice', {
-            url: '/joint/manage/notice/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/manage/notice.html',
-                    controller: 'CorporationNoticeCtrl'
-                }
-            }
-        })
-
-        .state('corporation_edit', {
-            url: '/corporation/profile/edit/:id',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/edit/profile.html',
-                    controller: 'CorporationEditCtrl'
-                }
-            }
-        })
-
-        .state('corporation_create', {
-            url: '/corporation/create',
-            views: {
-                'content': {
-                    templateUrl: 'templates/joint/edit/create.html',
-                    controller: 'CorporationCreateCtrl'
-                }
-            }
-        })
-
-        .state('app_me', {
+        .state('tab.userView', {
             url: '/user/view/:id',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/view.html',
                     controller: 'UserViewCtrl'
                 }
             }
         })
-
-        .state('app_writer', {
+        .state('tab.settingUserinfo', {
+            url: '/setting/userinfo',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/setting/userinfo.html',
+                    controller: 'SetUserInfoCtrl'
+                }
+            }
+        })
+        .state('tab.settingAddress', {
+            url: '/setting/address',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/setting/address.html',
+                    controller: 'SetAddressCtrl'
+                }
+            }
+        })
+        .state('tab.updateAddress', {
+            url: '/my/address/add/:type',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/setting/address.html',
+                    controller: 'UpdateAddressCtrl'
+                }
+            }
+        })
+        .state('tab.citySetting', {
+            url: '/city/setting/type/:type',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
+                }
+            }
+        })
+        .state('tab.citySettingId', {
+            url: '/city/setting/:areaId',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/city/setting.html',
+                    controller: 'CitySettingCtrl'
+                }
+            }
+        })
+        .state('tab.sendtip', {
+            url: '/card/sendtip',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/card/sendtip.html',
+                    controller: 'SendtipCtrl'
+                }
+            }
+        })
+        .state('tab.mySending', {
+            url: '/my/sending',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/user/card/sending.html',
+                    controller: 'MySendingCtrl'
+                }
+            }
+        })
+        .state('tab.myUserinfo', {
+            url: '/my/userinfo',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/user/userinfo.html',
+                    controller: 'MyUserInfoCtrl'
+                }
+            }
+        })
+        .state('tab.myReceiving', {
+            url: '/my/receiving',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/user/card/receiving.html',
+                    controller: 'MyReceivingCtrl'
+                }
+            }
+        })
+        .state('tab.myAddress', {
+            url: '/my/address',
+            views: {
+                'tab-mine': {
+                    templateUrl: 'templates/user/info/addresslist.html',
+                    controller: 'MyAddressListCtrl'
+                }
+            }
+        })
+        .state('tab.joint', {
+            url: '/joint',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/index.html',
+                    controller: 'JointHomeCtrl'
+                }
+            }
+        })
+        .state('tab.corporation', {
+            url: '/joint/corporation/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/corporation.html',
+                    controller: 'CorporationCtrl'
+                }
+            }
+        })
+        .state('tab.jointManageAssociator', {
+            url: '/joint/manage/associator/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/manage/associator.html',
+                    controller: 'JointManageAssociatorCtrl'
+                }
+            }
+        })
+        .state('tab.manageReleaseActivity', {
+            url: '/joint/manage/releaseActivity/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/manage/releaseActivity.html',
+                    controller: 'JointManagereleaseActivityCtrl'
+                }
+            }
+        })
+        .state('tab.jointManageCadgeList', {
+            url: '/joint/manage/cadgeList/:corporationId/:activityId',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/manage/cadgeList.html',
+                    controller: 'JointManageCadgeListCtrl'
+                }
+            }
+        })
+        .state('tab.activity', {
+            url: '/joint/activity/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/activity/index.html',
+                    controller: 'JointActivityCtrl'
+                }
+            }
+        })
+        .state('tab.activityQuestion', {
+            url: '/joint/activity/:id/question',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/activity/question.html',
+                    controller: 'JointActivityQuestionCtrl'
+                }
+            }
+        })
+        .state('tab.activityMember', {
+            url: '/joint/activity/:id/member',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/activity/memberlist.html',
+                    controller: 'ActivityMemberCtrl'
+                }
+            }
+        })
+        .state('tab.activityMembercard', {
+            url: '/joint/activity/:id/membercard',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/activity/membercard.html',
+                    controller: 'MemberCardCtrl'
+                }
+            }
+        })
+        .state('tab.activityJoinMember', {
+            url: '/joint/activity/:id/joinmember/:show',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/activity/joinuserlist.html',
+                    controller: 'JoinUserListCtrl'
+                }
+            }
+        })
+        .state('tab.myCorporationList', {
+            url: '/joint/manage/myCorporation',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/manage/mycorporationList.html',
+                    controller: 'myCorporationCtrl'
+                }
+            }
+        })
+        .state('tab.corporationNotice', {
+            url: '/joint/manage/notice/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/manage/notice.html',
+                    controller: 'CorporationNoticeCtrl'
+                }
+            }
+        })
+        .state('tab.corporationEdit', {
+            url: '/corporation/profile/edit/:id',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/edit/profile.html',
+                    controller: 'CorporationEditCtrl'
+                }
+            }
+        })
+        .state('tab.corporationCreate', {
+            url: '/corporation/create',
+            views: {
+                'tab-home': {
+                    templateUrl: 'templates/joint/edit/create.html',
+                    controller: 'CorporationCreateCtrl'
+                }
+            }
+        })
+        .state('tab.writer', {
             url: '/writer',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/writer/index.html',
                     controller: 'WriterCtrl'
                 }
             }
         })
-        .state('app_', {
+        .state('tab.tips', {
             url: '/tips/:type',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/user/writer/list.html',
                     controller: 'TipsListCtrl'
                 }
             }
         })
-        .state('app_writer_tips', {
+        .state('tab.writerTips', {
             url: '/tipsdetail/:id/:type',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/user/writer/tips.html',
                     controller: 'TipsCtrl'
                 }
             }
         })
-
-        .state('app_sign', {
+        .state('tab.sign', {
             url: '/sign',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/sign/index.html',
                     controller: 'SignCtrl'
                 }
             }
         })
-        .state('app_setting', {
+        .state('tab.Setting', {
             url: '/setting',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/setting/index.html',
                     controller: 'UserCtrl'
                 }
             }
         })
-        .state('app_about', {
+        .state('tab.about', {
             url: '/setting/about',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/setting/about.html',
                     controller: 'AboutCtrl'
                 }
             }
         })
-        .state('app_setting_send', {
+        .state('tab.SettingSend', {
             url: '/setting/send',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/setting/send.html',
                     controller: 'SettingSendCtrl'
                 }
             }
         })
-        .state('switch_photos', {
+        .state('tab.switchPhotos', {
             url: '/switch/photos/:type',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/switch/photos.html',
                     controller: 'SwitchPhotosCtrl'
                 }
             }
         })
-        .state('switch_upload', {
+        .state('tab.switchUpload', {
             url: '/switch/upload',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/switch/upload.html',
                     controller: 'SwitchUploadCtrl'
                 }
             }
         })
-        .state('switch_index', {
+        .state('tab.switchIndex', {
             url: '/switch',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/switch/index.html',
                     controller: 'SwitchCtrl'
                 }
             }
         })
-        .state('switch_card', {
+        .state('tab.switchCard', {
             url: '/switch/card/:id',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/switch/card.html',
                     controller: 'SwitchCardCtrl'
                 }
             }
         })
-        .state('switch_card_post', {
+        .state('tab.switchCardPost', {
             url: '/switch/post/:id',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/switch/post.html',
                     controller: 'SwitchPostCtrl'
                 }
             }
         })
-        .state('app_search', {
+        .state('tab.search', {
             url: '/search',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/search/index.html',
                     controller: 'SearchCtrl'
                 }
             }
         })
-        .state('app_orderdetail', {
+        .state('tab.OrderDetail', {
             url: '/order/:id/:type',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/detail.html',
                     controller: 'OrderDetailCtrl'
                 }
             }
         })
-        .state('app_trash', {
+        .state('tab.trash', {
             url: '/trash/:id',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/trash.html',
                     controller: 'OrderTrashCtrl'
                 }
             }
         })
-
-        .state('app_signking', {
+        .state('tab.signking', {
             url: '/sign/king',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/sign/king.html',
                     controller: 'SignKingCtrl'
                 }
             }
         })
-
-        .state('app_expand', {
+        .state('tab.expand', {
             url: '/expand',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/expand/index.html',
                     controller: 'ExpandCtrl'
                 }
             }
         })
-
-        .state('app_expandking', {
+        .state('tab.expandking', {
             url: '/expand/king',
             views: {
-                'content': {
+                'tab-home': {
                     templateUrl: 'templates/expand/king.html',
                     controller: 'ExpandKingCtrl'
                 }
             }
         })
-
-        .state('app_square', {
+        .state('tab.square', {
             url: '/square',
             views: {
-                'content': {
+                'tab-square': {
                     templateUrl: 'templates/square/index.html',
                     controller: 'SquareCtrl'
                 }
             }
         })
-
-        .state('app_squarepost', {
+        .state('tab.squarepost', {
             url: '/squarepost',
             views: {
-                'content': {
+                'tab-square': {
                     templateUrl: 'templates/square/post.html',
                     controller: 'SquarePostCtrl'
                 }
             }
         })
-
-        .state('app_squaredetail', {
+        .state('tab.squaredetail', {
             url: '/squaretheme/:id/:from',
             views: {
-                'content': {
+                'tab-square': {
                     templateUrl: 'templates/square/theme.html',
                     controller: 'SquareThemeCtrl'
                 }
             }
         })
-
-        .state('app_reply', {
+        .state('tab.reply', {
             url: '/square/:id/reply',
             views: {
-                'content': {
+                'tab-square': {
                     templateUrl: 'templates/square/reply.html',
                     controller: 'SquareReplyCtrl'
                 }
             }
         })
-
-        .state('app_user_wish', {
+        .state('tab.userWish', {
             url: '/user/wish',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/user/info/wish.html',
                     controller: 'UserViewCtrl'
                 }
             }
         })
-
-
-        .state('app_report', {
+        .state('tab.report', {
             url: '/report/:from/:id',
             views: {
-                'content': {
+                'tab-mine': {
                     templateUrl: 'templates/square/report.html',
                     controller: 'ReportCtrl'
                 }
@@ -565,10 +561,11 @@ angular.module('xinrenshe', [
 
 
 
+
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/home');
+        $urlRouterProvider.otherwise('/tab/home');
 
         var datePickerObj = {
             inputDate: new Date(),

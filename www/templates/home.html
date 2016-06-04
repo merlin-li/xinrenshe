@@ -1,6 +1,5 @@
 <ion-view view-title="信人社" hide-back-button="true">
     <ion-content>
-
         <ion-slide-box>
             <ion-slide ng-repeat="banner in dataObj.bannerList">
                 <a ng-click="go(banner)" class="item-image"><img class="index-banner" ng-src="{{dataObj.host + banner.picture}}"></a>
@@ -9,28 +8,21 @@
 
         <section class="lmqd">
             <div>
-                <a href="#/card/sendtip"><img src="img/icon_pchome.png"></a>
-                <a href="#/search"><img src="img/icon_geitaji.png"></a>
-                <a href="#/switch"><img src="img/icon_huji.png"></a>
-                <a href="#/joint"><img src="img/icon_lianm.png"></a>
+                <a href="#/tab/card/sendtip"><img src="img/icon_pchome.png"></a>
+                <a href="#/tab/search"><img src="img/icon_geitaji.png"></a>
+                <a href="#/tab/switch"><img src="img/icon_huji.png"></a>
+                <a href="#/tab/joint"><img src="img/icon_lianm.png"></a>
             </div>
             <div>
-                <a href="#/sign"><img src="img/icon_qiandao.png"></a>
-                <a href="#/expand"><img src="img/icon_tuig.png"></a>
-                <a href="#/feedback"><img src="img/icon_yijian.png"></a>
-                <a href="#/tips/shouce"><img src="img/icon_shouce.png"></a>
+                <a href="#/tab/sign"><img src="img/icon_qiandao.png"></a>
+                <a href="#/tab/expand"><img src="img/icon_tuig.png"></a>
+                <a href="#/tab/feedback"><img src="img/icon_yijian.png"></a>
+                <a href="#/tab/tips/shouce"><img src="img/icon_shouce.png"></a>
             </div>
         </section>
 
-        <a class="home-race" href="#/sign/king"><img src="img/icon_background.png"></a>
-        <a class="home-race" href="#/expand/king"><img src="img/icon_background1.png"></a>
+        <a class="home-race" href="#/tab/sign/king"><img src="img/icon_background.png"></a>
+        <a class="home-race" href="#/tab/expand/king"><img src="img/icon_background1.png"></a>
 
     </ion-content>
 </ion-view>
-
-<ion-tabs class="tabs-icon-top tabs-color-active-positive">
-    <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
-    <ion-tab title="社区" icon-off="ion-sofa" icon-on="ion-sofa-on" href="#/square"></ion-tab>
-    <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/messagesx"></ion-tab>
-    <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
-</ion-tabs>

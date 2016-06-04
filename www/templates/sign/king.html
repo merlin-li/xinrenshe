@@ -1,10 +1,10 @@
 <ion-view title="签到王">
     <ion-content has-header="true" style="background:#f2f2f2">
-        <img src="img/icon_home_bj1.png" class="full">
+        <img ng-src="{{kingData.host + kingData.bannerInfo.picture}}" class="full">
 
         <div class="member-list sign-list king-title" ng-if="hasLogin">
-            <div class="member-item sign-item" ng-if="!noNum">
-                <span class="index">12</span>
+            <div class="member-item sign-item" ng-if="kingData.userNum > 0">
+                <span class="index">{{kingData.userNum + 1}}</span>
                 <img ng-src="{{kingData.host + userObj.avatar}}">
                 <section>
                     <label>{{userObj.username}}</label>
@@ -17,10 +17,9 @@
         </div>
 
         <div class="king-title" ng-if="!hasLogin">
-            <a href="#/user/login">立即登录</a>
+            <a href="#/tab/user/login">立即登录</a>
             <span>登录查看你的排行</span>
         </div>
-
 
         <ul class="king-list">
             <li ng-repeat="king in kingData.topList">

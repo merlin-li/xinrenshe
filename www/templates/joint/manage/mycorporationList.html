@@ -2,7 +2,7 @@
   <ion-content has-header="true" style="background: #f2f2f2" class="joint">
     <div class="joint-list" style="top:0">
       <ion-list class="list">
-        <ion-item class="item item-thumbnail-left" href="#/joint/corporation/{{corporation.id}}" ng-repeat="corporation in corporationList">
+        <ion-item class="item item-thumbnail-left" href="#/tab/joint/corporation/{{corporation.id}}" ng-repeat="corporation in corporationList">
           <img ng-src="{{host+corporation.avatar}}">
           <div>
             <h2 ng-bind="corporation.name"></h2>
@@ -20,5 +20,4 @@
       </ion-infinite-scroll>-->
     </div>
   </ion-content>
-  </ion-view>
-
+</ion-view>

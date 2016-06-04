@@ -14,6 +14,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
+        offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.4/';
 
         //判断是不是stage环境
@@ -171,7 +172,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
 
                     } else {
                         _alert('提示', '请重新登录');
-                        $location.path('/user/login');
+                        $location.path('/tab/user/login');
                     }
                 }
                 if (needAccessSign !== false) {
@@ -188,7 +189,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                         if (data.status === 402) {
                             _cookieStore.remove('userinfo');
                             _alert('提示', data.msg);
-                            $location.path('/user/login');
+                            $location.path('/tab/user/login');
                         } else {
                             successCallback(data);
                         }
@@ -201,11 +202,10 @@ angular.module('xinrenshe.services', []).factory('Common', [
             },
             _resetToken = function() {
                 _cookieStore.remove('userinfo');
-                $location.path('/user/login');
+                $location.path('/tab/user/login');
             },
             _handlePostResult = function(d, cb) {
                 if (!d.status) {
-                    console.error('no status.');
                     return false;
                 }
                 if (d.status && d.status === 200) {
@@ -213,7 +213,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else if (d.status === 402) {
                     //reset login method
                     _cookieStore.remove('userinfo');
-                    $location.path('/user/login');
+                    $location.path('/tab/user/login');
                 } else {
                     _alert('提示', d.msg);
                 }
@@ -372,7 +372,12 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 forumReport: apiBaseUrl + 'Report/forumReport',
                 publishReport: apiBaseUrl + 'Report/publishReport',
                 personReport: apiBaseUrl + 'Report/personReport',
-                setUserinfoConsignee: apiBaseUrl + 'setUserInfo/consignee'
+                addNewConsignee: apiBaseUrl + 'setUserInfo/addNewConsignee',
+                consigneeDelete: apiBaseUrl + 'setUserInfo/consigneeDelete',
+                setDefaultConsignee: apiBaseUrl + 'setUserInfo/setDefaultConsignee',
+                updateConsignee: apiBaseUrl + 'setUserInfo/consignee',
+                inviteTop: apiBaseUrl + 'Promote/inviteTop',
+                myLevel: apiBaseUrl + 'My/lv'
             },
             utility: {
                 'checkPhone': function(p) {
@@ -406,7 +411,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 corporationInfo: '',
                 imgData: '',
                 userData: {},
-                homeData: {}
+                homeData: {},
+                addressData: {}
             }
         };
     }

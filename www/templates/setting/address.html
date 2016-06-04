@@ -1,10 +1,10 @@
-<ion-view title="收信地址" cache-view="false">
+<ion-view title="收信地址" cache-view="false" hide-back-button="true">
     <ion-content has-header="true">
         <div class="list">
-            <a class="item item-icon-right" href="#/city/setting/type/my_address_add">
+            <a class="item item-icon-right" href="#/tab/city/setting/type/{{urlType}}">
                 省市区
                 <i class="icon ion-ios-arrow-right"></i>
-                <span class="item-note">{{userModel.province + userModel.city + userModel.area}}</span>
+                <span class="item-note">{{userModel.consignee_province + userModel.consignee_city + userModel.consignee_area}}</span>
             </a>
             <label class="item item-input">
                 <span class="input-label">收信人姓名</span>
@@ -16,7 +16,7 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">街道地址</span>
-                <input ng-model="userModel.consignee_address" type="text" placeholder="请输入街道地址">
+                <input ng-model="userModel.consignee_addr" type="text" placeholder="请输入街道地址">
             </label>
         </div>
         <div class="padding">

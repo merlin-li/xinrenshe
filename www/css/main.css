@@ -226,7 +226,6 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     padding: 10px;
 }
 .avatar-container div{
-    display: inline-block;
     position: absolute;
 }
 .avatar-container .rate{
@@ -285,14 +284,13 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     margin: 20px auto;
 }
 .name-address{
-    width: 70px;
     top: 15px;
     left: 80px;
 }
 
 .avatar-container img, .me-container .avatar{
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -1760,12 +1758,56 @@ i.landlord{
 .address-item{
     font-size: 13px;
 }
+.address-item span{
+    display: inline-block;
+    width: 50%;
+}
+.address-item span:first-child{
+    font-size: 15px;
+    font-weight: bolder;
+}
+.address-item span:last-child{
+    text-align: right;
+}
 .address-item-select{
-    background: #ff8e80;
-    color: #fff;
+    background: #fedba8;
 }
 .address-item .btn-container{
     text-align: right;
     padding-top: 10px;
-    border-top: solid 1px #fff;
+    /*border-top: solid 1px #ccc;*/
 }
+.expand-list{
+    background: #fff;
+    width: 100%;
+    font-size: 14px;
+}
+.expand-list tr td:last-child{
+    color: red;
+}
+.expand-list .avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.expand-list td{
+    vertical-align: middle;
+    padding: 10px;
+}
+.expand-list .king{
+    width: 60px;
+}
+
+
+
+
+
+
+
+
+
+
+
+

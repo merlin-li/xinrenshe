@@ -1,7 +1,7 @@
 <ion-view view-title="活动详情" cache-view="false">
     <ion-nav-bar class="bar-stable">
         <ion-nav-buttons>
-            <a href="#/joint" class="button back-button buttons button-clear header-item">
+            <a href="#/tab/joint" class="button back-button buttons button-clear header-item">
                 <i class="icon ion-ios-arrow-back"></i> 
             </a>
         </ion-nav-buttons>
@@ -21,7 +21,7 @@
                 {{activityModel.addr_city}} &nbsp;
                 {{activityModel.activity_addr}} 
             </div>
-            <a class="item item-icon-left item-icon-right" href="#/joint/corporation/{{activityModel.corporation_id}}">
+            <a class="item item-icon-left item-icon-right" href="#/tab/joint/corporation/{{activityModel.corporation_id}}">
                 <i class="icon ion-ios-photos-outline"></i>
                 主办单位：{{activityModel.corporation_name}}
                 <i class="icon ion-ios-arrow-right"></i>
@@ -32,7 +32,7 @@
             <div class="item">
                 活动已报名写片{{activityModel.postcard_count}}人
             </div>
-            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/joint/activity/{{activityModel.id}}/joinmember/{{activityModel.isPresident}}">
+            <a class="item item-icon-right" ng-hide="activityModel.postcardUserList.length === 0" href="#/tab/joint/activity/{{activityModel.id}}/joinmember/{{activityModel.isPresident}}">
                 <img class="activity-avatar" ng-src="{{activityModel.host + user.avatar}}" ng-repeat="user in activityModel.postcardUserList">
                 <i class="icon ion-ios-arrow-right"></i>
             </a>

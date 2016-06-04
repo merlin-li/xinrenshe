@@ -1,10 +1,10 @@
-<ion-view title="推广王">
+<ion-view title="推广王大赛">
     <ion-content has-header="true" style="background:#f2f2f2">
-        <img src="img/icon_home_bj.png" class="full">
+        <img ng-src="{{kingData.host + kingData.bannerInfo.picture}}" class="full">
 
         <div class="member-list sign-list king-title" ng-if="hasLogin">
-            <div class="member-item sign-item" ng-if="!noNum">
-                <span class="index">12</span>
+            <div class="member-item sign-item" ng-if="kingData.userNum > 0">
+                <span class="index">{{kingData.userNum + 1}}</span>
                 <img ng-src="{{kingData.host + userObj.avatar}}">
                 <section>
                     <label>{{userObj.username}}</label>
@@ -17,49 +17,21 @@
         </div>
 
         <div class="king-title" ng-if="!hasLogin">
-            <a href="#/user/login">立即登录</a>
+            <a href="#/tab/user/login">立即登录</a>
             <span>登录查看你的排行</span>
         </div>
 
-
-        <ul class="king-list">
-            <li ng-repeat="king in kingData.topList">
-                <img class="king" src="img/picture_king.png" ng-if="king.index === 0">
-                <img class="king" src="img/picture_wang.png" ng-if="king.index > 0">
-
-                <div class="content">
-
-                    <span class="title">
-                        <img ng-src="{{kingData.host + king.avatar}}">
-                        {{king.username}}</span>
-                    <div>
-                        <span ng-if="king.prize_arr['1st']">
-                            <img src="img/icon_hg.png">
-                            <i>{{king.prize_arr['1st'] || 0}}</i>
-                        </span>
-                        <span ng-if="king.prize_arr['2rd']">
-                            <img src="img/icon_yg.png">
-                            <i>{{king.prize_arr['2rd'] || 0}}</i>
-                        </span>
-                        <span ng-if="king.prize_arr['3th']">
-                            <img src="img/icon_tg.png">
-                            <i>{{king.prize_arr['3th'] || 0}}</i>
-                        </span>
-                        <span ng-if="king.prize_arr['2']">
-                            <img src="img/icon_libaop.png">
-                            <i>{{king.prize_arr['2'] || 0}}</i>
-                        </span>
-                        <span ng-if="king.prize_arr['3']">
-                            <img src="img/icon_libaoy.png">
-                            <i>{{king.prize_arr['3'] || 0}}</i>
-                        </span>
-                        <span ng-if="king.prize_arr['1']">
-                            <img src="img/icon_liwu.png">
-                            <i>{{king.prize_arr['1'] || 0}}</i>
-                        </span>
-                    </div>
-                </div>
-            </li>
-        </ul>
+        <table class="expand-list">
+            <tr ng-repeat="king in kingData.topList">
+                <td>
+                    <img class="king" src="img/picture_king.png" ng-if="king.index === 0">
+                    <img class="king" src="img/picture_wang.png" ng-if="king.index > 0">
+                </td>
+                <td><img class="avatar"  ng-src="{{kingData.host + king.avatar}}"></td>
+                <td>{{king.username}}</td>
+                <td>已邀请{{king.invite_count}}人</td>
+                <td>暂居第{{king.rank}}名</td>
+            </tr>
+        </table>
     </ion-content>
 </ion-view>

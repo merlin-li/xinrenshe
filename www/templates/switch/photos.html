@@ -1,6 +1,6 @@
 <ion-view title="互寄相册" cache-view="false">
     <ion-nav-buttons side="right">
-        <a href="#/switch/upload" ng-if="pagetype !== 'select'" class="button">上传照片</a>
+        <a href="#/tab/switch/upload" ng-if="pagetype !== 'select'" class="button">上传照片</a>
     </ion-nav-buttons>
     <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
         <div class="button-bar" ng-if="pagetype !== 'select'">
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <a class="item" ng-repeat="p in dataList" ng-if="loadtype === 2" href="#/switch/card/{{p.id}}">
+            <a class="item" ng-repeat="p in dataList" ng-if="loadtype === 2" href="#/tab/switch/card/{{p.id}}">
                 <div><img ng-src="{{p.picture}}" class="full"></div>
                 <div class="tip-container" ng-if="loadtype === 2 || loadtype === 3">
                     <span>{{p.theme}}</span><br>

@@ -9,14 +9,14 @@
         <label class="item item-input-inset">
             <input ng-model="signupModel.code" type="tel" placeholder="请输入验证码">
         </label>
-
+        <label class="item item-input-inset">
+            <input ng-model="signupModel.invitation_code" type="tel" placeholder="邀请码（可为空）">
+        </label>
         <label class="item item-input item-stacked-label">
             <input ng-model="signupModel.pwd" type="password" placeholder="请输入密码">
         </label>
         <div class="padding">
             <button class="button button-block button-positive" ng-click="signup()">注册</button>
-
-            <!-- <p style="display:inline-block;line-height:" class="{{signupModel.msg.class}}">{{signupModel.msg.value}}</p> -->
         </div>
     </ion-content>
 </ion-view>

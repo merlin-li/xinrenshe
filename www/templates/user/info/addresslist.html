@@ -1,37 +1,23 @@
-<ion-view title="收信地址">
+<ion-view title="收信地址" cache-view="false">
     <ion-nav-buttons side="right">
-        <a href="#/my/address/add" class="button back-button buttons button-clear header-item">
+        <a href="#/tab/my/address/add/insert" class="button back-button buttons button-clear header-item">
             <i class="icon ion-android-add"></i> 
         </a>
     </ion-nav-buttons>
     <ion-content has-header="true">
-
-        <div class="item" ng-repeat="address in consigneeList">
-            <section>
-                <div>
-                    <span>{{address.consignee_username}}</span>
-                    <span>{{address.zip_code}}</span>
-                </div>
-                {{address.consignee_addr}}
-            </section>
-            <section>
-
-            </section>
-        </div>
-
         <div class="list">
-            <div class="item address-item">
+            <div class="item address-item {{address.status === 2 ? 'address-item-select' : ''}}" ng-repeat="address in consigneeList">
                 <section>
                     <div>
-                        <span>小强</span>
-                        <span>310000</span>
+                        <span>{{address.consignee_username}}</span>
+                        <span>{{address.zip_code}}</span>
                     </div>
-                    杭州市西湖区西斗门路
+                    {{address.consignee_province + address.consignee_city + address.consignee_area + address.consignee_addr}}
                 </section>
                 <section class="btn-container">
-                    <a href="#" class="button button-small icon-left ion-checkmark">设为默认</a>
-                    <a href="#" class="button button-small icon-left ion-edit">编辑</a>
-                    <a href="#" class="button button-small icon-left ion-trash-a">删除</a>
+                    <a ng-click="setDefault(address)" ng-if="address.status !== 2" class="button button-small icon-left ion-checkmark">设为默认</a>
+                    <a ng-click="edit(address)" class="button button-small icon-left ion-edit">编辑</a>
+                    <a ng-click="delete(address)" class="button button-assertive button-small icon-left ion-trash-a">删除</a>
                 </section>
             </div>
         </div>
