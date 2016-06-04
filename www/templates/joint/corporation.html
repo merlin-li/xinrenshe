@@ -23,7 +23,7 @@
         </div>
 
         <div class="list joint-list activity-list" style="top:0" ng-hide="!pageModel.showActivity">
-            <ion-item class="item item-thumbnail-left" href="#/tab/joint/activity/{{activity.id}}" ng-repeat="activity in activityModel.activityList">
+            <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in activityModel.activityList">
                 <img ng-src="{{activityModel.host + activity.propaganda_pic}}">
                 <div>
                     <h2 ng-bind="activity.name"></h2>

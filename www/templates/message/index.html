@@ -1,7 +1,7 @@
 <ion-view view-title="信箱" hide-back-button="true" cache-view="false">
     <ion-content style="background:#f6f6f6;" has-bouncing="true">
         <div class="list list-msg">
-            <a class="item item-avatar" href="#/tab/message/{{msg.category}}" ng-repeat="msg in msgList.msgCategoryList">
+            <a class="item item-avatar" href="#/message/{{msg.category}}" ng-repeat="msg in msgList.msgCategoryList">
                 <img ng-src="{{msgList.host + msg.avatar}}">
                 <h2>{{msg.name}}</h2>
                 <p ng-if="msg.new_msg">{{msg.new_msg}}</p>
@@ -16,3 +16,10 @@
         </div>
     </ion-content>
 </ion-view>
+
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+    <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
+    <ion-tab title="社区" icon-off="ion-sofa" icon-on="ion-sofa-on" href="#/square"></ion-tab>
+    <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
+    <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
+</ion-tabs>

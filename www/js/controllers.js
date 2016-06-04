@@ -144,7 +144,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.go = function(b) {
             if (b.url !== '') {
                 common.utility.cookieStore.put('bannerurl', b);
-                $location.path('/tab/banner');
+                $location.path('/banner');
             }
         };
     }
@@ -197,7 +197,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     data.data.userInfo.token = data.data.token;
                     data.data.host = data.data.host;
                     common.utility.cookieStore.put('userinfo', data.data.userInfo);
-                    $location.path('/tab/home');
+                    $location.path('/home');
                 } else {
                     common.utility.alert(data.msg);
                 }
@@ -206,7 +206,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         ! function() {
             common.utility.checkLogin().success(function(u) {
-                $location.path('/tab/user');
+                $location.path('/user');
             });
         }();
     }
@@ -307,7 +307,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).success(function(data) {
                     if (data.status === 200) {
                         common.utility.alert('提示', '重置密码成功！').then(function(){
-                            $location.path('/tab/user/login');
+                            $location.path('/user/login');
                         });
                     } else {
                         common.utility.alert('提示', data.msg);
@@ -371,7 +371,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.goLevel = function(){
-            $location.path('/tab/user/level');
+            $location.path('/user/level');
         };
     }
 ])
@@ -582,7 +582,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     if (data.status === 200) {
                         common.utility.alert('提示', '注册成功！').then(function(){
                             common.utility.cookieStore.put('userinfo', data.data);
-                            $location.path('/tab/setting/userinfo');
+                            $location.path('/setting/userinfo');
                         });
                     } else {
                         common.utility.alert('提示', data.msg);
@@ -687,7 +687,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }).success(function(data) {
                 common.utility.loadingHide();
                 if (data.status === 200) {
-                    $location.path('/tab/setting/address');
+                    $location.path('/setting/address');
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -755,7 +755,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     data: paramsObj
                 }).success(function(data) {
                     if (data.status === 200) {
-                        $location.path('/tab/home');
+                        $location.path('/home');
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
@@ -765,7 +765,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.goAddress = function() {
             common.utility.cookieStore.put('useraddressinfo', this.userModel);
-            $location.path('/tab/city/setting/type/');
+            $location.path('/city/setting/type/');
         };
 
         ! function() {
@@ -822,7 +822,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     var redirect_type = common.utility.cookieStore.get('citySetType');
 
                     if (!redirect_type) {
-                        $location.path('/tab/setting/address');
+                        $location.path('/setting/address');
                     } else {
                         //按redirect_type 下划线分割 如redirect_type = “setting_address” 则跳转地址为“/setting/address”;
                         var redirectArr = redirect_type.split('_');
@@ -843,21 +843,21 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             if (i.type === 1) {
                 //表示省份
                 common.utility.cookieStore.put('areainfo1', i);
-                $location.path('/tab/city/setting/' + i.id);
+                $location.path('/city/setting/' + i.id);
             } else if (i.type === 2) {
                 //表示市
                 common.utility.cookieStore.put('areainfo2', i);
 
                 if (common.utility.cookieStore.get('citySetType') === 'corporation') {
                     //如果是创建联名社的选择时候，进行跳转
-                    $location.path('/tab/corporation/create');
+                    $location.path('/corporation/create');
                 } else {
-                    $location.path('/tab/city/setting/' + i.id);
+                    $location.path('/city/setting/' + i.id);
                 }
             } else if (i.type === 3) {
                 //表示区县
                 common.utility.cookieStore.put('areainfo3', i);
-                $location.path('/tab/city/setting/' + i.id);
+                $location.path('/city/setting/' + i.id);
             }
         };
 
@@ -942,7 +942,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     data: paramsObj
                 }).success(function(data) {
                     common.utility.handlePostResult(data, function(d){
-                        $location.path('/tab/my/address');
+                        $location.path('/my/address');
                     });
                 }).error(function() {
                     alert('网络异常.');
@@ -987,14 +987,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             common.utility.loadingHide();
                             common.utility.handlePostResult(data, function(d){
                                 common.utility.alert('提示', data.msg).then(function(){
-                                    $location.path('/tab/home');
+                                    $location.path('/home');
                                 });
                             });
                             // if(data.status === 402) {
                             //     common.utility.resetToken();
                             // } else if (data.status === 501 || data.status === 200) {
                             //     common.utility.alert('提示', data.msg).then(function(){
-                            //         $location.path('/tab/home');
+                            //         $location.path('/home');
                             //     });
                             // }
                         }).error(function() {
@@ -1170,7 +1170,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.goDetail = function(c) {
             if (c.order_warning) {
-                $location.path('/tab/order/' + c.id + '/sending');
+                $location.path('/order/' + c.id + '/sending');
             }
         };
 
@@ -1319,7 +1319,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     }).success(function(data) {
                         common.utility.loadingHide();
                         common.utility.alert('提示', data.msg).then(function(){
-                            $location.path('/tab/my/' + orderType);
+                            $location.path('/my/' + orderType);
                         });
                     }).error(function(){
                         alert('网络异常.');
@@ -1331,7 +1331,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.btnAction2 = function(){
             if (orderType === 'sending') {
                 //去寄出
-                $location.path('/tab/my/sending');
+                $location.path('/my/sending');
             }
             if (orderType === 'receiving') {
                 //没收到
@@ -1359,7 +1359,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         }).success(function(data){
                             common.utility.loadingHide();
                             common.utility.alert('提示', data.msg).then(function(){
-                                $location.path('/tab/my/receiving');
+                                $location.path('/my/receiving');
                             });
                         });
                     }
@@ -1722,7 +1722,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     $scope.inputHide = true;
                     $scope.usernameHide = false;
                     common.utility.cookieStore.put('userinfo', $scope.userObj);
-                    $location.path('/tab/user');
+                    $location.path('/user');
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -1908,10 +1908,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.go = function(c) {
             if (c && c.order_warning) {
-                $location.path('/tab/order/' + c.id + '/receiving');
+                $location.path('/order/' + c.id + '/receiving');
             } else if (c && c.order_type === 2) {
                 //如果是互寄
-                $location.path('/tab/order/' + c.id + '/detail');
+                $location.path('/order/' + c.id + '/detail');
             }
         };
 
@@ -1962,7 +1962,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             common.utility.checkLogin().success(function(u) {
                 $scope.userModel = u;
             }).fail(function() {
-                $location.path('/tab/user/login');
+                $location.path('/user/login');
             });
             if (common.utility.cookieStore.get('areainfo1') && common.utility.cookieStore.get('areainfo2') && common.utility.cookieStore.get('areainfo3')) {
                 var areaObj1 = common.utility.cookieStore.get('areainfo1'),
@@ -2001,7 +2001,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 var success = function(data) {
                     if (data.status === 200) {
                         common.utility.cookieStore.put('userinfo', $scope.userModel);
-                        $location.path('/tab/user');
+                        $location.path('/user');
                     } else {
                         common.utility.alert('提示', data.msg);
                     }
@@ -2095,7 +2095,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.edit = function(a){
             common.tempData.addressData = a;
-            $location.path('/tab/my/address/add/update');
+            $location.path('/my/address/add/update');
         };
     }
 ])
@@ -2666,7 +2666,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             var success = function(data) {
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 if (data.status === 200) {
-                    $location.path('/tab/joint/corporation/' + $scope.corpid);
+                    $location.path('/joint/corporation/' + $scope.corpid);
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -2842,7 +2842,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     if ($scope.buttonObj.status === 1) {
                         //报名索片, 如果有问题进行跳转，没有直接提交
                         if ($scope.activityModel.question) {
-                            $location.path('/tab/joint/activity/' + id + '/question');
+                            $location.path('/joint/activity/' + id + '/question');
                         } else {
                             executed = true;
                         }
@@ -2873,9 +2873,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.goMember = function() {
             if  ($scope.activityModel.isPresident || $scope.activityModel.isPostUser) {
-                $location.path('/tab/joint/activity/' + $scope.activityModel.id + '/membercard');
+                $location.path('/joint/activity/' + $scope.activityModel.id + '/membercard');
             } else {
-                $location.path('/tab/joint/activity/' + $scope.activityModel.id + '/member');
+                $location.path('/joint/activity/' + $scope.activityModel.id + '/member');
             }
         };
 
@@ -2995,7 +2995,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.handlePostResult(data, function(d){
                     common.utility.alert('提示', d.msg).then(function(){
                         //跳转到详情页面
-                        $location.path('/tab/joint/activity/' + id);
+                        $location.path('/joint/activity/' + id);
                     });
                 });
             });
@@ -3202,7 +3202,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }).success(function(data) {
                 common.utility.handlePostResult(data, function(d) {
                     common.utility.alert('提示', d.msg).then(function(){
-                        $location.path('/tab/joint/corporation/' + id);
+                        $location.path('/joint/corporation/' + id);
                     });
                 });
             }).error(function() {alert('网络异常.');common.utility.loadingHide();});
@@ -3246,7 +3246,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d) {
                     common.utility.alert('提示', d.msg).then(function(){
-                        $location.path('/tab/joint/corporation/' + id);
+                        $location.path('/joint/corporation/' + id);
                     });
                 });
             }).error(function() {
@@ -3309,7 +3309,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.goAddress = function(){
-            $location.path('/tab/city/setting/type/corporation');
+            $location.path('/city/setting/type/corporation');
         };
 
         !function(){
@@ -3375,7 +3375,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     buttonClicked: function(index) {
                         if (index === 0) {
                             //举报
-                            $location.path('/tab/report/user/' + userId);
+                            $location.path('/report/user/' + userId);
                         }
                     }
                 });
@@ -3414,7 +3414,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             userCookieObj.introduction = paramsObj.introduction;
                             common.utility.cookieStore.remove('userinfo');
                             common.utility.cookieStore.put('userinfo', userCookieObj);
-                            $location.path('/tab/user/view/');
+                            $location.path('/user/view/');
                         });
                     });
                 }).error(function() {
@@ -3424,17 +3424,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             };
 
             $scope.go = function(){
-                $location.path('/tab/my/userinfo');
+                $location.path('/my/userinfo');
             };
 
             $scope.updateAddress = function(){
                 //更新收信地址
-                $location.path('/tab/my/address');
+                $location.path('/my/address');
             };
 
             $scope.updateWish = function(){
                 //更新wish
-                $location.path('/tab/user/wish');
+                $location.path('/user/wish');
             };
         }
 
@@ -3627,7 +3627,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 };
             }
             common.tempData.userData = paramsObj;
-            $location.path('/tab/square/' + paramsObj.id + '/reply');
+            $location.path('/square/' + paramsObj.id + '/reply');
             $event.stopPropagation();
         };
 
@@ -3874,7 +3874,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 });
                 confirmPopup.then(function(res) {
                     if(res) {
-                        $location.path('/tab/switch/photos/' + $scope.publishModel.id);
+                        $location.path('/switch/photos/' + $scope.publishModel.id);
                     }
                 });
             } else {
@@ -3948,7 +3948,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.send = function(p){
             common.utility.cookieStore.put('picurl', p.picture);
-            $location.path('/tab/switch/post/' + p.id);
+            $location.path('/switch/post/' + p.id);
         };
 
         $scope.initList = function(t) {
@@ -4027,7 +4027,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     common.utility.alert('提示', data.msg).then(function(){
-                        $location.path('/tab/switch/card/' + publishId);
+                        $location.path('/switch/card/' + publishId);
                     });
                 });
             }).error(function() {
@@ -4143,7 +4143,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     common.utility.alert('提示', d.msg).then(function(){
-                        $location.path('/tab/switch/photos/');
+                        $location.path('/switch/photos/');
                     });
                 });
             }).error(function() {alert('网络异常.');common.utility.loadingHide();});
@@ -4223,7 +4223,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', data.msg).then(function(){
-                            $location.path('/tab/switch');
+                            $location.path('/switch');
                         });
                     });
                 }).error(function() {alert('网络异常.');common.utility.loadingHide();});
@@ -4628,7 +4628,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     }).success(function (data) {
                         common.utility.loadingHide();
                         common.utility.alert('提示', data.msg).then(function (argument) {
-                            $location.path('/tab/square');
+                            $location.path('/square');
                         });
                     }).error(function () {
                         common.utility.loadingHide();
@@ -4734,7 +4734,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 buttonClicked: function(index) {
                     if (index === 0) {
                         //举报
-                        $location.path('/tab/report/forum/' + forumId);
+                        $location.path('/report/forum/' + forumId);
                     }
                     if (index === 1) {
                         //删除
@@ -4877,7 +4877,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     return;
                 } else {
                     common.tempData.userData = f;
-                    $location.path('/tab/square/' + forumId + '/reply'); 
+                    $location.path('/square/' + forumId + '/reply'); 
                 }
             }).fail(function(){
                 common.utility.resetToken();
@@ -4886,7 +4886,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.report = function(f) {
             console.log(f);
-            $location.path('/tab/report/forum/' + f.id);
+            $location.path('/report/forum/' + f.id);
         };
 
         $scope.formatDate = function(t) {
@@ -4950,9 +4950,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
                         if (from === 'user') {
-                            $location.path('/tab/user/view/' + id);
+                            $location.path('/user/view/' + id);
                         } else {
-                            $location.path('/tab/square');
+                            $location.path('/square');
                         }
                     });
                 });
@@ -5030,9 +5030,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.cancel = function(){
             var fObj = common.tempData.userData;
             if (fObj.from) {
-                $location.path('/tab/message/forum');
+                $location.path('/message/forum');
             } else {
-                $location.path('/tab/squaretheme/' + $stateParams.id + '/square');
+                $location.path('/squaretheme/' + $stateParams.id + '/square');
             }
         };
 
@@ -5068,9 +5068,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     common.utility.handlePostResult(data, function(d){
                         common.utility.alert('提示', d.msg).then(function(){
                             if (fObj.from) {
-                                $location.path('/tab/message/forum');
+                                $location.path('/message/forum');
                             } else {
-                                $location.path('/tab/squaretheme/' + $stateParams.id + '/square');
+                                $location.path('/squaretheme/' + $stateParams.id + '/square');
                             }
                         });
                     });

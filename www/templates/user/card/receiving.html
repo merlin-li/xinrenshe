@@ -1,11 +1,11 @@
 <ion-view title="收信" cache-view="false" hide-back-button="true">
     <ion-nav-buttons side="left">
-        <a href="#/tab/user" class="button back-button buttons button-clear header-item">
+        <a href="#/user" class="button back-button buttons button-clear header-item">
             <i class="icon ion-ios-arrow-back"></i>
         </a>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a href="#/tab/trash/2" class="button buttons button-clear header-item"><img class="icon icon-trash" src="img/icon_lajix.png"/></a>
+        <a href="#/trash/2" class="button buttons button-clear header-item"><img class="icon icon-trash" src="img/icon_lajix.png"/></a>
     </ion-nav-buttons>
     <ion-content has-header="true" has-bouncing="true" style="background:#f2f2f2">
         <div class="button-bar">
@@ -32,7 +32,7 @@
 
             <div class="footer" ng-if="card.order_type !== 4 && selectIndex === 6">
                 <section class="left">
-                    <a href="#/tab/user/view/{{card.send_uid}}"><img class="avatar" ng-src="{{card.sender_avatar}}"></a>
+                    <a href="#/user/view/{{card.send_uid}}"><img class="avatar" ng-src="{{card.sender_avatar}}"></a>
                 </section>
                 <section class="center">
                     <span>{{card.sender_username}}</span>

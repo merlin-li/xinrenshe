@@ -1,5 +1,5 @@
 <ion-list class="list activity-list">
-    <ion-item class="item item-thumbnail-left" href="#/tab/joint/activity/{{activity.id}}" ng-repeat="activity in activityList">
+    <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in activityList">
         <img ng-src="{{host+activity.propaganda_pic}}">
         <img class="hasCadge" ng-if="activity.joined" src="./img/ysp_1.png"/>
         <div>
@@ -11,7 +11,7 @@
 
     <div ng-show="noCurentData" class="item item-divider">以下为历史活动</div>
 
-    <ion-item class="item item-thumbnail-left" href="#/tab/joint/activity/{{activity.id}}" ng-repeat="activity in historyActivityList">
+    <ion-item class="item item-thumbnail-left" href="#/joint/activity/{{activity.id}}" ng-repeat="activity in historyActivityList">
         <img ng-src="{{host+activity.propaganda_pic}}">
         <div>
             <h2 ng-bind="activity.name"></h2>

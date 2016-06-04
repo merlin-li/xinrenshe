@@ -172,7 +172,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
 
                     } else {
                         _alert('提示', '请重新登录');
-                        $location.path('/tab/user/login');
+                        $location.path('/user/login');
                     }
                 }
                 if (needAccessSign !== false) {
@@ -189,7 +189,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                         if (data.status === 402) {
                             _cookieStore.remove('userinfo');
                             _alert('提示', data.msg);
-                            $location.path('/tab/user/login');
+                            $location.path('/user/login');
                         } else {
                             successCallback(data);
                         }
@@ -202,7 +202,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             },
             _resetToken = function() {
                 _cookieStore.remove('userinfo');
-                $location.path('/tab/user/login');
+                $location.path('/user/login');
             },
             _handlePostResult = function(d, cb) {
                 if (!d.status) {
@@ -213,7 +213,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else if (d.status === 402) {
                     //reset login method
                     _cookieStore.remove('userinfo');
-                    $location.path('/tab/user/login');
+                    $location.path('/user/login');
                 } else {
                     _alert('提示', d.msg);
                 }

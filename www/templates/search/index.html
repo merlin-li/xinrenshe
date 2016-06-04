@@ -9,7 +9,7 @@
         </div>
 
         <ion-list class="list joint-list" style="top:0">
-            <a class="item item-avatar" ng-repeat="m in dataModel.userList" href="#/tab/user/view/{{m.uid}}">
+            <a class="item item-avatar" ng-repeat="m in dataModel.userList" href="#/user/view/{{m.uid}}">
                 <img ng-src="{{dataModel.host + m.avatar}}">
                 <h2>
                     <span ng-bind="m.username"></span>

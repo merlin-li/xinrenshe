@@ -1,9 +1,9 @@
 <ion-view title="社区" hide-back-button="true" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button header-item" href="#/tab/squarepost">发帖</a>
+        <a class="button header-item" href="#/squarepost">发帖</a>
     </ion-nav-buttons>
     <ion-content>
-        <a href="#/tab/squaretheme/{{forum.id}}/square" class="item square-item {{forum.to_top ? 'square-item-top' : ''}}" ng-repeat="forum in dataList">
+        <a href="#/squaretheme/{{forum.id}}/square" class="item square-item {{forum.to_top ? 'square-item-top' : ''}}" ng-repeat="forum in dataList">
             <div class="header" ng-if="!forum.to_top">
                 <img class="avatar" ng-src="{{forum.avatar}}">
                 <label>{{forum.username}}
@@ -41,3 +41,9 @@
         </ion-infinite-scroll>
     </ion-content>
 </ion-view>
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+    <ion-tab title="首页" icon-off="ion-ios-home" icon-on="ion-ios-home" href="#/home"></ion-tab>
+    <ion-tab title="社区" icon-off="ion-sofa" icon-on="ion-sofa-on" href="#/square"></ion-tab>
+    <ion-tab title="信箱" icon-off="ion-ios-email" icon-on="ion-ios-email" href="#/message"></ion-tab>
+    <ion-tab title="我的" icon-off="ion-person" icon-on="ion-person" href="#/user"></ion-tab>
+</ion-tabs>

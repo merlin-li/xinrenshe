@@ -1,6 +1,6 @@
 <ion-view title="写片小能手工作室">
     <ion-nav-buttons side="right">
-        <a href="#/tab/tipsdetail/2/baodian" class="button">宝典</a>
+        <a href="#/tipsdetail/2/baodian" class="button">宝典</a>
     </ion-nav-buttons>
     <ion-content has-header="true" style="background:#f6f6f6;">
         <div>
@@ -21,7 +21,7 @@
         <div class="list">
             <div class="item writer-item" ng-repeat="t in taskObj.taskList">
                 <section>
-                    <a href="#/tab/user/view/{{t.recipient_uid}}"><img ng-src="{{taskObj.host + t.avatar}}"></a>
+                    <a href="#/user/view/{{t.recipient_uid}}"><img ng-src="{{taskObj.host + t.avatar}}"></a>
                     <div>
                         <span>{{t.username}}</span>
                         <span>{{t.province}} {{t.city}}</span>
