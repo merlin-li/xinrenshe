@@ -11,19 +11,15 @@
                 <div class="me-container" ng-click="go()">
                     <img class="avatar" ng-src="{{userModel.host + userModel.avatar}}">
                     <div>
-                        <span>
-                            {{userModel.username}}
-                            <i class="gender gender{{userModel.sex}}"></i>
-                        </span>
+                        <span>{{userModel.username}}</span>
+                        <img class="level" ng-src="{{'img/levelicon/' + userModel.lv + '.png'}}">
+                        <i class="gender gender{{userModel.sex}}"></i>
                     </div>
+                    <section class="address">{{userModel.province + ' ' + userModel.city}}</section>
                     <i class="icon ion-edit" ng-if="!hideEle"></i>
                 </div>
 
                 <ul class="me-info clearfix">
-                    <li>
-                        <span>{{userModel.province}} {{userModel.city}}</span>
-                        <img class="level" ng-src="{{'img/levelicon/' + userModel.lv + '.png'}}">
-                    </li>
                     <li>
                         <span>RP值</span>
                         <label>{{userModel.rp}}</label>
@@ -55,10 +51,10 @@
                 <section>{{userModel.introduction}}</section>
             </div>
             
-            <div class="data-mine">
+            <div class="data-mine" ng-if="!hideEle">
                 <h4 ng-click="updateAddress()">
                     收信地址
-                    <i class="icon ion-edit" ng-if="!hideEle"></i>
+                    <i class="icon ion-edit"></i>
                 </h4>
                 <section>
                     <div>
@@ -72,7 +68,6 @@
 
         <div class="padding">
             <button class="button button-positive button-block" ng-click="sendto()" ng-if="hideEle">给Ta寄</button>
-            <!-- <button class="button button-positive button-block" ng-click="save()" ng-if="!hideEle">保存修改</button> -->
         </div>
     </ion-content>
 

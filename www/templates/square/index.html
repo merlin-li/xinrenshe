@@ -2,7 +2,8 @@
     <ion-nav-buttons side="right">
         <a class="button header-item" href="#/squarepost">发帖</a>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content class="has-tabs">
+
         <a href="#/squaretheme/{{forum.id}}/square" class="item square-item {{forum.to_top ? 'square-item-top' : ''}}" ng-repeat="forum in dataList">
             <div class="header" ng-if="!forum.to_top">
                 <img class="avatar" ng-src="{{forum.avatar}}">
@@ -31,9 +32,6 @@
             </div>
         </a>
 
-        <br>
-        <br>
-        <br>
         <ion-infinite-scroll
             ng-if="!noMoreData"
             icon="ion-loading-c"

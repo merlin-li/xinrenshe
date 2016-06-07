@@ -1,5 +1,5 @@
 <ion-view view-title="信人社" hide-back-button="true">
-    <ion-content>
+    <ion-content class="has-tabs">
         <ion-slide-box>
             <ion-slide ng-repeat="banner in dataObj.bannerList">
                 <a ng-click="go(banner)" class="item-image"><img class="index-banner" ng-src="{{dataObj.host + banner.picture}}"></a>

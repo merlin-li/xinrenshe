@@ -1,33 +1,32 @@
 <ion-view title="个人资料">
-  <ion-content has-header="true">
-      <div class="avatar-container user-info-avatar" >
-        <img style="width:80px;height:80px" ng-src={{userObj.host+userObj.avatar}} ng-click="takePicture()">
-        <span class="ion-compose edit-avatar-btn" data-pack="default" data-tags="write, compose, type"></span>
-      </div>
-
-      <div class="content user-info-list ionic-pseudo">
-
-        <div class="list">
-
-          <div class="item item-input" ng-click="changeUserName()">
-            <span  class="input-label">昵称</span>
-            <span ng-bind="userObj.username" class="list-right" ng-hide="usernameHide"></span>
-            <input type="search" maxlength="30" ng-hide="inputHide" ng-model="userObj.username" >
-          </div>
-
-          <div class="item">
-            性别
-            <span ng-cloak class="list-right">{{userObj.sex==1? '男':'女'}}</span>
-
-          </div>
-
+    <ion-content has-header="true">
+        <div class="avatar-container user-info-avatar" >
+            <img style="width:80px;height:80px" ng-src="{{userObj.host + userObj.avatar}}" ng-click="takePicture()">
+            <span class="ion-compose edit-avatar-btn" data-pack="default" data-tags="write, compose, type"></span>
         </div>
 
-      </div>
-      <div class="padding">
-        <button class="button button-block button-positive" ng-click="saveUserInfo()">确定</button>
-      </div>
-    <!--拍照-->
-    <!-- <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none"> -->
-  </ion-content>
+        <div class="content user-info-list ionic-pseudo">
+            <div class="list">
+                <div class="item item-input">
+                    <span class="input-label">昵称</span>
+                    <input type="text" maxlength="30" ng-model="userObj.username" >
+                </div>
+
+                <a class="item item-input">
+                    <span class="input-label">性别</span>
+                    <input type="text" value="{{userObj.sex==1? '男':'女'}}" readonly>
+                </a>
+
+                <a class="item item-icon-right" href="#/city/setting/type/my_userinfo">
+                    所在地
+                    <i class="icon ion-ios-arrow-right"></i>
+                    <span class="item-note">{{userObj.province + userObj.city}}</span>
+                </a>
+            </div>
+        </div>
+        <div class="padding">
+            <br>
+            <button class="button button-block button-positive" ng-click="saveUserInfo()">确定</button>
+        </div>
+    </ion-content>
 </ion-view>

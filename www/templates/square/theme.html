@@ -7,12 +7,13 @@
     <ion-nav-buttons side="right">
         <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="operation()"><i class="icon ion-ios-more"></i></a>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content class="has-tabs">
         <div class="item square-item squarelist-item {{forum.floor > 1 ? 'square-item-gray' : ''}}" ng-repeat="forum in dataList">
             <div class="header">
                 <img class="avatar" ng-src="{{forum.avatar}}">
                 <label>
-                    {{forum.username}}<img ng-src="{{'img/levelicon/' + forum.lv + '.png'}}" class="level">
+                    {{forum.username}}&nbsp;
+                    <img ng-src="{{'img/levelicon/' + forum.lv + '.png'}}" class="level">
                     <i class="gender gender{{forum.sex}}"></i>
                     <i ng-if="forum.isLandlord" class="landlord">楼主</i>
                 </label>
@@ -22,7 +23,7 @@
                 <div ng-if="forum.floor > 1">
                     <span class="sq-icon" ng-click="comment(forum)">
                         <i class="ion ion-ios-chatbubble-outline"></i>&nbsp;
-                        {{forum.commentList.length}}
+                        <!-- {{forum.commentList.length}} -->
                     </span>
                     <span class="sq-icon" ng-click="report(forum)"><i class="ion ion-ios-more"></i></span>
                 </div>
@@ -45,9 +46,6 @@
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
 
         <ion-infinite-scroll
             ng-if="!noMoreData"

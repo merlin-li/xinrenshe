@@ -15,7 +15,7 @@
         </div>
 
         <section class="card-item" ng-repeat="card in orderList">
-            <div class="header receive-header {{card.order_warning ? 'headerwarn' : ''}}" ng-click="go(card)">
+            <div ng-if="selectIndex !== 2" class="header receive-header {{card.order_warning ? 'headerwarn' : ''}}" ng-click="go(card)">
                 <i class="badgex badgex1" ng-if="card.order_type === 1"><img src="img/icon_gtj.png"></i>
                 <i class="badgex badgex1" ng-if="card.order_type === 2"><img src="img/icon_hj.png"></i>
                 <i class="badgex badgex1" ng-if="card.order_type === 3"><img src="img/icon_pc.png"></i>
@@ -27,6 +27,19 @@
                 <label ng-if="!statusObj.hide" class="day">
                     {{statusObj.txt}} {{card.travel_days}}天
                 </label>
+                <button ng-if="!card.order_warning" ng-hide="statusObj.hideBtn" ng-click="done($event, card)">确认收信</button>
+            </div>
+
+            <div ng-if="selectIndex === 2" class="header receive-header travel-header {{card.order_warning ? 'headerwarn' : ''}}" ng-click="go(card)">
+                <i class="badgex badgex1" ng-if="card.order_type === 1"><img src="img/icon_gtj.png"></i>
+                <i class="badgex badgex1" ng-if="card.order_type === 2"><img src="img/icon_hj.png"></i>
+                <i class="badgex badgex1" ng-if="card.order_type === 3"><img src="img/icon_pc.png"></i>
+                <i class="badgex badgex1" ng-if="card.order_type === 4"><img src="img/icon_lm.png"></i>
+                <i class="badgex badgex1" ng-if="card.order_type === 5"><img src="img/icon_fl.png"></i>
+
+                <span class="order-number {{card.order_type === 2 ? 'red' : ''}}">{{card.order_number}}</span>
+                <label class="day">已旅行{{card.travel_days}}天</label>
+
                 <button ng-if="!card.order_warning" ng-hide="statusObj.hideBtn" ng-click="done($event, card)">确认收信</button>
             </div>
 
@@ -67,23 +80,4 @@
 
         <img src="img/xltb_1.png" class="full" ng-hide="showTip">
     </ion-content>
-
-    <div class="backdrop visible active" ng-if="showRateDialog"></div>
-    <div class="popup-container popup-showing active cssClass" ng-if="showRateDialog">
-        <div class="popup">
-            <div class="popup-head">
-                <h3 class="popup-title ng-binding">给小伙伴加RP值</h3>
-            </div>
-            <div class="popup-body">
-                <span class="popup-span">{{rateShowText}}</span>
-                <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
-            </div>
-            <div class="popup-buttons">
-                <button class="button ng-binding button-default" ng-click="cancel()">取消</button>
-
-                <button class="button ng-binding button-positive button-default" ng-click="receive()">确认收信</button>
-            </div>
-        </div>
-    </div>
-
 </ion-view>

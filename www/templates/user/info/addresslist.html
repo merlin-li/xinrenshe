@@ -1,4 +1,9 @@
-<ion-view title="收信地址" cache-view="false">
+<ion-view title="收信地址" cache-view="false" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <a href="#/user/view/" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-ios-arrow-back"></i> 
+        </a>
+    </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <a href="#/my/address/add/insert" class="button back-button buttons button-clear header-item">
             <i class="icon ion-android-add"></i> 
@@ -15,7 +20,7 @@
                     {{address.consignee_province + address.consignee_city + address.consignee_area + address.consignee_addr}}
                 </section>
                 <section class="btn-container">
-                    <a ng-click="setDefault(address)" ng-if="address.status !== 2" class="button button-small icon-left ion-checkmark">设为默认</a>
+                    <a ng-click="setDefault(address)" ng-if="address.status !== 2" class="button button-small icon-left ion-checkmark btn-setdef">设为默认</a>
                     <a ng-click="edit(address)" class="button button-small icon-left ion-edit">编辑</a>
                     <a ng-click="delete(address)" class="button button-assertive button-small icon-left ion-trash-a">删除</a>
                 </section>

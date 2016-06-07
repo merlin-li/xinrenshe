@@ -17,10 +17,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
         offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.4/';
 
-        //判断是不是stage环境
-        // if (location.indexOf('?stage') >= 0) {
-        //     api_base_url = 'http://stage.api.guozhongbao.com';
-        // }
         var u = window.navigator.userAgent,
             loadingTemplate = '<ion-spinner icon="spiral" style="fill:#fff"></ion-spinner>';
         // if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
@@ -274,7 +270,16 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 } else {
                     return '';
                 }
-            }();
+            }(),
+            _checkPhone = function (p) {
+                return /^1[3|4|5|7|8][0-9]\d{8}$/.test(p);
+            },
+            _checkPassword = function (p) {
+                return p.trim().length >= 6;
+            },
+            _getCache = function (name) {
+                return $cacheFactory(name);
+            };
 
 
         return {
@@ -377,18 +382,13 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 setDefaultConsignee: apiBaseUrl + 'setUserInfo/setDefaultConsignee',
                 updateConsignee: apiBaseUrl + 'setUserInfo/consignee',
                 inviteTop: apiBaseUrl + 'Promote/inviteTop',
-                myLevel: apiBaseUrl + 'My/lv'
+                myLevel: apiBaseUrl + 'My/lv',
+                forumDelete: apiBaseUrl + 'Forum/forumDelete'
             },
             utility: {
-                'checkPhone': function(p) {
-                    return /^1[3|4|5|7|8][0-9]\d{8}$/.test(p);
-                },
-                'checkPassword': function(p) {
-                    return p.trim().length >= 6;
-                },
-                'getCache': function(name) {
-                    return $cacheFactory(name);
-                },
+                'checkPhone': _checkPhone,
+                'checkPassword': _checkPassword,
+                'getCache': _getCache,
                 'alert': _alert,
                 'checkLogin': _checkLogin,
                 'formatTime': _formatTime,
@@ -412,7 +412,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 imgData: '',
                 userData: {},
                 homeData: {},
-                addressData: {}
+                addressData: {},
+                orderData: {}
             }
         };
     }

@@ -12,12 +12,12 @@
             </div>
             <ul class="card-detail" ng-if="!card.order_warning">
                 <li>
-                    <img class="avatar" ng-src="{{card.sender_avatar || card.corporation_avatar}}">
+                    <a href="#/user/view/{{card.send_uid}}"><img class="avatar" ng-src="{{card.sender_avatar || card.corporation_avatar}}"></a>
                     <span>{{card.sender_username}}</span>
                 </li>
                 <li><img class="zj" src="img/icon_hujitb.png"></li>
                 <li>
-                    <img class="avatar" ng-src="{{card.host + card.recipient_avatar}}">
+                    <a href="#/user/view/{{card.recipient_uid}}"><img class="avatar" ng-src="{{card.host + card.recipient_avatar}}"></a>
                     <span>{{card.consignee_username}}</span>
                 </li>
             </ul>

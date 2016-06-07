@@ -17,7 +17,7 @@ angular.module('xinrenshe', [
         $ionicConfigProvider.platform.android.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
         $ionicConfigProvider.views.swipeBackEnabled(false);
-        // $ionicConfigProvider.views.forwardCache(false);
+        $ionicConfigProvider.views.forwardCache(true);
 
         $stateProvider.state('xrs_home', {
             url: '/home',
@@ -196,6 +196,15 @@ angular.module('xinrenshe', [
                 'content': {
                     templateUrl: 'templates/user/card/receiving.html',
                     controller: 'MyReceivingCtrl'
+                }
+            }
+        })
+        .state('xrs_myReceivingComment', {
+            url: '/my/receiving/comment',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/card/comment.html',
+                    controller: 'ReceivingCommentCtrl'
                 }
             }
         })

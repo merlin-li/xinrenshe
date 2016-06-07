@@ -193,7 +193,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     font-size: 20px;
 }
 .me-container div{
-    height: 100%;
+    height: 30px;
     display: flex;
     display: -moz-flex;
     display: -webkit-flex;
@@ -204,9 +204,18 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     -ms-flex-align: center;
     -webkit-align-items: center;
     -moz-align-items: center;
+    justify-content: flex-start;
+    -ms-justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
     position: absolute;
     top: 0;
     left: 80px;
+}
+.me-container .address{
+    left: 80px;
+    top: 30px;
+    position: absolute;
 }
 .me-list .item{
     margin-bottom: 10px;
@@ -397,7 +406,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     border-top: solid 1px #e2e2e2;
     border-bottom: solid 1px #e2e2e2;
     background: #fff;
-    margin: 8px 0;
+    margin-bottom: 8px;
     color: #949494;
 }
 .card-item .header{
@@ -542,12 +551,6 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
 .user-info-avatar .edit-avatar-btn .activated{
   background: #ff8c9b;!important;
 }
-
-.user-info-list .list-right{
-  position: absolute;
-  right: 50px;
-}
-
 .corp-header{
     /*display: flex;
     display: -webkit-flex;
@@ -796,6 +799,9 @@ ul.send-tip{
     width: 40px;
     height: 40px;
     position: absolute;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
 }
 .list-message .container img:first-child{
     left: 0;
@@ -1358,6 +1364,11 @@ h4.tip{
     color: #ff8c9b;
     text-align: center;
 }
+.king-title span.tip{
+    color: #ff8c9b;
+    text-align: left;
+    line-height: 30px;
+}
 .king-title a{
     display: block;
     border: solid 1px #ff8c9b;
@@ -1411,19 +1422,20 @@ h4.tip{
     display: -webkit-flex;
     align-items: center;
 }
-.img-content h2{
+.square-item-top h2{
     display: inline-block;
     margin-left: 10px;
 }
 .square-item {
-    border-bottom: solid 5px #e5e5e5;
+    border-top: solid 5px #e5e5e5;
 }
 .square-item-top{
     padding: 10px;
-    border-bottom: solid 1px #e5e5e5
+    border-top: solid 1px #e5e5e5
 }
 .squarelist-item {
     border-bottom: solid 1px #e5e5e5;
+    border-top: 0;
 }
 .square-item .comment{
     background: #f6f6f6;
@@ -1438,23 +1450,22 @@ h4.tip{
     white-space: normal;
 }
 .square-item .header{
-    margin-bottom: 10px;
     position: relative;
-    min-height: 33px;
+    min-height: 45px;
 }
 .square-item label{
     position: absolute;
     top: 8px;
-    left: 40px;
+    left: 50px;
 }
 .squarelist-item label{
-    left: 60px;
+    left: 40px;
     top: 0;
 }
 .squarelist-item .time{
     position: absolute;
-    left: 60px;
-    top: 30px;
+    left: 40px;
+    bottom: 0;
     font-size: 12px;
     color: #c4c4c4;
 }
@@ -1473,13 +1484,21 @@ h4.tip{
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
 }
+.squarelist-item .avatar{
+    width: 50px;
+    height: 50px;
+}
+.squarelist-item label, .squarelist-item span.time{
+    left: 60px;
+}
 .square-item .level{
     width: 50px;
     vertical-align: middle;
 }
 .square-item .sq-icon{
-    font-size: 14px;
+    font-size: 18px;
     margin-right: 10px;
+    color: #2f2f2f;
 }
 .txt-content{
     height: 100px;
@@ -1505,6 +1524,9 @@ i.landlord{
     font-size: 12px;
     padding: 1px 3px;
 }
+.detail-content{
+    padding-top: 10px;
+}
 .square-item-gray{
     background: #f8f8f8;
 }
@@ -1528,9 +1550,6 @@ i.landlord{
 }
 .theme-reply{
     height: 60px;
-}
-.ion-ios-chatbubble-outline{
-    /*font-size: 20px;*/
 }
 .first-comment{
     border-top: solid 1px #ededed;
@@ -1714,23 +1733,17 @@ i.landlord{
 }
 .me-info li{
     float: left;
-    min-width: 13%;
+    min-width: 19%;
 }
 .me-info .border-left{
     border-left: solid 1px #fff;
 }
-.me-info li:first-child{
-    min-width: 25%;
-}
 .me-info li:last-child{
     min-width: 20%;
 }
-.me-info .level{
-    width: 57px;
-    height: auto;
-    border-radius: 0;
-    display: block;
-    margin: 0 auto;
+.me-container .level{
+    height: 20px;
+    vertical-align: bottom;
 }
 .data-mine section{
     white-space: normal;
@@ -1757,10 +1770,11 @@ i.landlord{
 }
 .address-item{
     font-size: 13px;
+    white-space: normal;
 }
 .address-item span{
     display: inline-block;
-    width: 50%;
+    width: 48%;
 }
 .address-item span:first-child{
     font-size: 15px;
@@ -1776,6 +1790,9 @@ i.landlord{
     text-align: right;
     padding-top: 10px;
     /*border-top: solid 1px #ccc;*/
+}
+.address-item .btn-container a.btn-setdef{
+    float: left;
 }
 .expand-list{
     background: #fff;
@@ -1799,8 +1816,22 @@ i.landlord{
 .expand-list .king{
     width: 60px;
 }
-
-
+.level-icon{
+    width: 50px;
+    vertical-align: middle;
+}
+.travel-header span.order-number, .travel-header label.day{
+    position: absolute;
+    left: 100px;
+}
+.travel-header span.order-number{
+    top: 10px;
+    font-size: 16px;
+    width: auto;
+}
+.travel-header label.day{
+    top: 40px;
+}
 
 
 

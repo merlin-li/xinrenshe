@@ -4,7 +4,9 @@
             <section>
                 <img class="avatar" ng-src="{{publishModel.host + publishModel.avatar}}">
                 <div class="start">
-                    <span class="name">{{publishModel.username}}</span><br>
+                    <span class="name">{{publishModel.username}}
+                        <img class="level-icon" ng-src="{{'img/levelicon/' + publishModel.lv + '.png'}}" class="level">
+                    </span><br>
                     <span class="address">{{publishModel.province + publishModel.city}}</span>
                 </div>
 
