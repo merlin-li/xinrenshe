@@ -1,4 +1,4 @@
-<ion-view title="个人资料">
+<ion-view title="个人资料" cache-view="false">
     <ion-nav-buttons side="right">
         <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="share()"><i class="icon ion-ios-more"></i></a>
         <a class="button buttons button-clear header-item" ng-if="hideEle" ng-click="report()"><i class="icon ion-ios-more"></i></a>
@@ -21,7 +21,7 @@
 
                 <ul class="me-info clearfix">
                     <li>
-                        <span>RP值</span>
+                        <span>信用分</span>
                         <label>{{userModel.rp}}</label>
                     </li>
                     <li class="border-left">

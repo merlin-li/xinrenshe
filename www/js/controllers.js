@@ -10,6 +10,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             'http://www.xinrenclub.com/**'
         ]);
         $httpProvider.defaults.useXDomain = true;
+        $httpProvider.defaults.headers.post = {'Content-Type': 'application/x-www-form-urlencoded'};
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
     }
 ])
@@ -39,7 +40,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             common.utility.cookieStore.remove('areainfo1');
             common.utility.cookieStore.remove('areainfo2');
             common.utility.cookieStore.remove('areainfo3');
-            common.utility.cookieStore.remove('bannerurl');
             common.utility.cookieStore.remove('picurl');
             common.utility.checkLogin().success(function(u){
                 paramsObj.uid = u.uid;
@@ -126,7 +126,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.go = function(b) {
             if (b.url !== '') {
-                common.utility.cookieStore.put('bannerurl', b);
+                common.tempData.iframeUrl = b;
                 $location.path('/banner');
             }
         };
@@ -135,15 +135,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
 .controller('BannerCtrl', [
     '$scope',
-    '$http',
     'Common',
-    '$location',
-    'md5',
-    function($scope, $http, common, $location, md5) {
+    function($scope, common) {
         ! function() {
-            if (common.utility.cookieStore.get('bannerurl')) {
-                var bannerObj = common.utility.cookieStore.get('bannerurl');
-                $scope.bannerModel = bannerObj;
+            if (common.tempData.iframeUrl) {
+                $scope.bannerModel = common.tempData.iframeUrl;
             }
         }();
     }
@@ -948,7 +944,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.send = function() {
             var confirmPopup = $ionicPopup.confirm({
                 title: '温馨提示',
-                template: '你要为陌生人写片，并且满足对方的要求在15天内寄出？',
+                template: '请确认您是否愿意写片给陌生人，尽量满足Ta的要求，并在10天内寄出？',
                 cancelText: '不寄了',
                 okText: '确定'
             });
@@ -1214,6 +1210,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 url: common.API.orderDetail,
                 data: paramsObj
             }).success(function(data){
+
                 common.utility.loadingHide();
                 //如果没有照片，进行更改为 相机背景 的图片
                 if (data.data.picture) {
@@ -1231,7 +1228,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     //寄信追踪
                     $scope.msgObj.btnTxt1 = '取消寄出';
                     $scope.msgObj.btnTxt2 = '去寄出';
-                    $scope.msgObj.infoTxt = data.data.warning_deadline + '天内不处理，系统将关闭该订单，并扣除相应RP值。'
+                    $scope.msgObj.infoTxt = data.data.warning_deadline + '天内不处理，系统将关闭该订单，并扣除相应信用分。'
                 }
                 if (orderType === 'receiving') {
                     //收信追踪
@@ -1255,10 +1252,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     order_id: c.id,
                     uid: $scope.userInfo.uid,
                     token: $scope.userInfo.token
-                }, templateStr, apiStr;
+                },
+                cardOrderType = $scope.card.order_type, templateStr, apiStr;
             if (orderType === 'sending') {
-                //取消寄出
-                templateStr = '取消寄出RP值减2，您确定要取消吗?';
+                //取消寄出，根据订单类型，提示不同的文案
+                if (cardOrderType === 1 || cardOrderType === 3) {
+                    //pc，给他寄
+                    templateStr = '您确定取消吗？';
+                } else {
+                    templateStr = '取消寄出信用分 -1，您确定要取消吗?';
+                }
             }
             if (orderType === 'receiving') {
                 //确认收信
@@ -1313,7 +1316,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 //没收到
                 var confirmPopup = $ionicPopup.confirm({
                     title: '温馨提示',
-                    template: '没收到双方RP值减1，您确定没收到吗？',
+                    template: '没收到双方信用分减1，您确定没收到吗？',
                     cancelText: '取消',
                     okText: '确定'
                 });
@@ -1659,7 +1662,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         common.utility.checkLogin().success(function(u){
             paramsObj.uid = u.uid;
             paramsObj.token = u.token;
-            // $scope.readHandleList();
         }).fail(function(){
             common.utility.resetToken();
         });
@@ -1676,7 +1678,14 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         ! function() {
             common.utility.checkLogin().success(function(u) {
                 $scope.userObj = u;
-                console.log(u);
+                var province = common.utility.cookieStore.get('areainfo1'),
+                    city = common.utility.cookieStore.get('areainfo2');
+                if (province) {
+                    $scope.userObj.province = province.name;
+                }
+                if (city) {
+                    $scope.userObj.city = city.name;
+                }
             }).fail(function() {
                 common.utility.resetToken();
             });
@@ -1684,9 +1693,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         $scope.saveUserInfo = function() {
             var params = {
-                'username': $scope.userObj.username
+                'username': $scope.userObj.username,
+                'province': $scope.userObj.province,
+                'city': $scope.userObj.city
             };
-            var url = common.API.modifyUserName;
+            var url = common.API.setBasicInfo;
             var success = function(data) {
                 if (data.status === 200) {
                     $scope.inputHide = true;
@@ -1864,10 +1875,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'md5',
     function($scope, $http, common, $location, md5) {
         var card = common.tempData.orderData;
-
         $scope.card = card;
         $scope.cardModel = {content: ''};
-
         $scope.done = function(){
             var confirmObj = card.postParams;
             confirmObj.reply_content = $scope.cardModel.content;
@@ -1887,6 +1896,30 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 alert('网络异常.');
             });
         };
+
+        !function(){
+            common.utility.loadingShow();
+            var paramsObj = {
+                order_id: card.id,
+                uid: card.postParams.uid,
+                token: card.postParams.token
+            };
+            paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+            $http({
+                method: 'post',
+                url: common.API.orderDetail,
+                data: paramsObj
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.card.sender_avatar = d.data.host + d.data.sender_avatar;
+                    $scope.card.sender_sex = d.data.sender_sex;
+                    $scope.card.sender_username = d.data.sender_username;
+                    $scope.card.sender_province = d.data.sender_province;
+                    $scope.card.sender_city = d.data.sender_city;
+                });
+            });
+        }();
     }
 ])
 
@@ -3468,7 +3501,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 $http({
                     method: 'post',
                     url: common.API.msgCategoryList,
-                    data: paramsObj
+                    data: paramsObj,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
@@ -4386,7 +4420,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             // messageAction: "<action>dotalist</action>",
                             media: {
                                 type: Wechat.Type.LINK,
-                                webpageUrl: "http://www.xinrenclub.com/wechatshare/expand.html?uname=" + escape($scope.userObj.username)
+                                webpageUrl: "http://www.xinrenclub.com/wechatshare/expand.html?uname=" + escape($scope.userObj.username) + '&code=' + $scope.userObj.invitation_code
                             }
                         },
                         scene: Wechat.Scene.TIMELINE   // share to Timeline
@@ -4632,18 +4666,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$ionicPopup',
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera, $ionicActionSheet, $ionicPopup){
         var forumId = $stateParams.id,
-            options = {
-                quality: 95,
-                destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.CAMERA,
-                allowEdit: false,
-                encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 600,
-                targetHeight: 600,
-                popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false,
-                correctOrientation: true
-            }, 
+            // options = {
+            //     quality: 95,
+            //     destinationType: Camera.DestinationType.DATA_URL,
+            //     sourceType: Camera.PictureSourceType.CAMERA,
+            //     allowEdit: false,
+            //     encodingType: Camera.EncodingType.JPEG,
+            //     targetWidth: 600,
+            //     targetHeight: 600,
+            //     popoverOptions: CameraPopoverOptions,
+            //     saveToPhotoAlbum: false,
+            //     correctOrientation: true
+            // }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };

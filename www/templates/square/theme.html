@@ -10,7 +10,7 @@
     <ion-content class="has-tabs">
         <div class="item square-item squarelist-item {{forum.floor > 1 ? 'square-item-gray' : ''}}" ng-repeat="forum in dataList">
             <div class="header">
-                <img class="avatar" ng-src="{{forum.avatar}}">
+                <a href="#/user/view/{{forum.uid}}"><img class="avatar" ng-src="{{forum.avatar}}"></a>
                 <label>
                     {{forum.username}}&nbsp;
                     <img ng-src="{{'img/levelicon/' + forum.lv + '.png'}}" class="level">

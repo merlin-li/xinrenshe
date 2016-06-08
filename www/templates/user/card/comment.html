@@ -12,7 +12,6 @@
                 <label class="day">
                     已旅行{{card.travel_days}}天
                 </label>
-                <!-- <button ng-if="!card.order_warning" ng-hide="statusObj.hideBtn" ng-click="done($event, card)">确认收信</button> -->
             </div>
 
             <div class="footer" ng-if="card.order_type !== 4">
@@ -21,7 +20,7 @@
                 </section>
                 <section class="center">
                     <span>{{card.sender_username}}</span>
-                    <span>{{card.sender_sex ==1? '男':'女'}}</span>
+                    <span>{{card.sender_sex == 1? '男':'女'}}</span>
                     <span class="address">{{card.sender_province + card.sender_city}}</span>
                 </section>
                 <section class="right">

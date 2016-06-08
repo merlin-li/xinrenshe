@@ -383,7 +383,8 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 updateConsignee: apiBaseUrl + 'setUserInfo/consignee',
                 inviteTop: apiBaseUrl + 'Promote/inviteTop',
                 myLevel: apiBaseUrl + 'My/lv',
-                forumDelete: apiBaseUrl + 'Forum/forumDelete'
+                forumDelete: apiBaseUrl + 'Forum/forumDelete',
+                setBasicInfo : apiBaseUrl + 'setUserInfo/basicInfo'
             },
             utility: {
                 'checkPhone': _checkPhone,
@@ -413,7 +414,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 userData: {},
                 homeData: {},
                 addressData: {},
-                orderData: {}
+                iframeUrl: {}
             }
         };
     }

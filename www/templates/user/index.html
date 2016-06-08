@@ -1,21 +1,18 @@
 <ion-view title="我的" hide-back-button="true" cache-view="false">
     <ion-content has-header="true" style="background:#f6f6f6;" has-bouncing="true">
-
         <div class="item item-icon-right avatar-container">
             <img ng-src="{{userObj.host + userObj.avatar}}">
-
             <div class="name-address">
                 <span>{{userObj.username}}</span>
                 <label>{{userObj.province + userObj.city}}</label>
             </div>
-
-            <div class="rate" ng-if="userObj.hasLogin">
-                <a href="#/user/view/">完善度{{userObj.completeRate * 100}}%</a>
-            </div>
             <div class="rate rate-login" ng-if="!userObj.hasLogin">
                 <a href="#/user/login">立即登录</a>
             </div>
-            <i ng-if="userObj.hasLogin" class="icon ion-ios-arrow-right icon-userinfo-right"></i>
+            <div class="rate" ng-if="userObj.hasLogin">
+                <a href="#/user/view/">完善度{{userObj.completeRate * 100}}%</a>
+            </div>
+            <a href="#/user/view/"><i ng-if="userObj.hasLogin" class="icon ion-ios-arrow-right icon-userinfo-right"></i></a>
         </div>
 
         <section class="user-icon-list clearfix">
