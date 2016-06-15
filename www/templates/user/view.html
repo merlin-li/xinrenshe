@@ -1,4 +1,10 @@
-<ion-view title="个人资料" cache-view="false">
+<ion-view title="个人资料" cache-view="false" hide-back-button="!showBackButton">
+    <ion-nav-buttons side="left">
+        <a href="#/user" class="button back-button buttons button-clear header-item" ng-if="!showBackButton">
+            <i class="icon ion-ios-arrow-back"></i>
+        </a>
+    </ion-nav-buttons>
+
     <ion-nav-buttons side="right">
         <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="share()"><i class="icon ion-ios-more"></i></a>
         <a class="button buttons button-clear header-item" ng-if="hideEle" ng-click="report()"><i class="icon ion-ios-more"></i></a>
@@ -66,8 +72,9 @@
             </div>
         </div>
 
-        <div class="padding">
-            <button class="button button-positive button-block" ng-click="sendto()" ng-if="hideEle">给Ta寄</button>
+        <div class="padding" ng-if="hideEle">
+            <button class="button button-positive button-block" ng-click="sendto()">给Ta寄</button>
+            <button class="button button-positive button-block" ng-click="sendmsg()">留言</button>
         </div>
     </ion-content>
 

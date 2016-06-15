@@ -7,7 +7,7 @@
     <ion-nav-buttons side="right">
         <a href="#/trash/1" class="button buttons button-clear header-item"><img class="icon icon-trash" src="img/icon_lajix.png"/></a>
     </ion-nav-buttons>
-    <ion-content has-header="true" style="background:#f2f2f2" has-bouncing="true">
+    <ion-content has-header="true" class="gray-color" has-bouncing="true">
         <div class="button-bar">
             <a class="button {{btnClass1}}" ng-click="readCardList(1)">等待寄出</a>
             <a class="button {{btnClass2}}" ng-click="readCardList(4)">旅行中</a>
@@ -50,9 +50,6 @@
             icon="ion-loading-c"
             on-infinite="readCardList()" distance="10%">
         </ion-infinite-scroll>
-
-        <!--拍照-->
-        <!-- <input id="takecardpicture" type="file" accept="image/*" capture="camera" style="display: none"> -->
 
         <img src="img/xltb_1.png" class="full" ng-hide="showTip">
     </ion-content>

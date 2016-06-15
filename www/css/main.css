@@ -1679,7 +1679,8 @@ i.landlord{
     background: #fff;
     margin-bottom: 15px;
 }
-.user-icon-list div{
+.user-icon-list div, .user-icon-list a{
+    text-decoration: none;
     display: inline-block;
     text-align: center;
     width: 25%;
@@ -1844,12 +1845,120 @@ i.landlord{
 .travel-header label.day{
     top: 40px;
 }
+.task-item img{
+    width: 30px;
+    height: 30px;
+}
+.task-item img.select{
+    width: 20px;
+    height: 20px;
+}
+.task-item span{
+    color: #fe6682;
+}
+.task-title{
+    color: #fe6682;
+    border-left: solid 3px #fe6682;
+    padding-left: 10px;
+    font-size: 14px;
+    font-weight: bolder;
+}
+.bean-list img{
+    width: 70px;
+}
+.bean-list .item-icon-left{
+    padding-left: 90px;
+}
+.bean-list label{
+    color: #65b72e;
+}
+.bean-bar{
+    width: 150px;
+    height: 15px;
+    border: solid 1px #65b72e;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+}
+.bean-bar div{
+    height: 100%;
+    background: url(../img/bgcolor.png);
+}
+.chat-tip{
+    background: #fe6682;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    line-height: 24px;
+}
+.chat-item{
+    display: flex;
+    display: -moz-flex;
+    display: -webkit-flex;
+/*    display: -moz-box;
+    display: -webkit-box;
+    display: -ms-flex-box;*/
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    justify-content: flex-start;
+    -ms-justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+    -webkit-flex-direction: row;
+}
+.chat-item .avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+}
+.chat-item div{
+    background: #f7f7f7;
+    max-width: 70%;
+    margin: 0 10px;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.chat-right{
+    justify-content: flex-end;
+    -ms-justify-content: flex-end;
+    -moz-justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+}
 
-
-
-
-
-
+.credit-title{
+    text-align: center;
+    font-size: 16px;
+    line-height: 50px;
+    color: #2f2f2f;
+}
+.credit-score{
+    text-align: center;
+    font-size: 16px;
+    color: #fe6682;
+    line-height: 30px;
+}
+.credit-record-item span{
+    width: 30%;
+    display: inline-block;
+}
+.credit-record-item span:last-child{
+    text-align: center;
+    color: #fe6682;
+}
+.gray-color{
+    background: #f6f6f6;
+}
 
 
 

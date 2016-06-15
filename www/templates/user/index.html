@@ -1,10 +1,10 @@
 <ion-view title="我的" hide-back-button="true" cache-view="false">
-    <ion-content has-header="true" style="background:#f6f6f6;" has-bouncing="true">
+    <ion-content has-header="true" class="gray-color" has-bouncing="true">
         <div class="item item-icon-right avatar-container">
             <img ng-src="{{userObj.host + userObj.avatar}}">
             <div class="name-address">
                 <span>{{userObj.username}}</span>
-                <label>{{userObj.province + userObj.city}}</label>
+                <label>{{userObj.province}}</label>
             </div>
             <div class="rate rate-login" ng-if="!userObj.hasLogin">
                 <a href="#/user/login">立即登录</a>
@@ -21,17 +21,17 @@
                 <span>{{userObj.lv}}</span>
                 <label>等级</label>
             </div>
-            <div>
+            <a href="#/usertype/credit">
                 <img src="img/icon_character.png">
                 <span>{{userObj.rp}}</span>
                 <label>信用分</label>
-            </div>
-            <div>
+            </a>
+            <a href="#/usertype/bean">
                 <img src="img/icon_bean.png">
                 <span>{{userObj.bean}}</span>
                 <label>社豆</label>
-            </div>
-            <div>
+            </a>
+            <div ng-click="open('arrive')">
                 <img src="img/icon_rate.png">
                 <span ng-if="userObj.hasLogin">{{userObj.arrivalRate + '%'}}</span>
                 <label>到达率</label>
@@ -47,7 +47,7 @@
             <a href="#/switch/photos/"><img src="img/icon_album.png"></a>
             <a href="#/joint/manage/myCorporation"><img src="img/icon_jointly.png"></a>
             <a href="#/writer" ng-if="userObj.isPostcardMaster"><img src="img/icon_master.png"></a>
-            <a href="#/tips/baodian"><img src="img/icon_canon.png"></a>
+            <a ng-click="open('baodian')"><img src="img/icon_canon.png"></a>
         </section>
 
         <section class="box-icon clearfix">

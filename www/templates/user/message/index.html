@@ -1,0 +1,43 @@
+<ion-view title="私信" cache-view="false">
+    <ion-nav-buttons side="right">
+        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="setting()"><i class="icon ion-ios-more"></i></a>
+    </ion-nav-buttons>
+    <ion-content has-header="true">
+        <div class="chat-tip">留言非即时消息</div>
+
+        <div class="chat-item padding" ng-repeat="msg in dataList">
+            <img class="avatar" ng-src="{{msg.avatar}}">
+            <div>
+                {{msg.content}}
+                <img ng-src="{{msg.picture}}" ng-if="msg.picture">
+            </div>
+        </div>
+
+<!--         <div class="chat-item padding">
+            <img class="avatar" src="img/tx_01.png">
+            <div>这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息</div>
+        </div>
+
+        <div class="chat-item padding chat-right">
+            <div><img src="img/logo_shiguang.png"></div>
+            <img class="avatar" src="img/tx_01.png">
+        </div> -->
+
+
+        <ion-infinite-scroll
+            ng-if="!noMoreData"
+            icon="ion-loading-c"
+            on-infinite="initList()" distance="10%">
+        </ion-infinite-scroll>
+    </ion-content>
+
+    <div class="post-replay" ng-style="replyStyle">
+        <div class="item item-input-inset theme-reply">
+            <a class="btn-image icon ion-image" ng-click="upload()"></a>
+            <label class="item-input-wrapper">
+                <input type="text" class="full" ng-model="messageRepModel.content" placeholder="输入您想说的话" ng-blur="inputBlur()">
+            </label>
+            <button class="button button-small button-positive" ng-click="replay()">回复</button>
+        </div>
+    </div>
+</ion-view>

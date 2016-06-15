@@ -1,5 +1,5 @@
 <ion-view title="签到王">
-    <ion-content has-header="true" style="background:#f2f2f2">
+    <ion-content has-header="true" class="gray-color">
         <img ng-src="{{kingData.host + kingData.bannerInfo.picture}}" class="full">
 
         <div class="member-list sign-list king-title" ng-if="hasLogin">
@@ -27,10 +27,10 @@
                 <img class="king" src="img/picture_wang.png" ng-if="king.index > 0">
 
                 <div class="content">
-
                     <span class="title">
                         <img ng-src="{{kingData.host + king.avatar}}">
-                        {{king.username}}</span>
+                        {{king.username}}
+                    </span>
                     <div>
                         <span ng-if="king.prize_arr['1st']">
                             <img src="img/icon_hg.png">

@@ -1,0 +1,31 @@
+<ion-view title="详情" cache-view="false">
+    <ion-content has-header="true" has-bouncing="true">
+
+        <h4 class="credit-score" ng-if="pageType === 'credit'">{{userObj.rp}}</h4>
+        <h4 class="credit-score" ng-if="pageType === 'bean'">当前社豆：{{userObj.bean}}</h4>
+
+        <h5 class="credit-title" ng-if="pageType === 'credit'">珍惜点滴信用，共建诚信社群</h5>
+
+        <div class="list" ng-if="pageType === 'credit'">
+            <a href="#/user/credit/record" class="item item-icon-right">
+                信用分记录
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+            <a ng-click="open('credit')" class="item item-icon-right">
+                信用宝典
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="list" ng-if="pageType === 'bean'">
+            <a href="#/user/bean/record" class="item item-icon-right">
+                社豆记录
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+            <a ng-click="open('bean')" class="item item-icon-right">
+                社豆宝典
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

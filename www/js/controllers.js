@@ -25,6 +25,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$ionicLoading',
     function($scope, $http, common, $location, $ionicSlideBoxDelegate, $ionicPopup, $ionicLoading) {
         ! function() {
+            document.addEventListener('deviceready', function() {
+                window.open = cordova.InAppBrowser.open;
+            }, false);
+
             var platformType = common.utility.deviceInfo,
                 os = 0, userObj, paramsObj;
             if (platformType === 'ios') {
@@ -121,27 +125,17 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         });
                     }
                 }
-            }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+            }).error(function() {
+                alert('网络异常.');
+                common.utility.loadingHide();
+            });
         }();
 
         $scope.go = function(b) {
             if (b.url !== '') {
-                common.tempData.iframeUrl = b;
-                $location.path('/banner');
+                window.open(b.url, '_blank', 'location=no,toolbarposition=top');
             }
         };
-    }
-])
-
-.controller('BannerCtrl', [
-    '$scope',
-    'Common',
-    function($scope, common) {
-        ! function() {
-            if (common.tempData.iframeUrl) {
-                $scope.bannerModel = common.tempData.iframeUrl;
-            }
-        }();
     }
 ])
 
@@ -303,7 +297,8 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     '$location',
-    function($scope, $http, common, md5, $location) {
+    '$stateParams',
+    function($scope, $http, common, md5, $location, $stateParams) {
         ! function() {
             $scope.userObj = {
                 hasLogin: false,
@@ -345,12 +340,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             });
         }();
 
+        $scope.pageType = $stateParams.pagetype;
+
         $scope.logout = function(){
             common.utility.resetToken();
         };
 
         $scope.goLevel = function(){
             $location.path('/user/level');
+        };
+
+        $scope.open = function(name){
+            common.utility.gotoHelp(name);
         };
     }
 ])
@@ -1316,7 +1317,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 //没收到
                 var confirmPopup = $ionicPopup.confirm({
                     title: '温馨提示',
-                    template: '没收到双方信用分减1，您确定没收到吗？',
+                    template: '没收到片会影响对方的到达率，请确定您真的没有收到？',
                     cancelText: '取消',
                     okText: '确定'
                 });
@@ -1703,7 +1704,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     $scope.inputHide = true;
                     $scope.usernameHide = false;
                     common.utility.cookieStore.put('userinfo', $scope.userObj);
-                    $location.path('/user');
+                    $location.path('/user/view/');
                 } else {
                     common.utility.alert('提示', data.msg);
                 }
@@ -3314,6 +3315,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.hideEle = true;
         $scope.hideShare = true;
         $scope.userId = 0;
+        $scope.showBackButton = false;
         var userId = $stateParams.id,
             userParamsObj = {
                 suid: userId
@@ -3321,6 +3323,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         userParamsObj.accessSign = md5.createHash(common.utility.createSign(userParamsObj));
 
         if (userId) {
+            $scope.showBackButton = true;
             $scope.userId = userId;
             $http({
                 method: 'post',
@@ -3352,6 +3355,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 });
             };
         } else {
+            $scope.showBackButton = false;
             $scope.hideEle = false;
             var paramsObj = {};
             common.utility.checkLogin().success(function(u){
@@ -3479,6 +3483,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }
             }, function (reason) {
                 alert("Failed: " + reason);
+            });
+        };
+
+        // href="#/user/message/{{userModel.uid}}
+        $scope.sendmsg = function(){
+            common.utility.checkLogin().success(function(u){
+                common.tempData.userInfo = u;
+                $location.path('/user/message/' + $scope.userModel.uid);
+            }).fail(function(){
+                common.utility.resetToken();
             });
         };
     }
@@ -3615,7 +3629,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     'Common',
     'md5',
     function($http, $scope, common, md5){
-
+        $scope.signCount = 0;
         $scope.uObj = {};
 
         function _init() {
@@ -3637,12 +3651,15 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         d.data.date = new Date(d.data.date * 1000).format('yyyy年MM月dd日');
                         $scope.signObj = d.data;
                     });
-                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+                }).error(function() {
+                    alert('网络异常.');
+                    common.utility.loadingHide();
+                });
 
                 var paramsObj1 = {
                     uid: u.uid,
                     token: u.token,
-                    per: 1000
+                    per: 100
                 };
                 paramsObj1.accessSign = md5.createHash(common.utility.createSign(paramsObj1));
                 $http({
@@ -3652,6 +3669,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
+                        $scope.signCount = d.data.totalCount;
                         d.data.signList.map(function(s){
                             s.avatar = d.data.host + s.avatar;
                             s.create_at = new Date(s.create_at * 1000).format('hh:mm');
@@ -3674,7 +3692,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         _init();
 
         $scope.sign = function(){
-            console.log($scope.uObj);
             var paramsObj = {
                     uid: $scope.uObj.uid,
                     token: $scope.uObj.token
@@ -3696,6 +3713,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 alert('网络异常.');
                 common.utility.loadingHide();
             });
+        };
+
+        $scope.open = function() {
+            common.utility.gotoHelp('signin');
         };
     }
 ])
@@ -4266,9 +4287,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.savePC = function(){
             $scope.save(2, $scope.dataModel.allowPC ? 1 : 0);
         };
-
-
-
     }
 ])
 
@@ -4388,6 +4406,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     $scope.dataModel = d.data;
+                    // console.log($scope.dataModel.invitation_code);
                 });
             }).error(function(){
                 alert('网络异常.');
@@ -4397,15 +4416,13 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             common.utility.resetToken();
         });
 
-
-
         $scope.share = function(){
             $scope.hideShare = false;
         };
 
         $scope.cancel = function (argument) {
             $scope.hideShare = true;
-        }
+        };
 
         $scope.shareWechat = function (argument) {
             Wechat.isInstalled(function (installed) {
@@ -4420,7 +4437,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             // messageAction: "<action>dotalist</action>",
                             media: {
                                 type: Wechat.Type.LINK,
-                                webpageUrl: "http://www.xinrenclub.com/wechatshare/expand.html?uname=" + escape($scope.userObj.username) + '&code=' + $scope.userObj.invitation_code
+                                webpageUrl: "http://www.xinrenclub.com/wechatshare/expand.html?uname=" + escape($scope.userObj.username) + '&code=' + $scope.dataModel.invitation_code
                             }
                         },
                         scene: Wechat.Scene.TIMELINE   // share to Timeline
@@ -4435,7 +4452,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }, function (reason) {
                 alert("Failed: " + reason);
             });           
-        }
+        };
+
+        $scope.help = function(){
+            common.utility.gotoHelp('expand');
+        };
     }
 ])
 
@@ -4541,8 +4562,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                             } else {
                                 c.timeStr = postTime.format('MM-dd');
                             }
-
-                            // if (timeStamp < )
                         });
                         $scope.lastPage = d.data.totalPage;
                         $scope.dataList = $scope.dataList.concat(d.data.forumList);
@@ -4666,18 +4685,18 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$ionicPopup',
     function($http, $scope, common, md5, $location, $stateParams, $cordovaCamera, $ionicActionSheet, $ionicPopup){
         var forumId = $stateParams.id,
-            // options = {
-            //     quality: 95,
-            //     destinationType: Camera.DestinationType.DATA_URL,
-            //     sourceType: Camera.PictureSourceType.CAMERA,
-            //     allowEdit: false,
-            //     encodingType: Camera.EncodingType.JPEG,
-            //     targetWidth: 600,
-            //     targetHeight: 600,
-            //     popoverOptions: CameraPopoverOptions,
-            //     saveToPhotoAlbum: false,
-            //     correctOrientation: true
-            // }, 
+            options = {
+                quality: 95,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: false,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 600,
+                targetHeight: 600,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                correctOrientation: true
+            }, 
             _savePicture = function(s){
                 $scope.photos.push(s);
             };
@@ -4747,12 +4766,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             });
         };
 
-        window.addEventListener('native.keyboardshow', function(e){
-            $scope.replyStyle = {
-                'height': (e.keyboardHeight + 60) + 'px'
-            };
-            $scope.$apply();
-        });
+        // window.addEventListener('native.keyboardshow', function(e){
+        //     $scope.replyStyle = {
+        //         'height': (e.keyboardHeight + 60) + 'px'
+        //     };
+        //     $scope.$apply();
+        // });
 
         $scope.inputBlur = function () {
             // $scope.showPhotos = true;
@@ -5084,11 +5103,334 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     }
 ])
 
+.controller('TaskCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    function($http, $scope, common){
+        $scope.hasLogin = false;
+        $scope.userInfo = {};
+        $scope.init = function(p) {
+            common.utility.loadingShow();
+            $http({
+                url: common.API.homeList,
+                params: p
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    $scope.taskModel = d.data;
+                });
+            }).error(function(){
+                alert('网络异常');
+                common.utility.loadingHide();
+            });
+        };
+
+        $scope.get = function() {
+            if ($scope.hasLogin) {
+                //登录，领取奖励
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.getPrize,
+                    data: $scope.userInfo
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.alert('提示', data.msg);
+                }).error(function(){
+                    alert('网络异常');
+                    common.utility.loadingHide();
+                });
+            } else {
+                common.utility.resetToken();
+            }
+        };
+
+        common.utility.checkLogin().success(function(u){
+            $scope.hasLogin = true;
+            $scope.userInfo = u;
+            $scope.init({uid: u.uid, token: u.token});
+        }).fail(function(){
+            $scope.hasLogin = false;
+            $scope.init();
+        });
+    }
+])
+
+.controller('BeanCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    function($http, $scope, common){
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 5;
+        $scope.userInfo = {};
+        $scope.brandList = [];
+        common.utility.checkLogin().success(function(u){
+            $scope.userInfo = u;
+        }).fail(function(){
+            common.utility.resetToken();
+        });
+
+        $scope.initList = function() {
+            var paramsObj = {};
+            paramsObj.uid = $scope.userInfo.uid;
+            paramsObj.token = $scope.userInfo.token;
+            paramsObj.page = $scope.currentPage;
+            // paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
+
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: common.API.digBeanList,
+                    data: paramsObj
+                }).success(function(data) {
+                    //处理card的示例图
+                    common.utility.handlePostResult(data, function(d) {
+                        if (d.data.brandList.length > 0) {
+                            d.data.brandList.map(function(b) {
+                                if (b.logo) {
+                                    b.logo = d.data.host + b.logo;
+                                }
+                            });
+                        }
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.brandList = $scope.brandList.concat(d.data.brandList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                    common.utility.loadingHide();
+                }).error(function() {
+                    alert('网络异常.');
+                    common.utility.loadingHide();
+                });
+            }
+        };
+        
+        $scope.dig = function(b) {
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.doDig,
+                data: {
+                    uid: $scope.userInfo.uid,
+                    token: $scope.userInfo.token,
+                    brand_id: b.id
+                }
+            }).success(function(data){
+                common.utility.loadingHide();
+                common.utility.handlePostResult(data, function(d){
+                    common.utility.alert('提示', data.msg).then(function(){
+                        $scope.brandList = [];
+                        $scope.currentPage = 1;
+                        $scope.lastPage = 2;
+                        $scope.noMoreData = false;
+                        $scope.initList();
+                    });
+                });
+            }).error(function(){
+                common.utility.loadingHide();
+                alert('网络异常.');
+            });
+        };
+    }
+])
+
+.controller('sendMessageCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    function($http, $scope, common, $stateParams){
+        var cuserInfo = {
+                uid: 12,
+                token: 'd96c20cb56dd6374071a8d2739147941'
+            },
+            // cuserInfo = common.tempData.userInfo,
+            userId = $stateParams.userId,
+            // options = {
+            //     quality: 95,
+            //     destinationType: Camera.DestinationType.DATA_URL,
+            //     sourceType: Camera.PictureSourceType.CAMERA,
+            //     allowEdit: false,
+            //     encodingType: Camera.EncodingType.JPEG,
+            //     targetWidth: 600,
+            //     targetHeight: 600,
+            //     popoverOptions: CameraPopoverOptions,
+            //     saveToPhotoAlbum: false,
+            //     correctOrientation: true
+            // }, 
+            _savePicture = function(s){
+                
+                $scope.photos.push(s);
+            };
+
+        console.log(cuserInfo);
+        $scope.dataList = [];
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 10;
+        $scope.photos = [];
+        $scope.showPhotos = false;
+        $scope.messageRepModel = {content: ''};
+        $scope.replyStyle = {height: ''};
+        $scope.userinfo = {};
+
+        // window.addEventListener('native.keyboardshow', function(e){
+        //     $scope.replyStyle = {
+        //         'height': (e.keyboardHeight + 60) + 'px'
+        //     };
+        //     $scope.$apply();
+        // });
+
+        $scope.upload = function() {
+            $scope.showPhotos = !$scope.showPhotos;
+            if (!$scope.showPhotos) {
+                $scope.replyStyle = {
+                    'height': '60px'
+                };
+            }
+        };
+
+        $scope.uploadPic = function() {
+            options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                _savePicture('data:image/jpeg;base64,' + imageData);
+            }, function(err) {});
+        };
+
+        $scope.uploadCamera = function(){
+            options.sourceType = Camera.PictureSourceType.CAMERA;
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                _savePicture('data:image/jpeg;base64,' + imageData);
+            }, function(err) {});
+        };
+
+        $scope.initList = function() {
+            if ($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                var paramsObj = {
+                    per: 20,
+                    page: $scope.currentPage,
+                    r_uid: userId,
+                    uid: cuserInfo.uid,
+                    token: cuserInfo.token
+                };
+                $http({
+                    method: 'get',
+                    url: common.API.noteHistory,
+                    params: paramsObj
+                }).success(function(data){
+                    common.utility.loadingHide();
+                    common.utility.handlePostResult(data, function(d){
+                        d.data.noteList.map(function(c){
+                            c.avatar = d.data.host + c.avatar;
+                            if (c.picture) {
+                                c.picture = d.data.host + c.picture;
+                            }
+                        });
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.dataList = $scope.dataList.concat(d.data.noteList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                }).error(function() {alert('网络异常.');common.utility.loadingHide();});
+            }
+        };
+
+        $scope.replay = function() {
+            common.utility.loadingShow();
+            $http({
+                method: 'post',
+                url: common.API.sendNote,
+                data: {
+                    uid: cuserInfo.uid,
+                    token: cuserInfo.token,
+                    r_uid: userId,
+                    content: $scope.messageRepModel.content
+                }
+            }).success(function(data){
+                common.utility.loadingHide();
+            }).error(function(){
+                alert('网络异常.');
+                common.utility.loadingHide();
+            });
+        };
+
+    }
+])
 
 
+.controller('CreditRecordCtrl', [
+    '$http',
+    '$scope',
+    'Common',
+    '$stateParams',
+    function($http, $scope, common, $stateParams){
+        var pageType = $stateParams.pagetype;
+        $scope.noMoreData = false;
+        $scope.currentPage = 1;
+        $scope.lastPage = 5;
+        $scope.userInfo = {};
+        $scope.recordList = [];
 
+        common.utility.checkLogin().success(function(u){
+            $scope.userInfo = u;
+        }).fail(function(){
+            common.utility.resetToken();
+        });
 
+        $scope.initList = function() {
+            var paramsObj = {}, 
+                apiUrl = common.API.rpRecord;
+            paramsObj.uid = $scope.userInfo.uid;
+            paramsObj.token = $scope.userInfo.token;
+            paramsObj.page = $scope.currentPage;
+            // paramsObj.accessSign = md5.createHash(common.utility.createSign(paramsObj));
 
+            if (pageType == 'bean') {
+                apiUrl = common.API.beanRecord;
+            }
+            if($scope.currentPage > $scope.lastPage) {
+                $scope.noMoreData = true;
+            } else {
+                common.utility.loadingShow();
+                $http({
+                    method: 'post',
+                    url: apiUrl,
+                    data: paramsObj
+                }).success(function(data) {
+                    //处理card的示例图
+                    common.utility.handlePostResult(data, function(d) {
+                        if (d.data.recordList.length > 0) {
+                            d.data.recordList.map(function(r){
+                                r.create_at = new Date(r.create_at * 1000).format('yyyy-MM-dd');
+                            });
+                        }
+                        $scope.lastPage = d.data.totalPage;
+                        $scope.recordList = $scope.recordList.concat(d.data.recordList);
+                        $scope.noMoreData = (d.data.totalPage <= 0);
+                        $scope.currentPage++;
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                    common.utility.loadingHide();
+                }).error(function() {
+                    alert('网络异常.');
+                    common.utility.loadingHide();
+                });
+            }
+        };
+
+    }
+])
 
 
 

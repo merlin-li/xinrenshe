@@ -9,23 +9,15 @@ angular.module('xinrenshe.services', []).factory('Common', [
     'md5',
     '$ionicActionSheet',
     function($ionicPopup, $ionicHistory, $cacheFactory, $ionicLoading, $http, $location, md5, $ionicActionSheet) {
-
         var offline = false,
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        offline = true;
-        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.4/';
+        apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.5/';
 
         var u = window.navigator.userAgent,
-            loadingTemplate = '<ion-spinner icon="spiral" style="fill:#fff"></ion-spinner>';
-        // if (u.match(/(iPhone|iPod|ios|iPad)/i)) {
-        //     loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
-        // } else {
-        //     loadingTemplate = '<ion-spinner icon="bubbles" style="fill:#fff"></ion-spinner>';
-            
-        //     // loadingTemplate = '<img src="img/pic_loading.gif" style="width:30px;height:30px;">';
-        // }
+            loadingTemplate = '<ion-spinner icon="spiral" style="fill:#fff"></ion-spinner>',
+            iframeUrlData;
         Date.prototype.format = function(fmt) {
             var o = {
                 'M+': this.getMonth() + 1,
@@ -279,8 +271,32 @@ angular.module('xinrenshe.services', []).factory('Common', [
             },
             _getCache = function (name) {
                 return $cacheFactory(name);
+            },
+            _gotoHelp = function (name) {
+                //跳转到帮助页面  
+                /*
+                    expand: 推广手册
+                    arrive: 到达率
+                    credit: 信用分
+                    bean：社豆
+                    sendAndReceive：寄信收信
+                    switch：互寄
+                    signin：签到
+                    level：经验等级
+                */
+                var urlObj = {
+                    'level': 'http://activity.xinrenclub.com/helper/sub/1.html',
+                    'signin': 'http://activity.xinrenclub.com/helper/sub/2.html',
+                    'switch': 'http://activity.xinrenclub.com/helper/sub/3.html',
+                    'sendAndReceive': 'http://activity.xinrenclub.com/helper/sub/4.html',
+                    'bean': 'http://activity.xinrenclub.com/helper/sub/5.html',
+                    'credit': 'http://activity.xinrenclub.com/helper/sub/6.html',
+                    'arrive': 'http://activity.xinrenclub.com/helper/sub/7.html',
+                    'expand': 'http://activity.xinrenclub.com/helper/sub/8.html',
+                    'baodian': 'http://activity.xinrenclub.com/helper'
+                };
+                window.open(urlObj[name], '_blank', 'location=no,toolbarposition=top');
             };
-
 
         return {
             API: {
@@ -384,7 +400,15 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 inviteTop: apiBaseUrl + 'Promote/inviteTop',
                 myLevel: apiBaseUrl + 'My/lv',
                 forumDelete: apiBaseUrl + 'Forum/forumDelete',
-                setBasicInfo : apiBaseUrl + 'setUserInfo/basicInfo'
+                setBasicInfo : apiBaseUrl + 'setUserInfo/basicInfo',
+                homeList: apiBaseUrl + 'Task/homeList',
+                getPrize: apiBaseUrl + 'Task/getPrize',
+                digBeanList: apiBaseUrl + 'DigBean/homeList',
+                doDig: apiBaseUrl + 'DigBean/doDig',
+                noteHistory: apiBaseUrl + 'Note/noteHistory',
+                sendNote: apiBaseUrl + 'Note/sendNote',
+                rpRecord: apiBaseUrl + 'My/rpRecord',
+                beanRecord: apiBaseUrl + 'My/beanRecord'
             },
             utility: {
                 'checkPhone': _checkPhone,
@@ -404,8 +428,9 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
                 'takePicture': _takePicture,
-                'getVersion': '1.1.0',
-                'deviceInfo': _deviceInfo
+                'getVersion': '1.2.0',
+                'deviceInfo': _deviceInfo,
+                'gotoHelp': _gotoHelp
             },
             tempData: {
                 userAddressInfo: '',
@@ -414,7 +439,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 userData: {},
                 homeData: {},
                 addressData: {},
-                iframeUrl: {}
+                userInfo: {}
             }
         };
     }

@@ -1,0 +1,25 @@
+<ion-view view-title="挖豆" cache-view="false">
+    <ion-content>
+        <div class="list bean-list">
+            <div class="item item-icon-left item-icon-right" ng-repeat="brand in brandList">
+                <i class="icon"><img ng-src="{{brand.logo}}"></i>
+
+                <div>
+                    <span>{{brand.brand_name}}</span>
+                    <div class="bean-bar">
+                        <div style="width:80%"></div>
+                    </div>
+                    <label>{{brand.remain_bean}}</label>
+                </div>
+
+                <i class="icon" ng-if="!brand.has_dug"><button class="button button-positive button-small" ng-click="dig(brand)">挖一下</button></i>
+            </div>
+        </div>
+
+        <ion-infinite-scroll
+            ng-if="!noMoreData"
+            icon="ion-loading-c"
+            on-infinite="initList()" distance="10%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

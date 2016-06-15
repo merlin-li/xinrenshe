@@ -4,9 +4,8 @@
             <i class="icon ion-ios-arrow-back"></i> 
         </a>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content class="gray-color">
         <div class="list list-message">
-
             <!--联名小助手-->
             <a ng-if="sourceType == 'jointly'" class="item item-avatar" ng-repeat="msg in msgModel.msgList">
                 <img ng-src="{{msgModel.host + msgModel.categoryInfo.avatar}}">

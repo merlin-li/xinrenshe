@@ -1,0 +1,20 @@
+<ion-view view-title="任务" cache-view="false">
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                <span class="task-title">每日任务</span>
+            </div> 
+            <div class="item item-icon-left item-icon-right task-item" ng-repeat="t in taskModel.taskList">
+                <i class="icon"><img ng-src="{{taskModel.host + t.avatar}}"></i>
+                {{t.name}}
+                <span>{{t.complete_count}}/{{t.total}}</span>
+                <i class="icon" ng-if="t.has_complete"><img class="select" src="img/icon_gou.png"></i>
+            </div>
+
+            <div class="item task-item item-button-right">
+                奖励经验值：<span>{{taskModel.prizeInfo}}</span>
+                <button class="button button-positive" ng-click="get()">领取</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

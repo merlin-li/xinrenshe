@@ -28,15 +28,6 @@ angular.module('xinrenshe', [
                 }
             }
         })
-        .state('xrs_banner', {
-            url: '/banner',
-            views: {
-                'content': {
-                    templateUrl: 'templates/banner/index.html',
-                    controller: 'BannerCtrl'
-                }
-            }
-        })
         .state('xrs_message', {
             url: '/message',
             views: {
@@ -559,6 +550,61 @@ angular.module('xinrenshe', [
                 }
             }
         })
+        .state('xrs_task', {
+            url: '/task',
+            views: {
+                'content': {
+                    templateUrl: 'templates/task/index.html',
+                    controller: 'TaskCtrl'
+                }
+            }
+        })
+        .state('xrs_bean', {
+            url: '/bean',
+            views: {
+                'content': {
+                    templateUrl: 'templates/bean/index.html',
+                    controller: 'BeanCtrl'
+                }
+            }
+        })
+        .state('xrs_sendMessage', {
+            url: '/user/message/:userId',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/message/index.html',
+                    controller: 'sendMessageCtrl'
+                }
+            }
+        })
+        .state('xrs_sendMessageSetting', {
+            url: '/user/message/:userId/setting',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/message/index.html',
+                    controller: 'sendMessageCtrl'
+                }
+            }
+        })
+        .state('xrs_userTypeInfo', {
+            url: '/usertype/:pagetype',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/typeinfo/index.html',
+                    controller: 'UserCtrl'
+                }
+            }
+        })
+
+        .state('xrs_userTypeRecord', {
+            url: '/user/:pagetype/record',
+            views: {
+                'content': {
+                    templateUrl: 'templates/user/typeinfo/record.html',
+                    controller: 'CreditRecordCtrl'
+                }
+            }
+        })
 
 
 
@@ -601,7 +647,6 @@ angular.module('xinrenshe', [
     $ionicPlatform.registerBackButtonAction(function(e){
         e.preventDefault();
         var currentPage = $location().path();  
-        alert(currentPage);
         if (currentPage == '/home' || currentPage == '/message' || currentPage == '/joint' || currentPage == '/user') {
             //退出应用程序
              ionic.Platform.exitApp();
