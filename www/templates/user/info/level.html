@@ -1,8 +1,5 @@
 <ion-view title="等级" cache-view="false">
-    <ion-nav-buttons side="right">
-        <a ng-click="open('level')" class="button"><i class="icon ion-ios-help-outline"></i></a>
-    </ion-nav-buttons>
-    <ion-content has-header="true" class="padding">
+    <ion-content has-header="true">
         <section class="level-container">
             <img class="level-avatar" ng-src="{{userObj.host + userObj.avatar}}">
             
@@ -11,9 +8,17 @@
             </div>
         </section>
 
-        <section class="level-container level-des">
-            下一个等级：<span>LV.{{userLevel.next_lv}}</span><br>
-            还差经验值：<span>{{userLevel.remain_exp}}</span>
-        </section>
+        <div class="list level-item">
+            <a href="#" class="item">
+                下一个等级：<span>LV.{{userLevel.next_lv}}</span>
+            </a>
+            <a href="#" class="item">
+                还差经验值：<span>LV.{{userLevel.remain_exp}}</span>
+            </a>
+            <a ng-click="open('level')" class="item item-icon-right">
+                等级宝典
+                <i class="icon ion-ios-arrow-right"></i>
+            </a>
+        </div>
     </ion-content>
 </ion-view>

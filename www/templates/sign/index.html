@@ -1,4 +1,4 @@
-<ion-view title="签到福利">
+<ion-view title="签到福利" cache-view="false">
     <ion-nav-buttons side="right">
         <a ng-click="open()" class="button">签到宝典</a>
     </ion-nav-buttons>
@@ -8,8 +8,9 @@
         <div class="sign-header">
             <span>{{signObj.date}}</span>
             <span>今日福利：{{signObj.total}}个  剩余{{signObj.remain}}个</span>
-            <img ng-click="sign()" src="img/icon_qiandao1.png" ng-if="!signObj.hasSign">
+            <img ng-click="sign()" src="img/icon_qiandao1.png" ng-if="!signObj.hasSign && !showTimeCount">
             <img src="img/icon_yqiandao.png" ng-if="signObj.hasSign">
+            <span ng-if="showTimeCount" class="timer">距离签到还剩：{{showHours}}:{{showMinutes}}:{{showSeconds}}</span>
         </div>
 
         <div style="width:100%;text-align:center;margin-top:100px" ng-if="signListObj.length === 0">暂无签到，你来做第一人吧</div>
@@ -32,6 +33,7 @@
                 <img ng-if="usersignObj.status === 1 && usersignObj.prize_id === 1" class="gift" src="img/icon_liwu.png">
                 <img ng-if="usersignObj.status === 1 && usersignObj.prize_id === 3" class="gift" src="img/icon_libaop.png">
                 <img ng-if="usersignObj.status === 1 && usersignObj.prize_id === 2" class="gift" src="img/icon_libaoy.png">
+                <img ng-if="usersignObj.status === 1 && usersignObj.prize_id === 4" class="gift" src="img/icon_sd.png">
             </div>
         </div>
 
@@ -51,6 +53,7 @@
                 <img ng-if="s.status === 1 && s.prize_id === 1" class="gift" src="img/icon_liwu.png">
                 <img ng-if="s.status === 1 && s.prize_id === 3" class="gift" src="img/icon_libaop.png">
                 <img ng-if="s.status === 1 && s.prize_id === 2" class="gift" src="img/icon_libaoy.png">
+                <img ng-if="s.status === 1 && s.prize_id === 4" class="gift" src="img/icon_sd.png">
             </a>
         </div>
 

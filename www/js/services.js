@@ -13,6 +13,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
+        offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.5/';
 
         var u = window.navigator.userAgent,
@@ -408,7 +409,10 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 noteHistory: apiBaseUrl + 'Note/noteHistory',
                 sendNote: apiBaseUrl + 'Note/sendNote',
                 rpRecord: apiBaseUrl + 'My/rpRecord',
-                beanRecord: apiBaseUrl + 'My/beanRecord'
+                beanRecord: apiBaseUrl + 'My/beanRecord',
+                addToBlack: apiBaseUrl + 'Note/addToBlack',
+                checkIsBlack: apiBaseUrl + 'Note/checkIsBlack',
+                userNoteMsgList: apiBaseUrl + 'Note/userNoteMsgList'
             },
             utility: {
                 'checkPhone': _checkPhone,

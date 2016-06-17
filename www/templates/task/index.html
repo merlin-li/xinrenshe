@@ -4,15 +4,16 @@
             <div class="item">
                 <span class="task-title">每日任务</span>
             </div> 
-            <div class="item item-icon-left item-icon-right task-item" ng-repeat="t in taskModel.taskList">
+            <div class="item item-icon-left task-item {{t.has_complete ? 'item-icon-right' : ''}}" ng-repeat="t in taskModel.taskList">
                 <i class="icon"><img ng-src="{{taskModel.host + t.avatar}}"></i>
                 {{t.name}}
-                <span>{{t.complete_count}}/{{t.total}}</span>
+                <span class="{{t.has_complete ? 'complete' : ''}}">{{t.complete_count}}/{{t.total}}</span>
                 <i class="icon" ng-if="t.has_complete"><img class="select" src="img/icon_gou.png"></i>
+                <label class="item-note" ng-if="!t.has_complete">未完成</label>
             </div>
 
             <div class="item task-item item-button-right">
-                奖励经验值：<span>{{taskModel.prizeInfo}}</span>
+                奖励经验值：<span>{{taskModel.prizeInfo.prize_exp_count}}</span>
                 <button class="button button-positive" ng-click="get()">领取</button>
             </div>
         </div>

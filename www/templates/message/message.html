@@ -136,6 +136,16 @@
                 </div>
             </a>
 
+            <!--留言小助手-->
+            <div ng-if="sourceType == 'note'" class="list list-msg">
+                <a class="item item-avatar item-msg-helper" href="#/user/message/{{msg.uid}}" ng-repeat="msg in msgModel.noteUserList">
+                    <img ng-src="{{msgModel.host + msg.avatar}}">
+                    <h2>{{msg.username}}</h2>
+                    <p>{{msg.new_msg}}</p>
+                    <span class="time">{{msg.create_at}}</span>
+                </a>
+            </div>
+
         </div>
 
         <div class="tip-message" ng-if="msgModel.msgList.length <= 0">

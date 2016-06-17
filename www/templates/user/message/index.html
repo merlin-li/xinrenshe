@@ -1,28 +1,18 @@
 <ion-view title="私信" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button buttons button-clear header-item" ng-if="!hideEle" ng-click="setting()"><i class="icon ion-ios-more"></i></a>
+        <a href="#/user/message/{{userId}}/setting" class="button buttons button-clear header-item"><i class="icon ion-ios-more"></i></a>
     </ion-nav-buttons>
     <ion-content has-header="true">
         <div class="chat-tip">留言非即时消息</div>
 
-        <div class="chat-item padding" ng-repeat="msg in dataList">
-            <img class="avatar" ng-src="{{msg.avatar}}">
+        <div class="chat-item padding {{msg.isMe ? 'chat-right' : ''}}" ng-repeat="msg in dataList">
+            <img class="avatar" ng-src="{{msg.avatar}}" ng-if="!msg.isMe">
             <div>
                 {{msg.content}}
                 <img ng-src="{{msg.picture}}" ng-if="msg.picture">
             </div>
+            <img class="avatar" ng-src="{{msg.avatar}}" ng-if="msg.isMe">
         </div>
-
-<!--         <div class="chat-item padding">
-            <img class="avatar" src="img/tx_01.png">
-            <div>这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息这是留言的第一条信息</div>
-        </div>
-
-        <div class="chat-item padding chat-right">
-            <div><img src="img/logo_shiguang.png"></div>
-            <img class="avatar" src="img/tx_01.png">
-        </div> -->
-
 
         <ion-infinite-scroll
             ng-if="!noMoreData"

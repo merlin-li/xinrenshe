@@ -98,6 +98,11 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     top: 0;
     width: 100%;
 }
+.sign-header .timer{
+    font-size: 18px;
+    display: block;
+    margin-top: 20px;
+}
 .sign-header span{
     display: block;
     color: #fff;
@@ -280,7 +285,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated, ion-tabs.tabs-color-act
     font-size: 14px;
     text-align: center;
 }
-.level-container span{
+.level-container span, .level-item span{
     color: #f81205;
 }
 .level-des{
@@ -1854,6 +1859,11 @@ i.landlord{
     height: 20px;
 }
 .task-item span{
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+}
+.task-item span.complete{
     color: #fe6682;
 }
 .task-title{
@@ -1959,7 +1969,9 @@ i.landlord{
 .gray-color{
     background: #f6f6f6;
 }
-
+.list-message .item-msg-helper{
+    background: #fff;
+}
 
 
 

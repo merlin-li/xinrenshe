@@ -7,12 +7,13 @@
                 <div>
                     <span>{{brand.brand_name}}</span>
                     <div class="bean-bar">
-                        <div style="width:80%"></div>
+                        <div style="width:{{brand.remain_bean / brand.total_bean * 100}}%"></div>
                     </div>
-                    <label>{{brand.remain_bean}}</label>
+                    <label>剩余：{{brand.remain_bean}}</label>
                 </div>
 
                 <i class="icon" ng-if="!brand.has_dug"><button class="button button-positive button-small" ng-click="dig(brand)">挖一下</button></i>
+                <i class="icon" ng-if="brand.has_dug"><button class="button button-stable button-small">今日已挖</button></i>
             </div>
         </div>
 

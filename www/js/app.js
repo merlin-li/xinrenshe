@@ -383,8 +383,7 @@ angular.module('xinrenshe', [
             url: '/setting/about',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/setting/about.html',
-                    controller: 'AboutCtrl'
+                    templateUrl: 'templates/user/setting/about.html'
                 }
             }
         })
@@ -581,7 +580,7 @@ angular.module('xinrenshe', [
             url: '/user/message/:userId/setting',
             views: {
                 'content': {
-                    templateUrl: 'templates/user/message/index.html',
+                    templateUrl: 'templates/user/message/setting.html',
                     controller: 'sendMessageCtrl'
                 }
             }
