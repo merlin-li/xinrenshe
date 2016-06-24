@@ -3317,6 +3317,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
     '$ionicActionSheet',
     function($http, $scope, common, md5, $stateParams, $location, $ionicPopup, $ionicActionSheet){
         $scope.hideEle = true;
+        $scope.isMe = true;
         $scope.hideShare = true;
         $scope.userId = 0;
         $scope.showBackButton = false;
@@ -3342,6 +3343,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }
                 $scope.userModel = d.data.userInfo;
                 $scope.hideEle = true;
+                //判断是不是本人
+                common.utility.checkLogin().success(function(u){
+                    $scope.isMe = (userId == u.uid);
+                });
             });
 
             $scope.report = function() {
@@ -3359,6 +3364,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 });
             };
         } else {
+            $scope.ieMe = true;
             $scope.showBackButton = false;
             $scope.hideEle = false;
             var paramsObj = {};
@@ -5011,7 +5017,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.submit = function() {
-            if ($scope.reportItem.id) {
+            // if ($scope.reportItem.id) {
                 common.utility.loadingShow();
                 var reportUrl = common.API.forumReport,
                     reportData = {
@@ -5028,9 +5034,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         token: $scope.userInfo.token,
                         picture: $scope.photos,
                         r_uid: id,
-                        contents: $scope.reportModel.content
+                        content: $scope.reportModel.content
                     };
-                }
+                } 
 
                 $http({
                     method: 'post',
@@ -5039,14 +5045,16 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 }).success(function(data){
                     common.utility.loadingHide();
                     common.utility.handlePostResult(data, function(d){
-                        if (from === 'user') {
-                            $location.path('/user/view/' + id);
-                        } else {
-                            $location.path('/square');
-                        }
+                        common.utility.alert('提示', d.msg).then(function(){
+                            if (from === 'user') {
+                                $location.path('/user/view/' + id);
+                            } else {
+                                $location.path('/square');
+                            }
+                        });
                     });
                 });
-            }
+            // }
         };
 
         $scope.select = function(o) {
@@ -5078,6 +5086,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         common.utility.checkLogin().success(function(u){
+            $scope.userInfo = u;
             // 如果是举报用户，不需要获取举报的选项
             if (from === 'user') {
 
@@ -5204,7 +5213,11 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         data: $scope.userInfo
                     }).success(function(data){
                         common.utility.loadingHide();
-                        common.utility.alert('提示', data.msg);
+                        common.utility.handlePostResult(data, function(d){
+                            common.utility.alert('提示', d.msg).then(function(){
+                                $scope.taskModel.prizeInfo.has_got = true;
+                            });
+                        });
                     }).error(function(){
                         alert('网络异常');
                         common.utility.loadingHide();
@@ -5403,7 +5416,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                         $scope.dataList = $scope.dataList.concat(d.data.noteList);
                         $scope.noMoreData = (d.data.totalPage <= 0);
                         $scope.currentPage++;
-                        // $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
                 }).error(function() {alert('网络异常.');common.utility.loadingHide();});
             }
@@ -5428,14 +5440,19 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             }).success(function(data){
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
+                    // $scope.currentPage = 1;
+                    // $scope.lastPage = 1;
+                    // $scope.noMoreData = false;
+                    // $scope.dataList = [];
+                    // $scope.initList();
+                    // 头像，内容
+                    paramsObj.isMe = true;
+                    paramsObj.avatar = cuserInfo.host + cuserInfo.avatar;
+                    $scope.dataList.push(paramsObj);
+
                     $scope.messageRepModel.content = '';
                     $scope.photos = [];
                     $scope.replyStyle = {height: '60px'};
-                    $scope.currentPage = 1;
-                    $scope.lastPage = 2;
-                    $scope.noMoreData = false;
-                    $scope.dataList = [];
-                    $scope.initList();
                 });
             }).error(function(){
                 alert('网络异常.');

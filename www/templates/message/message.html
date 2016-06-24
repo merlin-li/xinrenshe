@@ -1,4 +1,4 @@
-<ion-view title="信箱" hide-back-button="true">
+<ion-view title="信箱" hide-back-button="true" cache-view="false">
     <ion-nav-buttons side="left">
         <a href="#/message" class="button back-button buttons button-clear header-item">
             <i class="icon ion-ios-arrow-back"></i> 
@@ -138,7 +138,7 @@
 
             <!--留言小助手-->
             <div ng-if="sourceType == 'note'" class="list list-msg">
-                <a class="item item-avatar item-msg-helper" href="#/user/message/{{msg.uid}}" ng-repeat="msg in msgModel.noteUserList">
+                <a class="item item-avatar item-msg-helper" href="#/user/message/{{msg.opposite_uid}}" ng-repeat="msg in msgModel.noteUserList">
                     <img ng-src="{{msgModel.host + msg.avatar}}">
                     <h2>{{msg.username}}</h2>
                     <p>{{msg.new_msg}}</p>

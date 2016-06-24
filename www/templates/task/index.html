@@ -14,7 +14,8 @@
 
             <div class="item task-item item-button-right">
                 奖励经验值：<span>{{taskModel.prizeInfo.prize_exp_count}}</span>
-                <button class="button button-positive" ng-click="get()">领取</button>
+                <button class="button button-positive" ng-click="get()" ng-if="!taskModel.prizeInfo.has_got">领取</button>
+                <button class="button button-stable" ng-if="taskModel.prizeInfo.has_got">已领取</button>
             </div>
         </div>
     </ion-content>
