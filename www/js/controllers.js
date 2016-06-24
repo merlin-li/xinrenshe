@@ -704,7 +704,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
 
         $scope.save = function() {
-            if (this.userModel.consignee_username === '' || this.userModel.zip_code === '' || this.userModel.consignee_address === '' || this.userModel.area === '') {
+            if (this.userModel.consignee_username === '' || this.userModel.zip_code === '' || this.userModel.consignee_addr === '' || this.userModel.consignee_area === '') {
                 common.utility.alert('提示', '信息不能为空！');
             } else {
                 //邮编检查
@@ -717,10 +717,10 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     paramsObj = {
                         consignee_username: self.consignee_username,
                         zip_code: self.zip_code,
-                        consignee_addr: self.consignee_address,
-                        province: self.province,
-                        city: self.city,
-                        area: self.area
+                        consignee_addr: self.consignee_addr,
+                        province: self.consignee_province,
+                        city: self.consignee_city,
+                        area: self.consignee_area
                     },
                     userObj;
                 if (common.utility.cookieStore.get('userinfo')) {
@@ -761,9 +761,9 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                     areaObj2 = common.utility.cookieStore.get('areainfo2'),
                     areaObj3 = common.utility.cookieStore.get('areainfo3');
 
-                $scope.userModel.province = areaObj1.name;
-                $scope.userModel.city = areaObj2.name;
-                $scope.userModel.area = areaObj3.name;
+                $scope.userModel.consignee_province = areaObj1.name;
+                $scope.userModel.consignee_city = areaObj2.name;
+                $scope.userModel.consignee_area = areaObj3.name;
             }
             common.utility.cookieStore.remove('areainfo1'),
             common.utility.cookieStore.remove('areainfo2'),
@@ -4422,7 +4422,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
 
         if (!userObj) {
             $scope.hasLogin = false;
-            console.log('xx');
         } else  {
             paramsObj = {uid: userObj.uid};
         }
@@ -4476,7 +4475,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 common.utility.loadingHide();
                 common.utility.handlePostResult(data, function(d){
                     $scope.dataModel = d.data;
-                    // console.log($scope.dataModel.invitation_code);
                 });
             }).error(function(){
                 alert('网络异常.');
@@ -4978,7 +4976,6 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         };
 
         $scope.report = function(f) {
-            console.log(f);
             $location.path('/report/forum/' + f.id);
         };
 
@@ -5384,7 +5381,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                 var paramsObj = {
                     per: 20,
                     page: $scope.currentPage,
-                    r_uid: userId,
+                    opposite_uid: userId,
                     uid: cuserInfo.uid,
                     token: cuserInfo.token
                 };
@@ -5416,7 +5413,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             var paramsObj = {
                 uid: cuserInfo.uid,
                 token: cuserInfo.token,
-                r_uid: userId,
+                opposite_uid: userId,
                 content: $scope.messageRepModel.content,
             };
             if (isImg) {
