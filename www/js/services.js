@@ -13,7 +13,6 @@ angular.module('xinrenshe.services', []).factory('Common', [
             location = window.location.search,
             apiBaseUrl;
         offline = location.indexOf('?offline') >= 0;
-        offline = true;
         apiBaseUrl = offline ? 'http://appdev.xinrenclub.com/v1.5/' : 'http://api.xinrenclub.com/v1.5/';
 
         var u = window.navigator.userAgent,
@@ -432,7 +431,7 @@ angular.module('xinrenshe.services', []).factory('Common', [
                 'resetToken': _resetToken,
                 'handlePostResult': _handlePostResult,
                 'takePicture': _takePicture,
-                'getVersion': '1.2.0',
+                'getVersion': '1.2.1',
                 'deviceInfo': _deviceInfo,
                 'gotoHelp': _gotoHelp
             },

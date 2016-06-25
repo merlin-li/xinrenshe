@@ -4840,12 +4840,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
             });
         };
 
-        window.addEventListener('native.keyboardshow', function(e){
-            $scope.replyStyle = {
-                'height': (e.keyboardHeight + 60) + 'px'
-            };
-            $scope.$apply();
-        });
+        // window.addEventListener('native.keyboardshow', function(e){
+        //     $scope.replyStyle = {
+        //         'height': (e.keyboardHeight + 60) + 'px'
+        //     };
+        //     $scope.$apply();
+        // });
 
         $scope.inputBlur = function () {
             // $scope.showPhotos = true;
@@ -4895,6 +4895,7 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
                                     'height': '60px'
                                 };
                                 $scope.themeRepModel.content = '';
+                                $scope.photos = [];
                             });
                         });
                     });
@@ -5360,12 +5361,12 @@ angular.module('xinrenshe.controllers', ['ngCordova', 'angular-md5', 'ionic-rati
         $scope.userinfo = {};
         $scope.userId = userId;
 
-        window.addEventListener('native.keyboardshow', function(e){
-            $scope.replyStyle = {
-                'height': (e.keyboardHeight + 60) + 'px'
-            };
-            $scope.$apply();
-        });
+        // window.addEventListener('native.keyboardshow', function(e){
+        //     $scope.replyStyle = {
+        //         'height': (e.keyboardHeight + 60) + 'px'
+        //     };
+        //     $scope.$apply();
+        // });
 
         $http({
             method: 'post',
